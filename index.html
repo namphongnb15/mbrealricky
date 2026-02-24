@@ -357,7 +357,8 @@
   }
 
   function scoreAll(d1,d0, top3, clusterStates){
-    const m1=countMap(d1), m0=countMap(d0);
+        // LOCKED: REAL+/REAL KHÔNG VỪA VỀ NGÀY -1 (tức số đã xuất hiện ở ngày N gần nhất trong input). RICKY không áp.
+    if(tierName!=="RICKY"){ pool = pool.filter(s=>!m0.has(s.n)); }
     const nums=[...Array(100).keys()].map(i=>pad2(i));
     const out=[];
     const inTopTail=(n)=> top3.includes(parseInt(n[1],10));
