@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MB REAL–RICKY (LOCKED) — CHỐT 1 CON/NGÀY</title>
+  <title>SXMB MB REAL–RICKY (LOCKED) — CHỐT 1 CON/NGÀY</title>
   <style>
     :root{
       --bg:#f6f7fb;
@@ -28,7 +28,7 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0;box-shadow:0 1px 0 rgba(0,0,0,.02)}
     .card h2{margin:0 0 10px;font-size:14px}
     .toprow{display:flex;gap:8px;align-items:center;justify-content:space-between}
-    .btns{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .btns{display:flex;gap:8px;align-items:center}
     button{border:1px solid var(--line);background:#fff;color:#111827;border-radius:12px;padding:8px 10px;font-weight:700;cursor:pointer}
     button:hover{background:#fafafa}
     .btn-primary{background:#111827;color:#fff;border-color:#111827}
@@ -39,6 +39,7 @@
     .btn-soft{background:var(--pill)}
     textarea{width:100%;min-height:118px;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:13px;line-height:1.35;outline:none;background:#fff}
     textarea:focus{border-color:rgba(37,99,235,.35);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+    .label{color:var(--muted);font-size:12px;margin-top:6px}
     input[type="text"]{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:13px;outline:none}
     input[type="text"]:focus{border-color:rgba(37,99,235,.35);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
     .row{display:flex;gap:10px;flex-wrap:wrap}
@@ -53,7 +54,7 @@
     .kbox .h{font-size:12px;color:var(--muted)}
     .kbox .v{font-size:16px;font-weight:900;margin-top:6px}
     .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
-    table{width:100%;border-collapse:collapse;min-width:680px}
+    table{width:100%;border-collapse:collapse;min-width:640px}
     th,td{padding:10px 10px;border-bottom:1px solid var(--line);font-size:12px;text-align:left;white-space:nowrap}
     th{color:var(--muted);font-weight:800;background:#fafafa}
     tr:last-child td{border-bottom:0}
@@ -73,18 +74,16 @@
 </head>
 <body>
 <header>
-  <div class="title">MB REAL–RICKY (LOCKED) — CHỐT 1 CON/NGÀY</div>
+  <div class="title">SXMB MB REAL–RICKY (LOCKED) — CHỐT 1 CON/NGÀY</div>
   <div class="chips">
     <div class="chip">LOCKED</div>
-    <div class="chip">Đọc 3 ngày</div>
-    <div class="chip">Chấm 2 ngày</div>
     <div class="chip">B2 = ĐẾM (3 ngày)</div>
-    <div class="chip">Detect Shift = FLAG</div>
-    <div class="chip">Patch(C) + Selector</div>
+    <div class="chip">Selector + Patch(C)</div>
+    <div class="chip">Detect Shift = FLAG (chỉ ảnh hưởng Selector khi ON)</div>
   </div>
   <div class="sub">
-    <b>QUY ƯỚC:</b> App chỉ chỉnh <b>UI + parser + lưu lịch sử</b>. <b>KHÔNG</b> chỉnh/sửa hệ (scoring/lọc/tầng/selector).
-    <br/>Dán KQ theo đúng format: <span class="mono">ĐB/G1..G7</span>.
+    <b>QUY ƯỚC:</b> App chỉ thay đổi <b>giao diện + lưu lịch sử</b>. <b>KHÔNG</b> chỉnh/sửa hệ (scoring/lọc/tầng/selector).<br/>
+    Dán KQ vào Ngày N / N-1 / N-2 → bấm <b>CHỐT</b> để ra Con chốt (TOP 1) + Con phụ (tham khảo) + log B1→B9.
   </div>
 </header>
 
@@ -97,7 +96,7 @@
         <button class="btn-soft" data-clear="n">Xoá</button>
       </div>
     </div>
-    <textarea id="dayN" placeholder="Dán KQ ngày N theo format ĐB/G1..G7 (để tránh nhiễu)..."></textarea>
+    <textarea id="dayN" placeholder="Dán KQ ngày N (ngày mới nhất trong 3 ngày đọc)..."></textarea>
   </section>
 
   <section class="card">
@@ -108,7 +107,7 @@
         <button class="btn-soft" data-clear="n1">Xoá</button>
       </div>
     </div>
-    <textarea id="dayN1" placeholder="Dán KQ ngày N-1 theo format ĐB/G1..G7..."></textarea>
+    <textarea id="dayN1" placeholder="Dán KQ ngày N-1..."></textarea>
   </section>
 
   <section class="card">
@@ -119,17 +118,17 @@
         <button class="btn-soft" data-clear="n2">Xoá</button>
       </div>
     </div>
-    <textarea id="dayN2" placeholder="Dán KQ ngày N-2 theo format ĐB/G1..G7 (ngày cũ nhất)..."></textarea>
+    <textarea id="dayN2" placeholder="Dán KQ ngày N-2 (ngày cũ nhất trong 3 ngày đọc)..."></textarea>
   </section>
 
   <section class="card">
     <div class="toprow">
-      <h2>Ngày chốt (N+1)</h2>
+      <h2>Ngày soi (N+1)</h2>
       <div class="btns">
         <button id="btnChot" class="btn-primary">CHỐT</button>
       </div>
     </div>
-    <input id="dateNext" type="text" placeholder="VD: 24/2 (ngày chốt / N+1 để lưu lịch sử)"/>
+    <input id="dateNext" type="text" placeholder="VD: 24/2 (để ghi lịch sử)"/>
     <div class="statusline" id="statusLine">Chưa chốt.</div>
 
     <div class="row" style="margin-top:10px;">
@@ -178,7 +177,7 @@
       </div>
     </div>
 
-    <div style="height:1px;background:var(--line);margin:12px 0;"></div>
+    <div class="hr" style="height:1px;background:var(--line);margin:12px 0;"></div>
 
     <h2>Tham khảo</h2>
     <div class="kpi">
@@ -206,7 +205,7 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Ngày chốt</th>
+            <th>Ngày</th>
             <th>Con CHỐT</th>
             <th>Tầng</th>
             <th>Con PHỤ</th>
@@ -229,49 +228,24 @@
 </main>
 
 <script>
+/* =========================
+   LOCKED ENGINE (KHÔNG SỬA HỆ)
+   - Chỉ dùng lại engine để tính TOP1, tier, report.
+   - UI + history là phần bổ sung.
+========================= */
 (function(){
   const $ = (id)=>document.getElementById(id);
   const pad2 = (n)=> String(n).padStart(2,'0');
 
-  /* ========= PARSER (UI-only) =========
-     Only parse lines in strict format:
-       ĐB: ...
-       G1: ...
-       ...
-       G7: ...
-     Fallback to legacy if none found.
-  ===================================== */
   function extractLo(text){
-    const raw = (text||"").trim();
-    if(!raw) return [];
-
-    const lines = raw.split(/\r?\n/);
-    const allowed = new Set(["ĐB","DB","G1","G2","G3","G4","G5","G6","G7"]);
-    const picked = [];
-
-    for(const line of lines){
-      const s = line.trim();
-      const m = s.match(/^([A-Za-zĐđB1-7]{1,3})\s*:\s*(.*)$/);
-      if(!m) continue;
-
-      let key = m[1].toUpperCase();
-      if(key === "DB") key = "ĐB";
-      if(key === "ĐB".toUpperCase()) key = "ĐB";
-      if(!allowed.has(key)) continue;
-
-      const rest = m[2] || "";
-      const nums = rest.match(/\d+/g) || [];
-      for(const token of nums){
-        if(token.length===1) picked.push(pad2(Number(token)));
-        else picked.push(token.slice(-2));
-      }
+    const nums = (text||"").match(/\d+/g) || [];
+    const lo = [];
+    for(const s of nums){
+      if(s.length===1) lo.push(pad2(Number(s)));
+      else lo.push(s.slice(-2));
     }
-
-    const lo = (picked.length ? picked : ((raw.match(/\d+/g) || []).map(s => (s.length===1? pad2(Number(s)) : s.slice(-2)))));
     return lo.map(x=>pad2(parseInt(x,10)%100));
   }
-
-  /* ======== ENGINE (LOCKED) ======== */
   const unique = (arr)=> Array.from(new Set(arr));
   function intersection(aSet, bSet){ let cnt=0; for(const v of aSet){ if(bSet.has(v)) cnt++; } return cnt; }
   function countMap(arr){ const m=new Map(); for(const x of arr) m.set(x,(m.get(x)||0)+1); return m; }
@@ -357,8 +331,7 @@
   }
 
   function scoreAll(d1,d0, top3, clusterStates){
-        // LOCKED: REAL+/REAL KHÔNG VỪA VỀ NGÀY -1 (tức số đã xuất hiện ở ngày N gần nhất trong input). RICKY không áp.
-    if(tierName!=="RICKY"){ pool = pool.filter(s=>!m0.has(s.n)); }
+    const m1=countMap(d1), m0=countMap(d0);
     const nums=[...Array(100).keys()].map(i=>pad2(i));
     const out=[];
     const inTopTail=(n)=> top3.includes(parseInt(n[1],10));
@@ -438,8 +411,7 @@
       const phaseBonus=(phase.flag==="RED" && isBait(n))?1:0;
       const k2=inTail(n,secondary)?1:0;
       const open=(clusterStates.get(parseInt(n[1],10))==="open")?1:0;
-      // Tie-break cuối: ưu tiên theo TOTAL -> N -> L -> C -> T -> số lớn hơn (chỉ dùng khi hòa)
-      return [k1,run,chain,multi,phaseBonus,k2,open,s.total,s.N,s.L,s.C,s.T,parseInt(n,10)];
+      return [k1,run,chain,multi,phaseBonus,k2,open,s.total,-parseInt(n,10)];
     }
 
     pool.sort((a,b)=>{
@@ -450,6 +422,7 @@
 
     const best=pool[0]||null;
 
+    // tie group (ignore deterministic last element)
     const tie=[];
     if(best){
       const kb=key(best);
@@ -461,6 +434,7 @@
       }
     }
 
+    // Con phụ: ứng viên đứng sau TOP1 trong pool (nếu có)
     const phu = pool.length>=2 ? pool[1] : null;
 
     const reason=[];
@@ -469,7 +443,7 @@
     reason.push(`Cụm ưu tiên: đuôi ${primary.join(",")}`);
     if(best) reason.push(`TOTAL: ${best.total.toFixed(2)}`);
 
-    return {tierName, top1:best, tie, reason, phu};
+    return {tierName, top1:best, tie, reason, phu, poolCount:pool.length};
   }
 
   function reportText(ctx){
@@ -508,11 +482,13 @@
     return L.join("\n");
   }
 
-  /* ======== HISTORY (UI-only) ======== */
-  const HISTORY_KEY = "mb_rr_locked_history_v3";
-  const INPUT_KEY = "mb_rr_locked_inputs_v3";
-  let lastDraft = null;
-  let lastDraftSavedId = null;
+  /* =========================
+     HISTORY (UI-only)
+  ========================= */
+  const HISTORY_KEY = "mb_rr_locked_history_v2"; // new key to avoid breaking old
+  const INPUT_KEY = "mb_rr_locked_inputs_v2";
+  let lastDraft = null; // latest "CHỐT" draft
+  let lastDraftSavedId = null; // id of draft saved/updated in history
 
   function loadInputs(){
     try{
@@ -537,7 +513,7 @@
     }catch(e){ return []; }
   }
   function setHistory(list){
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+    try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(list)); }catch(e){ }
   }
 
   function icon(val){
@@ -545,6 +521,7 @@
     if(val===false) return '<span class="icon bad">❌</span>';
     return '<span class="muted">—</span>';
   }
+
   function tierTag(t){
     if(t==="REAL+") return '<span class="tag realp">REAL+</span>';
     if(t==="REAL") return '<span class="tag real">REAL</span>';
@@ -570,6 +547,7 @@
       tbody.appendChild(tr);
     });
 
+    // bind delete
     tbody.querySelectorAll("button[data-del]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const id=btn.getAttribute("data-del");
@@ -577,20 +555,22 @@
         setHistory(list);
         updateStats();
         renderHistory();
-        setStatus("Đã xoá 1 dòng lịch sử.");
       });
     });
   }
 
   function longestMissStreak(hist){
+    // ordered by time ascending
     const ordered = hist.slice().sort((a,b)=>(a.ts||0)-(b.ts||0));
     let cur=0, best=0;
     for(const r of ordered){
       if(r.kqChot===false){ cur++; best=Math.max(best,cur); }
       else if(r.kqChot===true){ cur=0; }
+      // if null: ignore streak boundary (do not reset)
     }
     return best;
   }
+
   function pct(n,d){ if(d<=0) return "0%"; return Math.round((n/d)*100) + "%"; }
 
   function updateStats(){
@@ -616,7 +596,9 @@
     $("kAny").textContent=pct(anyHit, Math.max(1,Math.max(total,anyKnown)));
   }
 
-  function setStatus(text){ $("statusLine").textContent=text; }
+  function setStatus(text){
+    $("statusLine").textContent=text;
+  }
 
   function setChotUI(res){
     $("chotVal").textContent = res.top1 || "--";
@@ -626,50 +608,42 @@
     $("debugBox").textContent = JSON.stringify(res.debug||{}, null, 2);
   }
 
-  function upsertDraftToHistory(){
-    const hist = getHistory();
-    if(!lastDraft) return null;
-
-    if(lastDraftSavedId){
-      const idx = hist.findIndex(x=>String(x.id)===String(lastDraftSavedId));
-      if(idx>=0){
-        hist[idx] = lastDraft;
-        setHistory(hist);
-        return lastDraftSavedId;
-      }
-    }
-
-    hist.push(lastDraft);
-    setHistory(hist);
-    lastDraftSavedId = lastDraft.id;
-    return lastDraftSavedId;
-  }
-
   function runEngine(){
+    // UI: N is newest (D0), N-1 is (D-1), N-2 is (D-2)
     const d0 = extractLo($("dayN").value);
     const d1 = extractLo($("dayN1").value);
     const d2 = extractLo($("dayN2").value);
 
+    // basic sanity
+    if(d0.length<18 || d1.length<18 || d2.length<18){
+      setStatus("Thiếu dữ liệu. Mỗi ngày nên có ~27 lô (tối thiểu 18).");
+    }
+
+    // B1
     const s2=new Set(unique(d2)), s1=new Set(unique(d1)), s0=new Set(unique(d0));
     const ov01=intersection(s0,s1);
     const ov12=intersection(s1,s2);
 
+    // B2 (locked: count)
     const tails = tailCounts([d2,d1,d0]);
     const topTails = topKIndices(tails,1);
     const secondTails = topKIndices(tails,2).slice(1);
     const top3 = topKIndices(tails,3);
 
+    // B3, B4, Shift
     const clusterStates = deriveClusterStates(d2,d1,d0);
     const phase = phaseFlag(d2,d1,d0);
     const shift = detectShift(d2,d1,d0);
     const hf = hiddenForce(d2,d1,d0);
 
+    // B5-B7
     const scored = scoreAll(d1,d0, top3, clusterStates);
     let {realp, real, ricky} = tierize(scored);
     realp = applyNoiseFilter(realp,d1,d0).slice(0,12);
     real  = applyNoiseFilter(real,d1,d0).slice(0,18);
     ricky = applyNoiseFilter(ricky,d1,d0).slice(0,24);
 
+    // B8 selector (+ shift override)
     const sel = selectorPick({realp,real,ricky}, d1,d0, topTails, secondTails, clusterStates, phase, shift);
 
     const ctx = {d2,d1,d0, ov01, ov12, topTails, secondTails, phase, shift, hf, realp, real, ricky, sel};
@@ -680,26 +654,35 @@
     const tier = sel.tierName || null;
 
     const debug = {
-      overlap:{ov01,ov12, state01:classifyBoard(ov01), state12:classifyBoard(ov12)},
-      b2:{tails, topTails, secondTails, top3},
-      phase, shift, hf,
+      overlap:{ov01,ov12, b1_ov01_state:classifyBoard(ov01), b1_ov12_state:classifyBoard(ov12)},
+      tails,
+      b2_topTails: topTails,
+      b2_secondTails: secondTails,
+      phase,
+      shift,
+      hf,
       tiers:{
-        realp: realp.map(x=>({n:x.n,total:+x.total.toFixed(2),N:x.N,C:x.C,L:x.L,T:x.T})),
-        real:  real.map(x=>({n:x.n,total:+x.total.toFixed(2),N:x.N,C:x.C,L:x.L,T:x.T})),
-        ricky: ricky.map(x=>({n:x.n,total:+x.total.toFixed(2),N:x.N,C:x.C,L:x.L,T:x.T})),
+        realp: realp.map(x=>({n:x.n,total:+x.total.toFixed(2)})),
+        real:  real.map(x=>({n:x.n,total:+x.total.toFixed(2)})),
+        ricky: ricky.map(x=>({n:x.n,total:+x.total.toFixed(2)})),
       },
       selector:{
-        tier, top1, phu, tie:(sel.tie||[]).map(x=>x.n), reason: sel.reason
+        tier,
+        top1,
+        phu,
+        tie: (sel.tie||[]).map(x=>x.n),
+        reason: sel.reason
       }
     };
 
-    return {top1, phu, tier, report: rep, debug, shiftOn: !!shift.on, sizes:{N:d0.length,N1:d1.length,N2:d2.length}};
+    return {top1, phu, tier, report: rep, debug, shiftOn: !!shift.on};
   }
 
   function chot(){
     saveInputs();
     const res = runEngine();
 
+    // Draft record (unconfirmed hit/miss yet)
     lastDraftSavedId = null;
     lastDraft = {
       id: String(Date.now()) + "_" + Math.random().toString(16).slice(2),
@@ -711,18 +694,38 @@
       kqChot: null,
       kqPhu: null,
       shiftOn: res.shiftOn,
+      // store report + debug to allow long-term audit
       report: res.report,
       debug: res.debug,
-      inputs: { N:$("dayN").value, N1:$("dayN1").value, N2:$("dayN2").value }
+      inputs: {
+        N: $("dayN").value,
+        N1: $("dayN1").value,
+        N2: $("dayN2").value
+      }
     };
 
-    // Auto-save ngay khi CHỐT để lưu lịch sử test theo ngày chốt
-    upsertDraftToHistory();
-    updateStats();
-    renderHistory();
-
     setChotUI({top1:res.top1, phu:res.phu, tier:res.tier, report:res.report, debug:res.debug});
-    setStatus("Đã chốt và đã lưu vào lịch sử (KQ để —). Khi có kết quả, bấm Lưu TRÚNG/SỊT để cập nhật.");
+    setStatus("Đã chốt. Bấm Lưu TRÚNG/SỊT để ghi lịch sử (con chốt và/hoặc con phụ).");
+  }
+
+  function upsertDraftToHistory(){
+    const hist = getHistory();
+    if(!lastDraft) return null;
+
+    // Update existing
+    if(lastDraftSavedId){
+      const idx = hist.findIndex(x=>String(x.id)===String(lastDraftSavedId));
+      if(idx>=0){
+        hist[idx] = lastDraft;
+        setHistory(hist);
+        return lastDraftSavedId;
+      }
+    }
+    // Insert new
+    hist.push(lastDraft);
+    setHistory(hist);
+    lastDraftSavedId = lastDraft.id;
+    return lastDraftSavedId;
   }
 
   function commitResult(isHit){
@@ -734,8 +737,9 @@
     upsertDraftToHistory();
     updateStats();
     renderHistory();
-    setStatus("Đã cập nhật KQ chốt.");
+    setStatus("Đã lưu vào lịch sử (KQ chốt).");
   }
+
   function commitPhuResult(isHit){
     if(!lastDraft || !lastDraft.phu){
       setStatus("Chưa có con phụ để lưu. Bấm CHỐT trước.");
@@ -745,7 +749,7 @@
     upsertDraftToHistory();
     updateStats();
     renderHistory();
-    setStatus("Đã cập nhật KQ phụ.");
+    setStatus("Đã lưu vào lịch sử (KQ phụ).");
   }
 
   function undoLast(){
@@ -768,7 +772,7 @@
   }
 
   function exportJSON(){
-    const data = {version:3, exportedAt:new Date().toISOString(), history:getHistory()};
+    const data = {version:2, exportedAt:new Date().toISOString(), history:getHistory()};
     const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -795,6 +799,7 @@
           if(!confirm("Import sẽ GỘP vào lịch sử hiện có. Tiếp tục?")) return;
           const hist=getHistory();
           const merged = hist.concat(list).filter(x=>x && x.id);
+          // dedupe by id
           const seen=new Set();
           const final=[];
           for(const r of merged){
