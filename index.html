@@ -2,876 +2,572 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SXMB MB REAL–RICKY (LOCKED) — CHỐT 1 CON/NGÀY</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>MB STABLE LOCK v2 — Chuẩn thi đấu</title>
   <style>
     :root{
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --text:#0b1220;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --good:#22c55e;
-      --bad:#ef4444;
-      --warn:#f59e0b;
-      --pill:#f3f4f6;
-      --blue:#2563eb;
+      --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
+      --accent:#21e6c1; --line:#233245; --danger:#ff4d6d; --warn:#ffcc66;
+      --rp:#1f8a3b; --r:#8a7a1f; --rk:#1f5f8a;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    header{padding:14px 14px 10px}
-    .title{font-weight:800;font-size:16px;letter-spacing:.2px}
-    .sub{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.35}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .chip{background:var(--pill);border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:12px;color:#111827}
-    main{max-width:820px;margin:0 auto;padding:0 12px 28px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:10px 0;box-shadow:0 1px 0 rgba(0,0,0,.02)}
-    .card h2{margin:0 0 10px;font-size:14px}
-    .toprow{display:flex;gap:8px;align-items:center;justify-content:space-between}
-    .btns{display:flex;gap:8px;align-items:center}
-    button{border:1px solid var(--line);background:#fff;color:#111827;border-radius:12px;padding:8px 10px;font-weight:700;cursor:pointer}
-    button:hover{background:#fafafa}
-    .btn-primary{background:#111827;color:#fff;border-color:#111827}
-    .btn-primary:hover{background:#0b1220}
-    .btn-good{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25)}
-    .btn-bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.25)}
-    .btn-warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.25)}
-    .btn-soft{background:var(--pill)}
-    textarea{width:100%;min-height:118px;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:13px;line-height:1.35;outline:none;background:#fff}
-    textarea:focus{border-color:rgba(37,99,235,.35);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
-    .label{color:var(--muted);font-size:12px;margin-top:6px}
-    input[type="text"]{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:13px;outline:none}
-    input[type="text"]:focus{border-color:rgba(37,99,235,.35);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
-    .muted{color:var(--muted)}
-    .statusline{margin-top:8px;color:var(--muted);font-size:12px}
-    .big{font-size:18px;font-weight:900}
-    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--pill);padding:6px 10px;border-radius:999px;font-size:12px}
-    .pill b{color:#111827}
-    .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .kbox{border:1px solid var(--line);border-radius:14px;padding:10px;background:#fff}
-    .kbox .h{font-size:12px;color:var(--muted)}
-    .kbox .v{font-size:16px;font-weight:900;margin-top:6px}
-    .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
-    table{width:100%;border-collapse:collapse;min-width:640px}
-    th,td{padding:10px 10px;border-bottom:1px solid var(--line);font-size:12px;text-align:left;white-space:nowrap}
-    th{color:var(--muted);font-weight:800;background:#fafafa}
-    tr:last-child td{border-bottom:0}
-    .tag{display:inline-flex;align-items:center;justify-content:center;padding:3px 8px;border-radius:999px;font-weight:900;font-size:12px}
-    .tag.realp{background:rgba(34,197,94,.12);color:#16a34a}
-    .tag.real{background:rgba(37,99,235,.10);color:var(--blue)}
-    .tag.ricky{background:rgba(168,85,247,.12);color:#7c3aed}
-    .icon{font-weight:900}
-    .icon.good{color:var(--good)}
-    .icon.bad{color:var(--bad)}
-    .danger{color:var(--bad);font-weight:800}
-    .small{font-size:11px}
-    details{margin-top:10px}
-    summary{cursor:pointer;color:var(--muted);font-weight:700}
-    pre{white-space:pre-wrap;word-break:break-word;background:#fafafa;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:11px}
+    body{
+      margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+      background:linear-gradient(180deg,#070a0f 0%, var(--bg) 100%);
+      color:var(--text);
+      padding:16px;
+      padding-bottom:calc(16px + env(safe-area-inset-bottom));
+    }
+    h1{margin:0 0 6px 0; font-size:20px}
+    .sub{color:var(--muted); font-size:13px; line-height:1.35; margin-bottom:12px}
+    .grid{display:grid; gap:12px}
+    .card{
+      background:rgba(18,26,36,.96);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    label{display:block; color:var(--muted); font-size:12px; margin-bottom:6px}
+    textarea{
+      width:100%; min-height:110px; resize:vertical;
+      background:#0c121b; color:var(--text);
+      border:1px solid var(--line); border-radius:12px;
+      padding:10px; font-size:14px; line-height:1.35; outline:none;
+    }
+    input[type="date"]{
+      width:100%; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line); background:#0c121b; color:var(--text);
+      font-size:14px;
+    }
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn{
+      border:0; border-radius:12px; padding:11px 14px; font-weight:800;
+      background:var(--accent); color:#001313; cursor:pointer;
+    }
+    .btn.secondary{background:#223244; color:var(--text); border:1px solid var(--line)}
+    .btn.danger{background:var(--danger); color:#140005}
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--line); background:#0c121b;
+      color:var(--muted); font-size:12px;
+    }
+    .pill strong{color:var(--text)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    .hr{height:1px; background:var(--line); margin:12px 0}
+    .tag{
+      display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:900;
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .tag.rp{background:rgba(31,138,59,.22); color:#c7ffdf; border-color:rgba(46,229,157,.35)}
+    .tag.r{background:rgba(138,122,31,.22); color:#fff1b8; border-color:rgba(255,204,102,.35)}
+    .tag.rk{background:rgba(31,95,138,.22); color:#cfe8ff; border-color:rgba(120,200,255,.28)}
+    .topbox{
+      border:1px solid rgba(255,77,109,.35);
+      background:rgba(255,77,109,.12);
+      border-radius:14px; padding:12px; margin-top:12px;
+    }
+    .big{font-size:28px; font-weight:950; letter-spacing:.8px}
+    table{width:100%; border-collapse:collapse; margin-top:10px}
+    th,td{border-bottom:1px solid var(--line); padding:8px 6px; text-align:center; font-size:13px}
+    th{color:var(--muted); font-weight:800}
+    .hint{color:var(--muted); font-size:12px; line-height:1.35; margin-top:8px}
+    .history-item{
+      border:1px solid var(--line); background:#0c121b; border-radius:14px;
+      padding:12px; display:grid; gap:8px;
+    }
+    .history-head{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center}
+    .smallbtn{
+      padding:8px 10px; border-radius:10px; border:1px solid var(--line);
+      background:#111a24; color:var(--text); cursor:pointer; font-weight:900; font-size:12px;
+    }
+    .smallbtn.danger{background:rgba(255,77,109,.12); border-color:rgba(255,77,109,.35); color:#ffd1db}
+    .smallbtn.ok{background:rgba(46,229,157,.12); border-color:rgba(46,229,157,.35); color:#c7ffdf}
+    .smallbtn.warn{background:rgba(255,204,102,.12); border-color:rgba(255,204,102,.35); color:#fff1b8}
   </style>
 </head>
 <body>
-<header>
-  <div class="title">SXMB MB REAL–RICKY (LOCKED) — CHỐT 1 CON/NGÀY</div>
-  <div class="chips">
-    <div class="chip">LOCKED</div>
-    <div class="chip">B2 = ĐẾM (3 ngày)</div>
-    <div class="chip">Selector + Patch(C)</div>
-    <div class="chip">Detect Shift = FLAG (chỉ ảnh hưởng Selector khi ON)</div>
-  </div>
+  <h1>MB STABLE LOCK v2 — Chuẩn thi đấu</h1>
   <div class="sub">
-    <b>QUY ƯỚC:</b> App chỉ thay đổi <b>giao diện + lưu lịch sử</b>. <b>KHÔNG</b> chỉnh/sửa hệ (scoring/lọc/tầng/selector).<br/>
-    Dán KQ vào Ngày N / N-1 / N-2 → bấm <b>CHỐT</b> để ra Con chốt (TOP 1) + Con phụ (tham khảo) + log B1→B9.
+    Nhập <b>D1–D2–D3</b> (dán nguyên format: <span class="mono">ĐB: ... G7: ...</span>) → hệ quét 00–99, phân tầng <b>REAL+/REAL/RICKY</b>, chốt <b>TOP 1</b>.
+    Có <b>lịch sử</b>, <b>ngày chốt</b>, <b>xóa lịch sử</b>, có <b>Safe Mode</b> và <b>2-loss brake</b> (dựa trên lịch sử ông đánh dấu Trúng/Trượt).
   </div>
-</header>
 
-<main>
-  <section class="card">
-    <div class="toprow">
-      <h2>Ngày N</h2>
-      <div class="btns">
-        <button class="btn-soft" data-sample="n">Mẫu</button>
-        <button class="btn-soft" data-clear="n">Xoá</button>
+  <div class="grid">
+    <div class="card">
+      <div class="row">
+        <div style="flex:1;min-width:180px">
+          <label>Ngày chốt</label>
+          <input id="pickDate" type="date" />
+        </div>
+        <div class="pill">D1 & D2 bắt buộc • D3 chỉ để đọc trạng thái</div>
       </div>
-    </div>
-    <textarea id="dayN" placeholder="Dán KQ ngày N (ngày mới nhất trong 3 ngày đọc)..."></textarea>
-  </section>
 
-  <section class="card">
-    <div class="toprow">
-      <h2>Ngày N-1</h2>
-      <div class="btns">
-        <button class="btn-soft" data-sample="n1">Mẫu</button>
-        <button class="btn-soft" data-clear="n1">Xoá</button>
+      <div class="hr"></div>
+
+      <label>D1 (mới nhất)</label>
+      <textarea id="inD1" placeholder="Dán KQ ngày D1 (format giải)"></textarea>
+
+      <label>D2</label>
+      <textarea id="inD2" placeholder="Dán KQ ngày D2 (format giải)"></textarea>
+
+      <label>D3 (đọc trạng thái)</label>
+      <textarea id="inD3" placeholder="Dán KQ ngày D3 (format giải)"></textarea>
+
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="runBtn">CHẠY & CHỐT</button>
+        <button class="btn secondary" id="clearBtn">XÓA Ô NHẬP</button>
+        <span class="pill">Trích D1: <strong id="c1">0</strong> • D2: <strong id="c2">0</strong> • D3: <strong id="c3">0</strong></span>
       </div>
-    </div>
-    <textarea id="dayN1" placeholder="Dán KQ ngày N-1..."></textarea>
-  </section>
 
-  <section class="card">
-    <div class="toprow">
-      <h2>Ngày N-2</h2>
-      <div class="btns">
-        <button class="btn-soft" data-sample="n2">Mẫu</button>
-        <button class="btn-soft" data-clear="n2">Xoá</button>
-      </div>
-    </div>
-    <textarea id="dayN2" placeholder="Dán KQ ngày N-2 (ngày cũ nhất trong 3 ngày đọc)..."></textarea>
-  </section>
-
-  <section class="card">
-    <div class="toprow">
-      <h2>Ngày soi (N+1)</h2>
-      <div class="btns">
-        <button id="btnChot" class="btn-primary">CHỐT</button>
-      </div>
-    </div>
-    <input id="dateNext" type="text" placeholder="VD: 24/2 (để ghi lịch sử)"/>
-    <div class="statusline" id="statusLine">Chưa chốt.</div>
-
-    <div class="row" style="margin-top:10px;">
-      <button id="btnHit" class="btn-good">✅ Lưu TRÚNG (Con chốt)</button>
-      <button id="btnMiss" class="btn-bad">❌ Lưu SỊT (Con chốt)</button>
-      <button id="btnPhuHit" class="btn-good">✅ Lưu TRÚNG (Con phụ)</button>
-      <button id="btnPhuMiss" class="btn-bad">❌ Lưu SỊT (Con phụ)</button>
-      <button id="btnUndo" class="btn-warn">↩︎ Xoá bản ghi gần nhất</button>
-    </div>
-
-    <div class="row" style="margin-top:10px;">
-      <span class="pill"><b>Con chốt:</b> <span id="chotVal" class="mono big">--</span></span>
-      <span class="pill"><b>Tầng:</b> <span id="tierVal" class="mono">--</span></span>
-      <span class="pill"><b>Con phụ:</b> <span id="phuVal" class="mono">--</span> <span class="muted small">(tham khảo)</span></span>
-    </div>
-
-    <details>
-      <summary>Report B1→B9 (xem chi tiết)</summary>
-      <pre id="reportBox">—</pre>
-    </details>
-
-    <details>
-      <summary>Debug JSON</summary>
-      <pre id="debugBox">—</pre>
-    </details>
-  </section>
-
-  <section class="card">
-    <h2>Thống kê CHỐT (Con 1)</h2>
-    <div class="kpi">
-      <div class="kbox">
-        <div class="h">Tổng</div>
-        <div class="v" id="kTotal">0</div>
-      </div>
-      <div class="kbox">
-        <div class="h">% Trúng (Con chốt)</div>
-        <div class="v" id="kHit">0%</div>
-      </div>
-      <div class="kbox">
-        <div class="h">Chuỗi sịt dài nhất</div>
-        <div class="v" id="kStreak">0</div>
-      </div>
-      <div class="kbox">
-        <div class="h">ShiftFlag ON (tỷ lệ)</div>
-        <div class="v" id="kShift">0%</div>
+      <div class="hint">
+        Trích số: lấy <b>2 số cuối</b> của mọi cụm số trong KQ (kể cả ĐB). Các chữ như “ĐB:”, “G1:” không ảnh hưởng.
       </div>
     </div>
 
-    <div class="hr" style="height:1px;background:var(--line);margin:12px 0;"></div>
+    <div class="card" id="outCard" style="display:none">
+      <div class="row" style="justify-content:space-between">
+        <div class="pill">Repeat-rate D2→D1: <strong id="repeatRate">--</strong></div>
+        <div class="pill">RISK: <strong id="risk">--</strong></div>
+        <div class="pill">Safe Mode: <strong id="safe">--</strong></div>
+        <div class="pill">2-loss brake: <strong id="brake">--</strong></div>
+      </div>
 
-    <h2>Tham khảo</h2>
-    <div class="kpi">
-      <div class="kbox">
-        <div class="h">% Trúng (Con phụ)</div>
-        <div class="v" id="kPhu">0%</div>
+      <div class="topbox" id="topBox">
+        <div style="font-weight:900">TOP 1 (Chốt 1 con)</div>
+        <div class="row" style="margin-top:6px; align-items:baseline">
+          <div class="big mono" id="topNum">--</div>
+          <div id="topTier"></div>
+          <div class="pill">Tổng: <strong id="topTotal">--</strong> • Cụm: <strong id="topCluster">--</strong> • Đầu/đuôi: <strong id="topHT">--</strong> • Lực: <strong id="topForce">--</strong></div>
+        </div>
+        <div class="hint" id="topWhy"></div>
       </div>
-      <div class="kbox">
-        <div class="h">% Trúng (≥1/2)</div>
-        <div class="v" id="kAny">0%</div>
-      </div>
-    </div>
-  </section>
 
-  <section class="card">
-    <div class="toprow">
-      <h2>Lịch sử</h2>
-      <div class="btns">
-        <span class="pill"><b>localStorage</b></span>
-        <button id="btnClearAll" class="btn-soft danger">Xoá toàn bộ lịch sử</button>
+      <div class="hr"></div>
+
+      <div class="row" style="justify-content:space-between; align-items:flex-end">
+        <div class="hint" style="margin:0">
+          Bảng xếp hạng: Total / Cluster / HeadTail / Force. Top mặc định 20.
+        </div>
+        <button class="btn secondary" id="toggleBtn">Hiện Top 50</button>
       </div>
+      <div id="rank"></div>
     </div>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Ngày</th>
-            <th>Con CHỐT</th>
-            <th>Tầng</th>
-            <th>Con PHỤ</th>
-            <th>KQ chốt</th>
-            <th>KQ phụ</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="historyBody"></tbody>
-      </table>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div style="font-weight:950">Lịch sử chốt</div>
+          <div class="hint" style="margin-top:4px">Ông có thể đánh dấu <b>Trúng</b> / <b>Trượt</b>. 2-loss brake sẽ dựa vào 2 bản ghi gần nhất bị đánh dấu Trượt.</div>
+        </div>
+        <div class="row">
+          <button class="btn secondary" id="copyBtn">COPY JSON</button>
+          <button class="btn danger" id="clearHistBtn">XÓA LỊCH SỬ</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div id="hist"></div>
     </div>
-    <div class="row" style="margin-top:10px;">
-      <button id="btnExport" class="btn-soft">Export JSON</button>
-      <button id="btnImport" class="btn-soft">Import JSON</button>
-    </div>
-    <div class="muted small" style="margin-top:6px;">
-      Gợi ý: Export để backup trước khi up Netlify / đổi máy.
-    </div>
-  </section>
-</main>
+  </div>
 
 <script>
-/* =========================
-   LOCKED ENGINE (KHÔNG SỬA HỆ)
-   - Chỉ dùng lại engine để tính TOP1, tier, report.
-   - UI + history là phần bổ sung.
-========================= */
-(function(){
+(() => {
   const $ = (id)=>document.getElementById(id);
-  const pad2 = (n)=> String(n).padStart(2,'0');
+  const KEY = "mb_stable_lock_v2_history";
 
+  function todayISO(){
+    const d=new Date();
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,"0");
+    const dd=String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dd}`;
+  }
+
+  function loadHist(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch(e){ return []; }
+  }
+  function saveHist(a){ localStorage.setItem(KEY, JSON.stringify(a)); }
+
+  // Parse pasted lottery text. Extract numeric tokens then last 2 digits.
   function extractLo(text){
-    const nums = (text||"").match(/\d+/g) || [];
-    const lo = [];
-    for(const s of nums){
-      if(s.length===1) lo.push(pad2(Number(s)));
-      else lo.push(s.slice(-2));
-    }
-    return lo.map(x=>pad2(parseInt(x,10)%100));
-  }
-  const unique = (arr)=> Array.from(new Set(arr));
-  function intersection(aSet, bSet){ let cnt=0; for(const v of aSet){ if(bSet.has(v)) cnt++; } return cnt; }
-  function countMap(arr){ const m=new Map(); for(const x of arr) m.set(x,(m.get(x)||0)+1); return m; }
-  function tailCounts(days){ const c=Array(10).fill(0); for(const day of days){ for(const x of day) c[parseInt(x[1],10)]++; } return c; }
-  function topKIndices(counts,k){ return counts.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]||a[1]-b[1]).slice(0,k).map(x=>x[1]); }
-  function classifyBoard(ov){ if(ov>=6) return "CHẠY"; if(ov>=3) return "ỔN"; return "RESET"; }
-
-  function phaseFlag(d2,d1,d0){
-    const s2=new Set(unique(d2)), s1=new Set(unique(d1)), s0=new Set(unique(d0));
-    const ov01=intersection(s0,s1), ov12=intersection(s1,s2);
-
-    function tailStats(day){
-      const c=Array(10).fill(0); for(const x of day) c[parseInt(x[1],10)]++;
-      const total=day.length||1;
-      const max=Math.max(...c);
-      const uniqueRate=unique(day).length/total;
-      const repeatRate=1-uniqueRate;
-      return {c,total,max,maxRate:max/total,uniqueRate,repeatRate};
-    }
-    const t1=tailStats(d1), t0=tailStats(d0);
-
-    let red=false, yellow=false, reason=[];
-    if(ov01<=2 && ov12>=3){ red=true; reason.push("ShockReset"); }
-    const peak=(t1.maxRate>=0.20 || t1.repeatRate>=0.40);
-    const diffuse=(t0.uniqueRate>=0.80 && t0.repeatRate<=0.25);
-    if(peak && diffuse){ yellow=true; reason.push("Peak→Diffuse"); }
-    const top1_1=topKIndices(t1.c,1)[0], top1_0=topKIndices(t0.c,1)[0];
-    if(ov01>=3 && ov01<=5 && top1_0!==top1_1){ yellow=true; reason.push("FalseRun"); }
-
-    if(red) return {flag:"RED", reason};
-    if(yellow) return {flag:"YELLOW", reason};
-    return {flag:"GREEN", reason:["Ổn định"]};
-  }
-
-  function hiddenForce(d2,d1,d0){
-    const days=[d2,d1,d0];
-    const tailPresence=Array(10).fill(0);
-    for(const day of days){
-      const pres=Array(10).fill(false);
-      for(const x of day) pres[parseInt(x[1],10)]=true;
-      for(let t=0;t<10;t++) if(pres[t]) tailPresence[t]+=1;
-    }
-    const hf1 = tailPresence.some(v=>v>=2) ? 1 : 0;
-
-    const all=d2.concat(d1).concat(d0);
-    const m=countMap(all);
-    let hf2=0;
-    for(const [num,_] of m.entries()){
-      const rev=num[1]+num[0];
-      if(rev!==num && m.has(rev)){ hf2=1; break; }
-    }
-    let kCount=0; for(const x of all) if(x[0]===x[1]) kCount++;
-    const hf3 = (kCount>=2) ? 1 : 0;
-
-    const score=hf1+hf2+hf3;
-    const parts=[]; if(hf1) parts.push("Chạm kéo"); if(hf2) parts.push("Đảo gõ"); if(hf3) parts.push("Kép/đôi");
-    return {score, parts};
-  }
-
-  function detectShift(d2,d1,d0){
-    function tailProfile(day){ const c=Array(10).fill(0); for(const x of day) c[parseInt(x[1],10)]++; return c; }
-    const c1=tailProfile(d1), c0=tailProfile(d0);
-    const top1_1=topKIndices(c1,1)[0], top1_0=topKIndices(c0,1)[0];
-    const drop = c0[top1_1] <= Math.floor(c1[top1_1]*0.5);
-    const adjacent = (Math.abs(top1_0-top1_1)===1) || (top1_0===0 && top1_1===9) || (top1_0===9 && top1_1===0);
-    const on = (top1_0!==top1_1) && (drop || adjacent);
-    const reason = on ? [`Top đuôi đổi ${top1_1}→${top1_0}`, drop? "đuôi cũ rơi" : "đuôi mới kề ±1"] : ["OFF"];
-    return {on, reason, from:top1_1, to:top1_0};
-  }
-
-  function deriveClusterStates(d2,d1,d0){
-    function tc(day){ const c=Array(10).fill(0); for(const x of day) c[parseInt(x[1],10)]++; return c; }
-    const c2=tc(d2), c1=tc(d1), c0=tc(d0);
-    const states=new Map();
-    for(let t=0;t<10;t++){
-      const pres=(c2[t]>0)+(c1[t]>0)+(c0[t]>0);
-      if(pres>=2 && (c2[t]+c1[t]+c0[t])>=6) states.set(t,"running");
-      else if(c2[t]==0 && c1[t]==0 && c0[t]>0) states.set(t,"open");
-      else if(c2[t]>0 && c1[t]>0 && c0[t] <= Math.floor(c1[t]*0.5) && c1[t]>=4) states.set(t,"dump");
-      else states.set(t,"normal");
-    }
-    return states;
-  }
-
-  function scoreAll(d1,d0, top3, clusterStates){
-    const m1=countMap(d1), m0=countMap(d0);
-    const nums=[...Array(100).keys()].map(i=>pad2(i));
+    const tokens = text.replace(/\r/g,"").split(/\s+/).map(s=>s.trim()).filter(Boolean);
     const out=[];
-    const inTopTail=(n)=> top3.includes(parseInt(n[1],10));
-    const hasRev=(n)=> (n[0]!==n[1]) && (m1.has(n[1]+n[0]) || m0.has(n[1]+n[0]));
-    const isDouble=(n)=> n[0]===n[1];
-
-    for(const n of nums){
-      const in1=m1.has(n), in0=m0.has(n);
-      let T=(in1&&in0)?6:((in1||in0)?3:0);
-
-      let L=0; if((m0.get(n)||0)>=2) L+=5; if(in0 && inTopTail(n)) L+=5;
-      let C=0; if(hasRev(n)) C+=3; if(isDouble(n)) C+=3; if(inTopTail(n)) C+=4;
-      let N=0; if(in1&&in0) N+=4; if(in1&&!in0) N+=3; if(inTopTail(n)) N+=3;
-
-      const st=clusterStates.get(parseInt(n[1],10))||"normal";
-      if(st==="running") N+=2; else if(st==="open") N+=1; else if(st==="dump") N-=2;
-      if(st==="running" && hasRev(n)) C+=1;
-      if(st==="running" && inTopTail(n)) C+=1;
-
-      N=Math.max(0,Math.min(10,N));
-      C=Math.max(0,Math.min(10,C));
-      L=Math.max(0,Math.min(10,L));
-      T=Math.max(0,Math.min(10,T));
-
-      const total=(N*0.40 + C*0.25 + L*0.20 + T*0.15);
-      out.push({n,N,C,L,T,total});
+    for(const t of tokens){
+      if(!/^\d+$/.test(t)) continue;
+      out.push(t.slice(-2).padStart(2,"0"));
     }
-    out.sort((a,b)=>b.total-a.total || a.n.localeCompare(b.n));
     return out;
   }
 
-  function tierize(scored){
-    const realp=[], real=[], ricky=[];
-    for(const s of scored){
-      if(s.total>=8.5) realp.push(s);
-      else if(s.total>=7.5) real.push(s);
-      else if(s.total>=6.5) ricky.push(s);
-    }
-    return {realp, real, ricky};
+  function freq(arr){
+    const m=new Map();
+    for(const x of arr) m.set(x,(m.get(x)||0)+1);
+    return m;
   }
 
-  function applyNoiseFilter(list, d1, d0){
-    const m1=countMap(d1), m0=countMap(d0);
-    return list.filter(s=>{
-      const in0=m0.has(s.n), in1=m1.has(s.n);
-      if(in0 && !in1 && s.total<7.5) return false;
-      return true;
-    });
+  function headTailCounts(arr){
+    const head=new Map(), tail=new Map();
+    for(const x of arr){
+      const h=x[0], t=x[1];
+      head.set(h,(head.get(h)||0)+1);
+      tail.set(t,(tail.get(t)||0)+1);
+    }
+    return {head,tail};
   }
 
-  function selectorPick(tiers, d1,d0, topTails, secondTails, clusterStates, phase, shift){
-    let pool=null, tierName="";
-    if(tiers.realp.length){ pool=tiers.realp.slice(); tierName="REAL+"; }
-    else if(tiers.real.length){ pool=tiers.real.slice(); tierName="REAL"; }
-    else { pool=tiers.ricky.slice(); tierName="RICKY"; }
+  function setTag(tier){
+    if(tier==="REAL+") return `<span class="tag rp">REAL+</span>`;
+    if(tier==="REAL") return `<span class="tag r">REAL</span>`;
+    return `<span class="tag rk">RICKY</span>`;
+  }
 
-    const m1=countMap(d1), m0=countMap(d0);
-    const isMultiD0=(n)=> (m0.get(n)||0)>=2;
-    const isChain2=(n)=> m1.has(n) && m0.has(n);
-    const isBait=(n)=> m1.has(n) && !m0.has(n);
-    const isRunning3=(n)=> clusterStates.get(parseInt(n[1],10))==="running";
-    const hasHoldForce=(n)=> isRunning3(n) || isBait(n);
+  function unionSet(a,b){ const s=new Set(a); for(const x of b) s.add(x); return s; }
 
-    // Patch(C) — chặn đa giải D0 nếu không có giữ lực
-    pool = pool.filter(s=> !(isMultiD0(s.n) && !hasHoldForce(s.n)) );
+  // Detect 2-loss brake: last 2 marked LOSE.
+  function twoLossBrake(hist){
+    const marked = hist.filter(x=>x.outcome==="LOSE").sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    return marked.length>=2; // last two loses exist (not necessarily consecutive calendar days)
+  }
 
-    const primary = shift.on ? secondTails : topTails;
-    const secondary = shift.on ? topTails : secondTails;
-    const inTail = (n, tails)=> tails.includes(parseInt(n[1],10));
+  function compute(D1,D2,D3,hist){
+    const f1=freq(D1), f2=freq(D2);
+    const U1=new Set(D1), U2=new Set(D2);
+    const inter=[...U1].filter(x=>U2.has(x));
+    const repeatRate = inter.length / (U1.size || 1);
 
-    function key(s){
-      const n=s.n;
-      const k1=inTail(n,primary)?1:0;
-      const run=isRunning3(n)?1:0;
-      const chain=isChain2(n)?1:0;
-      const multi=isMultiD0(n)?1:0;
-      const phaseBonus=(phase.flag==="RED" && isBait(n))?1:0;
-      const k2=inTail(n,secondary)?1:0;
-      const open=(clusterStates.get(parseInt(n[1],10))==="open")?1:0;
-      return [k1,run,chain,multi,phaseBonus,k2,open,s.total,-parseInt(n,10)];
+    const {head:hCount, tail:tCount} = headTailCounts(D1.concat(D2));
+    const hasHoldHT = [...hCount.values()].some(v=>v>=3) || [...tCount.values()].some(v=>v>=3);
+
+    // "cluster repeat >=2 numbers" proxy: total repeated numbers >=2
+    const totalRepeatNums = inter.length;
+    const hasClusterRepeat = totalRepeatNums >= 2;
+
+    // xả mạnh D1
+    const dupCount = [...f1.values()].filter(v=>v>=2).length;
+    const maxFreq = Math.max(0, ...f1.values());
+    const xaManh = (dupCount>=3) || (maxFreq>=3);
+
+    // RISK HIGH if any criteria
+    const riskHigh = (repeatRate < 0.30) || (!hasClusterRepeat) || (!hasHoldHT) || xaManh;
+    const safeMode = riskHigh;
+
+    const brake = twoLossBrake(hist);
+
+    const allNums = Array.from({length:100},(_,i)=>String(i).padStart(2,"0"));
+
+    // Dump cluster penalty: if head or tail too dense in D1 (>=5)
+    const {head:h1, tail:t1} = headTailCounts(D1);
+    const dumpHeads = new Set([...h1.entries()].filter(([k,v])=>v>=5).map(([k])=>k));
+    const dumpTails = new Set([...t1.entries()].filter(([k,v])=>v>=5).map(([k])=>k));
+
+    const union = unionSet(D1,D2); // for đảo/gương check
+
+    const rows=[];
+    for(const num of allNums){
+      // Force (locked)
+      let force=0;
+      const in1=U1.has(num), in2=U2.has(num);
+      const c1=f1.get(num)||0;
+
+      if(in1 && in2) force=3;
+      else if(in1) force=2;
+      else if(in2) force=1;
+
+      // D1 penalty rules (locked)
+      if(c1>=2) force -= 2;
+      else if(c1===1 && !in2) force -= 1;
+
+      // Cluster (max 4): +2 if repeat, +1 đảo/gương, +1 if repeat-cluster condition and this num repeats
+      let cluster=0;
+      if(in1 && in2) cluster += 2;
+
+      const rev = num[1]+num[0];
+      if((in1||in2) && union.has(rev) && rev!==num) cluster += 1;
+
+      if(hasClusterRepeat && in1 && in2) cluster += 1;
+
+      // Safe mode lowers cluster influence
+      if(safeMode) cluster = Math.max(0, cluster-1);
+
+      // Head/Tail
+      let headtail=0;
+      const head=num[0], tail=num[1];
+      const hc = (hCount.get(head)||0);
+      const tc = (tCount.get(tail)||0);
+      if(hc>=3) headtail += 2;
+      if(tc>=3) headtail += 2;
+
+      // Dump penalty
+      let dumpPenalty = 0;
+      if(in1 && (dumpHeads.has(head) || dumpTails.has(tail))) dumpPenalty -= 2;
+
+      const total = cluster + headtail + force + dumpPenalty;
+
+      // Tiering (locked)
+      const trues = [
+        cluster>=2, headtail>=2, force>=2
+      ].filter(Boolean).length;
+
+      let tier="RICKY";
+      if(total>=8 && cluster>=3 && c1<2 && dumpPenalty===0) tier="REAL+";
+      else if(total>=6 && trues>=2 && dumpPenalty===0) tier="REAL";
+      else if(total>=5 && (cluster>=2 || headtail>=2 || force>=2)) tier="RICKY";
+      else tier="RICKY";
+
+      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2});
     }
 
-    pool.sort((a,b)=>{
-      const ka=key(a), kb=key(b);
-      for(let i=0;i<ka.length;i++){ if(ka[i]!==kb[i]) return kb[i]-ka[i]; }
-      return 0;
-    });
+    // Base sort (selector tie-break, deterministic)
+    function baseCmp(a,b){
+      if(b.total!==a.total) return b.total-a.total;
+      if(b.cluster!==a.cluster) return b.cluster-a.cluster;
+      if(b.force!==a.force) return b.force-a.force;
+      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
+      if(a.c1!==b.c1) return a.c1-b.c1; // anti-dump
+      return a.num.localeCompare(b.num);
+    }
 
-    const best=pool[0]||null;
+    // Safe mode comparator for TOP1 (locked): Head/Tail > force2day > lower penalties > cluster > total
+    function safeCmp(a,b){
+      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
+      const a2 = (a.in1 && a.in2) ? 1 : 0;
+      const b2 = (b.in1 && b.in2) ? 1 : 0;
+      if(b2!==a2) return b2-a2;
+      // lower penalties (dump & d1 density)
+      if(a.c1!==b.c1) return a.c1-b.c1;
+      if(b.cluster!==a.cluster) return b.cluster-a.cluster;
+      if(b.total!==a.total) return b.total-a.total;
+      return a.num.localeCompare(b.num);
+    }
 
-    // tie group (ignore deterministic last element)
-    const tie=[];
-    if(best){
-      const kb=key(best);
-      for(const s of pool){
-        const ks=key(s);
-        let same=true;
-        for(let i=0;i<kb.length-1;i++){ if(ks[i]!==kb[i]) {same=false; break;} }
-        if(same) tie.push(s);
+    rows.sort(baseCmp);
+
+    // Selector chooses within tier order, but if brake ON -> do NOT select REAL+ (locked rule)
+    const candidates = {
+      rp: rows.filter(x=>x.tier==="REAL+"),
+      r: rows.filter(x=>x.tier==="REAL"),
+      rk: rows.filter(x=>x.tier==="RICKY"),
+    };
+
+    let poolName = "REAL+";
+    let pool = candidates.rp;
+
+    if(brake){
+      poolName = "REAL";
+      pool = candidates.r.length ? candidates.r : candidates.rk;
+    }else{
+      if(!pool.length){
+        poolName = "REAL";
+        pool = candidates.r.length ? candidates.r : candidates.rk;
       }
     }
 
-    // Con phụ: ứng viên đứng sau TOP1 trong pool (nếu có)
-    const phu = pool.length>=2 ? pool[1] : null;
-
-    const reason=[];
-    if(shift.on) reason.push("ShiftFlag ON → ưu tiên cụm bám");
-    reason.push(`Tier: ${tierName}`);
-    reason.push(`Cụm ưu tiên: đuôi ${primary.join(",")}`);
-    if(best) reason.push(`TOTAL: ${best.total.toFixed(2)}`);
-
-    return {tierName, top1:best, tie, reason, phu, poolCount:pool.length};
-  }
-
-  function reportText(ctx){
-    const L=[];
-    L.push("MB REAL–RICKY (LOCKED) — REPORT (B1→B9)");
-    L.push("--------------------------------------------------");
-    L.push(`Input sizes: N=${ctx.d0.length} · N-1=${ctx.d1.length} · N-2=${ctx.d2.length}`);
-    L.push("");
-    L.push("B1 — Trạng thái bảng");
-    L.push(`• Overlap N↔N-1: ${ctx.ov01} → ${classifyBoard(ctx.ov01)}`);
-    L.push(`• Overlap N-1↔N-2: ${ctx.ov12} → ${classifyBoard(ctx.ov12)}`);
-    L.push("");
-    L.push("B2 — Nhịp cụm bằng ĐẾM (3 ngày)");
-    L.push(`• Top đuôi: ${ctx.topTails.join(",")} | Bám #1: ${ctx.secondTails.join(",")}`);
-    L.push("");
-    L.push("B3 — Phase Flag");
-    L.push(`• ${ctx.phase.flag} (${ctx.phase.reason.join("; ")})`);
-    L.push("");
-    L.push("B3.1 — Detect Shift (FLAG)");
-    L.push(`• ShiftFlag: ${ctx.shift.on?"ON":"OFF"} (${ctx.shift.reason.join("; ")})`);
-    L.push("");
-    L.push("B4 — HF");
-    L.push(`• HF=${ctx.hf.score} (${ctx.hf.parts.join(", ")||"—"})`);
-    L.push("");
-    L.push("B5–B7 — Tầng số (cắt top để hiển thị)");
-    L.push(`• REAL+: ${ctx.realp.map(x=>x.n).join(" ")||"—"}`);
-    L.push(`• REAL : ${ctx.real.map(x=>x.n).join(" ")||"—"}`);
-    L.push(`• RICKY: ${ctx.ricky.map(x=>x.n).join(" ")||"—"}`);
-    L.push("");
-    L.push("B8 — Selector + Patch(C) + Tie-break cuối");
-    L.push(`• HÒA: ${(ctx.sel.tie&&ctx.sel.tie.length>1)?ctx.sel.tie.map(s=>s.n).join(" "):"—"}`);
-    L.push(`• TOP 1: ${ctx.sel.top1?ctx.sel.top1.n:"—"}`);
-    L.push(`• Con phụ: ${ctx.sel.phu?ctx.sel.phu.n:"—"}`);
-    L.push(`• Lý do: ${ctx.sel.reason.join(" | ")}`);
-    L.push("--------------------------------------------------");
-    return L.join("\n");
-  }
-
-  /* =========================
-     HISTORY (UI-only)
-  ========================= */
-  const HISTORY_KEY = "mb_rr_locked_history_v2"; // new key to avoid breaking old
-  const INPUT_KEY = "mb_rr_locked_inputs_v2";
-  let lastDraft = null; // latest "CHỐT" draft
-  let lastDraftSavedId = null; // id of draft saved/updated in history
-
-  function loadInputs(){
-    try{
-      const raw=localStorage.getItem(INPUT_KEY);
-      if(!raw) return;
-      const p=JSON.parse(raw);
-      $("dayN").value=p.n||"";
-      $("dayN1").value=p.n1||"";
-      $("dayN2").value=p.n2||"";
-      $("dateNext").value=p.next||"";
-    }catch(e){}
-  }
-  function saveInputs(){
-    const payload={n:$("dayN").value,n1:$("dayN1").value,n2:$("dayN2").value,next:$("dateNext").value,ts:Date.now()};
-    localStorage.setItem(INPUT_KEY, JSON.stringify(payload));
-  }
-
-  function getHistory(){
-    try{
-      const raw=localStorage.getItem(HISTORY_KEY);
-      return raw?JSON.parse(raw):[];
-    }catch(e){ return []; }
-  }
-  function setHistory(list){
-    try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(list)); }catch(e){ }
-  }
-
-  function icon(val){
-    if(val===true) return '<span class="icon good">✅</span>';
-    if(val===false) return '<span class="icon bad">❌</span>';
-    return '<span class="muted">—</span>';
-  }
-
-  function tierTag(t){
-    if(t==="REAL+") return '<span class="tag realp">REAL+</span>';
-    if(t==="REAL") return '<span class="tag real">REAL</span>';
-    return '<span class="tag ricky">RICKY</span>';
-  }
-
-  function renderHistory(){
-    const hist=getHistory().slice().sort((a,b)=> (b.ts||0)-(a.ts||0));
-    const tbody=$("historyBody");
-    tbody.innerHTML="";
-    hist.forEach((r,idx)=>{
-      const tr=document.createElement("tr");
-      tr.innerHTML = `
-        <td>${idx+1}</td>
-        <td class="mono">${(r.date||"").trim()||"—"}</td>
-        <td class="mono"><b>${r.chot||"—"}</b></td>
-        <td>${tierTag(r.tier||"RICKY")}</td>
-        <td class="mono">${r.phu||"—"}</td>
-        <td>${icon(r.kqChot)}</td>
-        <td>${icon(r.kqPhu)}</td>
-        <td><button class="btn-soft" data-del="${r.id}">Xoá</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    // bind delete
-    tbody.querySelectorAll("button[data-del]").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        const id=btn.getAttribute("data-del");
-        const list=getHistory().filter(x=>String(x.id)!==String(id));
-        setHistory(list);
-        updateStats();
-        renderHistory();
-      });
-    });
-  }
-
-  function longestMissStreak(hist){
-    // ordered by time ascending
-    const ordered = hist.slice().sort((a,b)=>(a.ts||0)-(b.ts||0));
-    let cur=0, best=0;
-    for(const r of ordered){
-      if(r.kqChot===false){ cur++; best=Math.max(best,cur); }
-      else if(r.kqChot===true){ cur=0; }
-      // if null: ignore streak boundary (do not reset)
-    }
-    return best;
-  }
-
-  function pct(n,d){ if(d<=0) return "0%"; return Math.round((n/d)*100) + "%"; }
-
-  function updateStats(){
-    const hist=getHistory();
-    const total=hist.length;
-    const hit=hist.filter(r=>r.kqChot===true).length;
-    const miss=hist.filter(r=>r.kqChot===false).length;
-
-    const phuHit=hist.filter(r=>r.kqPhu===true).length;
-    const phuKnown=hist.filter(r=>r.kqPhu===true || r.kqPhu===false).length;
-
-    const anyHit=hist.filter(r=> (r.kqChot===true) || (r.kqPhu===true)).length;
-    const anyKnown=hist.filter(r=> (r.kqChot===true || r.kqChot===false) || (r.kqPhu===true || r.kqPhu===false)).length;
-
-    const shiftOn=hist.filter(r=>r.shiftOn===true).length;
-
-    $("kTotal").textContent=String(total);
-    $("kHit").textContent=pct(hit, Math.max(1,(hit+miss)));
-    $("kStreak").textContent=String(longestMissStreak(hist));
-    $("kShift").textContent=pct(shiftOn, Math.max(1,total));
-
-    $("kPhu").textContent=pct(phuHit, Math.max(1,phuKnown));
-    $("kAny").textContent=pct(anyHit, Math.max(1,Math.max(total,anyKnown)));
-  }
-
-  function setStatus(text){
-    $("statusLine").textContent=text;
-  }
-
-  function setChotUI(res){
-    $("chotVal").textContent = res.top1 || "--";
-    $("phuVal").textContent  = res.phu || "--";
-    $("tierVal").textContent = res.tier || "--";
-    $("reportBox").textContent = res.report || "—";
-    $("debugBox").textContent = JSON.stringify(res.debug||{}, null, 2);
-  }
-
-  function runEngine(){
-    // UI: N is newest (D0), N-1 is (D-1), N-2 is (D-2)
-    const d0 = extractLo($("dayN").value);
-    const d1 = extractLo($("dayN1").value);
-    const d2 = extractLo($("dayN2").value);
-
-    // basic sanity
-    if(d0.length<18 || d1.length<18 || d2.length<18){
-      setStatus("Thiếu dữ liệu. Mỗi ngày nên có ~27 lô (tối thiểu 18).");
+    // choose TOP1
+    let top1;
+    if(safeMode){
+      const sortedPool = pool.slice().sort(safeCmp);
+      top1 = sortedPool[0];
+    }else{
+      top1 = pool[0];
     }
 
-    // B1
-    const s2=new Set(unique(d2)), s1=new Set(unique(d1)), s0=new Set(unique(d0));
-    const ov01=intersection(s0,s1);
-    const ov12=intersection(s1,s2);
-
-    // B2 (locked: count)
-    const tails = tailCounts([d2,d1,d0]);
-    const topTails = topKIndices(tails,1);
-    const secondTails = topKIndices(tails,2).slice(1);
-    const top3 = topKIndices(tails,3);
-
-    // B3, B4, Shift
-    const clusterStates = deriveClusterStates(d2,d1,d0);
-    const phase = phaseFlag(d2,d1,d0);
-    const shift = detectShift(d2,d1,d0);
-    const hf = hiddenForce(d2,d1,d0);
-
-    // B5-B7
-    const scored = scoreAll(d1,d0, top3, clusterStates);
-    let {realp, real, ricky} = tierize(scored);
-    realp = applyNoiseFilter(realp,d1,d0).slice(0,12);
-    real  = applyNoiseFilter(real,d1,d0).slice(0,18);
-    ricky = applyNoiseFilter(ricky,d1,d0).slice(0,24);
-
-    // B8 selector (+ shift override)
-    const sel = selectorPick({realp,real,ricky}, d1,d0, topTails, secondTails, clusterStates, phase, shift);
-
-    const ctx = {d2,d1,d0, ov01, ov12, topTails, secondTails, phase, shift, hf, realp, real, ricky, sel};
-    const rep = reportText(ctx);
-
-    const top1 = sel.top1 ? sel.top1.n : null;
-    const phu = sel.phu ? sel.phu.n : null;
-    const tier = sel.tierName || null;
-
-    const debug = {
-      overlap:{ov01,ov12, b1_ov01_state:classifyBoard(ov01), b1_ov12_state:classifyBoard(ov12)},
-      tails,
-      b2_topTails: topTails,
-      b2_secondTails: secondTails,
-      phase,
-      shift,
-      hf,
-      tiers:{
-        realp: realp.map(x=>({n:x.n,total:+x.total.toFixed(2)})),
-        real:  real.map(x=>({n:x.n,total:+x.total.toFixed(2)})),
-        ricky: ricky.map(x=>({n:x.n,total:+x.total.toFixed(2)})),
+    // For display: apply base sort already, but we want rank list by total desc -> baseCmp handles that.
+    return {
+      rows,
+      top1,
+      repeatRate,
+      riskHigh,
+      safeMode,
+      brake,
+      signals:{
+        totalRepeatNums,
+        hasHoldHT,
+        xaManh,
+        dupCount,
+        maxFreq
       },
-      selector:{
-        tier,
-        top1,
-        phu,
-        tie: (sel.tie||[]).map(x=>x.n),
-        reason: sel.reason
-      }
+      poolName
     };
-
-    return {top1, phu, tier, report: rep, debug, shiftOn: !!shift.on};
   }
 
-  function chot(){
-    saveInputs();
-    const res = runEngine();
-
-    // Draft record (unconfirmed hit/miss yet)
-    lastDraftSavedId = null;
-    lastDraft = {
-      id: String(Date.now()) + "_" + Math.random().toString(16).slice(2),
-      ts: Date.now(),
-      date: $("dateNext").value.trim(),
-      chot: res.top1,
-      phu: res.phu,
-      tier: res.tier,
-      kqChot: null,
-      kqPhu: null,
-      shiftOn: res.shiftOn,
-      // store report + debug to allow long-term audit
-      report: res.report,
-      debug: res.debug,
-      inputs: {
-        N: $("dayN").value,
-        N1: $("dayN1").value,
-        N2: $("dayN2").value
-      }
-    };
-
-    setChotUI({top1:res.top1, phu:res.phu, tier:res.tier, report:res.report, debug:res.debug});
-    setStatus("Đã chốt. Bấm Lưu TRÚNG/SỊT để ghi lịch sử (con chốt và/hoặc con phụ).");
+  function renderTable(rows, limit){
+    const top = rows.slice(0, limit);
+    let html = `<table><thead><tr>
+      <th>#</th><th>Số</th><th>Total</th><th>Cluster</th><th>HeadTail</th><th>Force</th><th>Penalty</th><th>Tầng</th>
+    </tr></thead><tbody>`;
+    top.forEach((r,i)=>{
+      html += `<tr>
+        <td>${i+1}</td>
+        <td class="mono" style="font-weight:950">${r.num}</td>
+        <td><b>${r.total}</b></td>
+        <td>${r.cluster}</td>
+        <td>${r.headtail}</td>
+        <td>${r.force}</td>
+        <td>${r.dumpPenalty}</td>
+        <td>${setTag(r.tier)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+    return html;
   }
 
-  function upsertDraftToHistory(){
-    const hist = getHistory();
-    if(!lastDraft) return null;
-
-    // Update existing
-    if(lastDraftSavedId){
-      const idx = hist.findIndex(x=>String(x.id)===String(lastDraftSavedId));
-      if(idx>=0){
-        hist[idx] = lastDraft;
-        setHistory(hist);
-        return lastDraftSavedId;
-      }
-    }
-    // Insert new
-    hist.push(lastDraft);
-    setHistory(hist);
-    lastDraftSavedId = lastDraft.id;
-    return lastDraftSavedId;
+  function summarize(info, top1){
+    const s = info.signals;
+    const parts = [];
+    parts.push(`Selector pool: <b>${info.poolName}</b>.`);
+    parts.push(`Repeat-rate: <span class="mono">${(info.repeatRate*100).toFixed(1)}%</span>, repeat nums: <b>${s.totalRepeatNums}</b>.`);
+    parts.push(`Hold head/tail: <b>${s.hasHoldHT ? "YES" : "NO"}</b>, xả mạnh D1: <b>${s.xaManh ? "YES" : "NO"}</b> (dup=${s.dupCount}, maxFreq=${s.maxFreq}).`);
+    parts.push(`TOP1 tie-break: Cụm → Lực → Đầu/đuôi → chống dày D1 (khi Safe Mode thì ưu tiên Đầu/đuôi → lực 2 ngày → chống dày).`);
+    return parts.join(" ");
   }
 
-  function commitResult(isHit){
-    if(!lastDraft || !lastDraft.chot){
-      setStatus("Chưa có bản chốt để lưu. Bấm CHỐT trước.");
+  function renderHist(){
+    const hist = loadHist().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    const box = $("hist");
+    if(hist.length===0){
+      box.innerHTML = `<div class="hint">Chưa có lịch sử.</div>`;
       return;
     }
-    lastDraft.kqChot = !!isHit;
-    upsertDraftToHistory();
-    updateStats();
-    renderHistory();
-    setStatus("Đã lưu vào lịch sử (KQ chốt).");
+    box.innerHTML = hist.map((it,idx)=>{
+      const out = it.outcome || "UNK";
+      const outTag = out==="WIN" ? `<span class="pill"><strong style="color:#2ee59d">TRÚNG</strong></span>` :
+                     out==="LOSE" ? `<span class="pill"><strong style="color:#ff4d6d">TRƯỢT</strong></span>` :
+                     `<span class="pill"><strong>CHƯA ĐÁNH DẤU</strong></span>`;
+      return `
+        <div class="history-item">
+          <div class="history-head">
+            <div class="pill">Ngày: <strong class="mono">${it.date}</strong></div>
+            <div class="pill">Chốt: <strong class="mono">${it.top1.num}</strong> ${setTag(it.top1.tier)}</div>
+            ${outTag}
+            <div class="row">
+              <button class="smallbtn ok" onclick="window.__mark(${idx},'WIN')">Trúng</button>
+              <button class="smallbtn warn" onclick="window.__mark(${idx},'LOSE')">Trượt</button>
+              <button class="smallbtn" onclick="window.__mark(${idx},'UNK')">Reset</button>
+              <button class="smallbtn danger" onclick="window.__del(${idx})">Xóa</button>
+            </div>
+          </div>
+          <div class="hint" style="margin:0">
+            Risk: <b>${it.meta.riskHigh ? "HIGH" : "NORMAL"}</b> • Safe: <b>${it.meta.safeMode ? "ON" : "OFF"}</b> • Repeat: <span class="mono">${(it.meta.repeatRate*100).toFixed(1)}%</span> • 2-loss brake (lúc chốt): <b>${it.meta.brake ? "ON" : "OFF"}</b>
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
-  function commitPhuResult(isHit){
-    if(!lastDraft || !lastDraft.phu){
-      setStatus("Chưa có con phụ để lưu. Bấm CHỐT trước.");
-      return;
-    }
-    lastDraft.kqPhu = !!isHit;
-    upsertDraftToHistory();
-    updateStats();
-    renderHistory();
-    setStatus("Đã lưu vào lịch sử (KQ phụ).");
-  }
-
-  function undoLast(){
-    const hist=getHistory().slice().sort((a,b)=>(b.ts||0)-(a.ts||0));
-    if(hist.length===0){ setStatus("Không có lịch sử để xoá."); return; }
-    const last=hist[0];
-    const rest=getHistory().filter(x=>String(x.id)!==String(last.id));
-    setHistory(rest);
-    updateStats();
-    renderHistory();
-    setStatus("Đã xoá bản ghi gần nhất.");
-  }
-
-  function clearAll(){
-    if(!confirm("Xoá toàn bộ lịch sử? Hành động này không khôi phục được.")) return;
-    setHistory([]);
-    updateStats();
-    renderHistory();
-    setStatus("Đã xoá toàn bộ lịch sử.");
-  }
-
-  function exportJSON(){
-    const data = {version:2, exportedAt:new Date().toISOString(), history:getHistory()};
-    const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href=url;
-    a.download="mb_rr_history.json";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  function importJSON(){
-    const inp = document.createElement("input");
-    inp.type="file";
-    inp.accept="application/json";
-    inp.onchange = ()=>{
-      const file=inp.files && inp.files[0];
-      if(!file) return;
-      const reader=new FileReader();
-      reader.onload = ()=>{
-        try{
-          const data=JSON.parse(String(reader.result||"{}"));
-          const list = (data.history && Array.isArray(data.history)) ? data.history : [];
-          if(!confirm("Import sẽ GỘP vào lịch sử hiện có. Tiếp tục?")) return;
-          const hist=getHistory();
-          const merged = hist.concat(list).filter(x=>x && x.id);
-          // dedupe by id
-          const seen=new Set();
-          const final=[];
-          for(const r of merged){
-            if(seen.has(r.id)) continue;
-            seen.add(r.id);
-            final.push(r);
-          }
-          setHistory(final);
-          updateStats();
-          renderHistory();
-          setStatus("Import xong.");
-        }catch(e){
-          alert("File JSON không hợp lệ.");
-        }
-      };
-      reader.readAsText(file);
-    };
-    inp.click();
-  }
-
-  // Samples
-  const SAMPLE = {
-    n: `ĐB: 67655\nG1: 11374\nG2: 55205 21535\nG3: 48054 88283 90399 42416 59902 57645\nG4: 1162 5668 4592 4642\nG5: 1722 1829 7715 0901 3426 7719\nG6: 396 332 669\nG7: 45 43 00 57`,
-    n1:`ĐB: 64512\nG1: 32888\nG2: 16801 47814\nG3: 26204 11555 31705 49009 68126 48716\nG4: 8217 9373 2208 8557\nG5: 8585 1495 1092 8317 7790 8648\nG6: 003 214 087\nG7: 30 88 09 33`,
-    n2:`ĐB: 44413\nG1: 07591\nG2: 33231 76046\nG3: 65697 99008 46145 79381 48609 12774\nG4: 4582 0612 6600 8162\nG5: 6341 0847 5564 4777 7500 8744\nG6: 243 887 936\nG7: 91 14 96 09`
+  window.__del = (uiIdx)=>{
+    const hist = loadHist().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    hist.splice(uiIdx,1);
+    saveHist(hist);
+    renderHist();
   };
 
-  // Bind UI
-  $("btnChot").addEventListener("click", chot);
-  $("btnHit").addEventListener("click", ()=>commitResult(true));
-  $("btnMiss").addEventListener("click", ()=>commitResult(false));
-  $("btnPhuHit").addEventListener("click", ()=>commitPhuResult(true));
-  $("btnPhuMiss").addEventListener("click", ()=>commitPhuResult(false));
-  $("btnUndo").addEventListener("click", undoLast);
-  $("btnClearAll").addEventListener("click", clearAll);
-  $("btnExport").addEventListener("click", exportJSON);
-  $("btnImport").addEventListener("click", importJSON);
+  window.__mark = (uiIdx, val)=>{
+    const hist = loadHist().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    hist[uiIdx].outcome = val;
+    saveHist(hist);
+    renderHist();
+  };
 
-  document.querySelectorAll("button[data-sample]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const k=btn.getAttribute("data-sample");
-      if(k==="n") $("dayN").value=SAMPLE.n;
-      if(k==="n1") $("dayN1").value=SAMPLE.n1;
-      if(k==="n2") $("dayN2").value=SAMPLE.n2;
-      saveInputs();
-      setStatus("Đã dán mẫu.");
-    });
-  });
-  document.querySelectorAll("button[data-clear]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const k=btn.getAttribute("data-clear");
-      if(k==="n") $("dayN").value="";
-      if(k==="n1") $("dayN1").value="";
-      if(k==="n2") $("dayN2").value="";
-      saveInputs();
-      setStatus("Đã xoá.");
-    });
-  });
+  let showLimit = 20;
 
-  // Auto save inputs on typing (debounced)
-  let t=null;
-  ["dayN","dayN1","dayN2","dateNext"].forEach(id=>{
-    $(id).addEventListener("input", ()=>{
-      if(t) clearTimeout(t);
-      t=setTimeout(saveInputs, 350);
-    });
-  });
+  function run(){
+    const date = $("pickDate").value || todayISO();
+    const raw1 = $("inD1").value || "";
+    const raw2 = $("inD2").value || "";
+    const raw3 = $("inD3").value || "";
 
-  // Init
-  loadInputs();
-  updateStats();
-  renderHistory();
+    const D1 = extractLo(raw1);
+    const D2 = extractLo(raw2);
+    const D3 = extractLo(raw3);
+
+    $("c1").textContent = String(D1.length);
+    $("c2").textContent = String(D2.length);
+    $("c3").textContent = String(D3.length);
+
+    if(D1.length===0 || D2.length===0){
+      alert("Cần dán ít nhất D1 và D2 (để chấm điểm 2 ngày).");
+      return;
+    }
+
+    const histNow = loadHist();
+    const info = compute(D1,D2,D3,histNow);
+
+    $("outCard").style.display = "block";
+    $("repeatRate").textContent = (info.repeatRate*100).toFixed(1) + "%";
+    $("risk").textContent = info.riskHigh ? "RISK HIGH" : "NORMAL";
+    $("safe").textContent = info.safeMode ? "ON" : "OFF";
+    $("brake").textContent = info.brake ? "ON" : "OFF";
+
+    $("topNum").textContent = info.top1.num;
+    $("topTier").innerHTML = setTag(info.top1.tier);
+    $("topTotal").textContent = String(info.top1.total);
+    $("topCluster").textContent = String(info.top1.cluster);
+    $("topHT").textContent = String(info.top1.headtail);
+    $("topForce").textContent = String(info.top1.force);
+    $("topWhy").innerHTML = summarize(info, info.top1);
+
+    $("rank").innerHTML = renderTable(info.rows, showLimit);
+
+    // Save history (overwrite same date)
+    const item = {
+      date,
+      top1: {num: info.top1.num, tier: info.top1.tier, total: info.top1.total, cluster: info.top1.cluster, headtail: info.top1.headtail, force: info.top1.force},
+      meta: { riskHigh: info.riskHigh, safeMode: info.safeMode, brake: info.brake, repeatRate: info.repeatRate },
+      raw: { D1: raw1, D2: raw2, D3: raw3 },
+      outcome: "UNK"
+    };
+
+    const idx = histNow.findIndex(x=>x.date===date);
+    if(idx>=0) histNow[idx]=item; else histNow.push(item);
+    saveHist(histNow);
+    renderHist();
+
+    setTimeout(()=> $("outCard").scrollIntoView({behavior:"smooth", block:"start"}), 50);
+  }
+
+  function clearInputs(){
+    $("inD1").value=""; $("inD2").value=""; $("inD3").value="";
+    $("c1").textContent="0"; $("c2").textContent="0"; $("c3").textContent="0";
+  }
+
+  function toggle(){
+    showLimit = (showLimit===20) ? 50 : 20;
+    $("toggleBtn").textContent = (showLimit===20) ? "Hiện Top 50" : "Chỉ Top 20";
+    // rerun rank view if outCard shown
+    if($("outCard").style.display==="none") return;
+    const D1 = extractLo($("inD1").value||"");
+    const D2 = extractLo($("inD2").value||"");
+    const D3 = extractLo($("inD3").value||"");
+    const info = compute(D1,D2,D3, loadHist());
+    $("rank").innerHTML = renderTable(info.rows, showLimit);
+  }
+
+  function clearHistory(){
+    if(!confirm("Xóa toàn bộ lịch sử chốt trên máy?")) return;
+    localStorage.removeItem(KEY);
+    renderHist();
+  }
+
+  function copyJSON(){
+    const data = loadHist();
+    const txt = JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(txt).then(()=>{
+      alert("Đã copy JSON lịch sử vào clipboard.");
+    }).catch(()=>{
+      prompt("Copy JSON:", txt);
+    });
+  }
+
+  // init
+  $("pickDate").value = todayISO();
+  $("runBtn").addEventListener("click", run);
+  $("clearBtn").addEventListener("click", clearInputs);
+  $("toggleBtn").addEventListener("click", toggle);
+  $("clearHistBtn").addEventListener("click", clearHistory);
+  $("copyBtn").addEventListener("click", copyJSON);
+  renderHist();
 })();
 </script>
 </body>
