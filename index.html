@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v2.3.1 — CORE LOCK (D3 + Anti-HeadTail)</title>
+  <title>MB STABLE LOCK v2.3.2 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v2.3.1 — CORE LOCK</h1>
+  <h1>MB STABLE LOCK v2.3.2 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
   <div class="sub">
     v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
     <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
@@ -133,6 +133,7 @@
         <div class="pill">RR23 (D3→D2): <strong id="rr23">--</strong></div>
         <div class="pill">PHA: <strong id="phase">--</strong></div>
         <div class="pill">NHỊP: <strong id="rhythm">--</strong></div>
+        <div class="pill">Cooldown(3d): <strong id="cd">--</strong></div>
         <div class="pill">RISK: <strong id="risk">--</strong></div>
         <div class="pill">Safe: <strong id="safe">--</strong></div>
         <div class="pill">2-loss brake: <strong id="brake">--</strong></div>
@@ -265,7 +266,24 @@
     return s; // 0..2
   }
 
-  function compute(D1,D2,D3,hist){
+  // Cooldown 3 ngày: cấm TOP1 trùng số đã chốt trong 3 ngày gần nhất (theo lịch sử).
+  function cooldownSet(hist, currentDate, days=3){
+    const sorted = hist.slice().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    const set = new Set();
+    for(const it of sorted){
+      if(!it.date || it.date===currentDate) continue;
+      const n = it.top1 && it.top1.num;
+      if(typeof n === "string" && /^\d{2}$/.test(n)){
+        set.add(n);
+        if(set.size>=days) break;
+      }
+    }
+    return set;
+  }
+
+
+  function compute(D1,D2,D3,hist,currentDate){
+    const cdSet = cooldownSet(hist, currentDate || todayISO(), 3);
     const f1=freq(D1);
     const U1=new Set(D1), U2=new Set(D2), U3=new Set(D3);
     const inter12=[...U1].filter(x=>U2.has(x));
@@ -337,6 +355,12 @@
       else if(total>=6 && trues>=2 && dumpPenalty===0) tier="REAL";
       else tier="RICKY";
 
+      // REAL+ chỉ hợp lệ khi PHA GIỮ (khác pha giữ thì tự hạ xuống REAL nếu đủ điều kiện)
+      if(tier==="REAL+" && phase!=="PHA GIỮ"){
+        if(total>=6 && trues>=2 && dumpPenalty===0) tier="REAL";
+        else tier="RICKY";
+      }
+
       // ===== SELECTOR GROUP by PHASE (same as v2.3) =====
       let group=3;
       if(phase==="PHA BẬT"){
@@ -366,12 +390,15 @@
       // Anti-HeadTail-only BAN: Cluster=0 & Force=1 (tránh số bám đầu/đuôi rác)
       const antiHTOnly = (cluster===0 && force===1);
 
+      // Cooldown BAN (3 ngày)
+      const cdBan = cdSet.has(num);
+
       // banRank: 1 means "cannot be TOP1"
-      const banRank = (hardBan || antiHTOnly) ? 1 : 0;
+      const banRank = (hardBan || antiHTOnly || cdBan) ? 1 : 0;
 
       const nb = neighborSupport(num, unionSet);
 
-      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2,in3,group,hardBan,antiHTOnly,banRank,nb});
+      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2,in3,group,hardBan,antiHTOnly,cdBan,banRank,nb});
     }
 
     // Ranking table comparator (unchanged)
@@ -423,7 +450,7 @@
     const top1 = rows.slice().sort(topCmp)[0];
     rows.sort(rankCmp);
 
-    return { rows, top1, rr12, rr23, phase, rhythm, riskHigh, safeMode, brake };
+    return { rows, top1, rr12, rr23, phase, rhythm, riskHigh, safeMode, brake, cdSet };
   }
 
   function renderTable(rows, limit){
@@ -434,7 +461,8 @@
     top.forEach((r,i)=>{
       const flags = [
         r.hardBan ? "⛔3D" : "",
-        r.antiHTOnly ? "⛔HT" : ""
+        r.antiHTOnly ? "⛔HT" : "",
+        r.cdBan ? "⛔CD" : ""
       ].filter(Boolean).join(" ");
       html += `<tr>
         <td>${i+1}</td>
@@ -454,6 +482,7 @@
   function topExplain(info){
     const t = info.top1;
     const parts=[];
+    const cdList = Array.from(info.cdSet||[]).join(", ") || "--";
     parts.push(`<b>${info.phase}</b> • RR12=${(info.rr12*100).toFixed(1)}%`);
     parts.push(info.rr23===null ? `• RR23=-- (NO D3)` : `• RR23=${(info.rr23*100).toFixed(1)}%`);
     parts.push(`• Nhịp: <b>${info.rhythm}</b>`);
@@ -534,13 +563,14 @@
     }
 
     const histNow = loadHist();
-    const info = compute(D1,D2,D3,histNow);
+    const info = compute(D1,D2,D3,histNow, date);
 
     $("outCard").style.display = "block";
     $("rr12").textContent = (info.rr12*100).toFixed(1) + "%";
     $("rr23").textContent = (info.rr23===null) ? "--" : (info.rr23*100).toFixed(1) + "%";
     $("phase").textContent = info.phase;
     $("rhythm").textContent = info.rhythm;
+    $("cd").textContent = Array.from(info.cdSet||[]).join(", ") || "--";
     $("risk").textContent = info.riskHigh ? "RISK HIGH" : "NORMAL";
     $("safe").textContent = info.safeMode ? "ON" : "OFF";
     $("brake").textContent = info.brake ? "ON" : "OFF";
@@ -584,7 +614,7 @@
     const D1 = extractLo($("inD1").value||"");
     const D2 = extractLo($("inD2").value||"");
     const D3 = extractLo($("inD3").value||"");
-    const info = compute(D1,D2,D3, loadHist());
+    const info = compute(D1,D2,D3, loadHist(), ($('pickDate').value||todayISO()));
     $("rank").innerHTML = renderTable(info.rows, showLimit);
   }
 
