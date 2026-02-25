@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v2.3 — CORE LOCK (Phase + D3)</title>
+  <title>MB STABLE LOCK v2.3.1 — CORE LOCK (D3 + Anti-HeadTail)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,13 +88,11 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v2.3 — CORE LOCK</h1>
+  <h1>MB STABLE LOCK v2.3.1 — CORE LOCK</h1>
   <div class="sub">
-    Giữ nguyên UI. Selector lõi theo pha + D3:
-    <b>RR12</b>=repeat(D1∩D2)/unique(D1) → pha chính.
-    <b>RR23</b>=repeat(D2∩D3)/unique(D2) → nhận nhịp/đổi pha.
-    <b>HARD BAN</b>: số xuất hiện <b>D3–D2–D1</b> bị cấm tuyệt đối TOP1.
-    Giữ <b>phạt dày D1</b> (freq D1 ≥2) như trước.
+    v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
+    <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
+    <b>tie-break</b> không chọn số nhỏ: dùng <b>NeighborSupport</b> → <b>không nằm D3</b> → cuối cùng chọn số <b>lớn hơn</b>.
   </div>
 
   <div class="grid">
@@ -104,7 +102,7 @@
           <label>Ngày chốt</label>
           <input id="pickDate" type="date" />
         </div>
-        <div class="pill">D1 & D2 bắt buộc • D3 khuyến nghị để đọc nhịp</div>
+        <div class="pill">D1 & D2 bắt buộc • D3 khuyến nghị</div>
       </div>
 
       <div class="hr"></div>
@@ -115,7 +113,7 @@
       <label>D2</label>
       <textarea id="inD2" placeholder="Dán KQ ngày D2 (format giải)"></textarea>
 
-      <label>D3 (đọc nhịp + HARD BAN 3 ngày)</label>
+      <label>D3 (nhịp + HARD BAN 3 ngày)</label>
       <textarea id="inD3" placeholder="Dán KQ ngày D3 (format giải)"></textarea>
 
       <div class="row" style="margin-top:10px">
@@ -145,7 +143,7 @@
         <div class="row" style="margin-top:6px; align-items:baseline">
           <div class="big mono" id="topNum">--</div>
           <div id="topTier"></div>
-          <div class="pill">Tổng: <strong id="topTotal">--</strong> • Cụm: <strong id="topCluster">--</strong> • Đầu/đuôi: <strong id="topHT">--</strong> • Lực: <strong id="topForce">--</strong></div>
+          <div class="pill">Tổng: <strong id="topTotal">--</strong> • Cụm: <strong id="topCluster">--</strong> • Đầu/đuôi: <strong id="topHT">--</strong> • Lực: <strong id="topForce">--</strong> • Neighbor: <strong id="topNb">--</strong></div>
         </div>
         <div class="hint" id="topWhy"></div>
       </div>
@@ -178,6 +176,7 @@
 <script>
 (() => {
   const $ = (id)=>document.getElementById(id);
+  // giữ nguyên key để không mất lịch sử bản v2.3
   const KEY = "mb_stable_lock_v23_history";
 
   function todayISO(){
@@ -233,9 +232,9 @@
     return decided[0].outcome==="LOSE" && decided[1].outcome==="LOSE";
   }
 
-  function detectPhase(rr12){
-    if(rr12 < 0.25) return "PHA BẬT";
-    if(rr12 >= 0.30) return "PHA GIỮ";
+  function detectPhase(rr){
+    if(rr < 0.25) return "PHA BẬT";
+    if(rr >= 0.30) return "PHA GIỮ";
     return "TRUNG TÍNH";
   }
 
@@ -255,6 +254,17 @@
     return 2;
   }
 
+  function neighborSupport(num, unionSet){
+    // objective tie-break: hàng xóm +/-1 có mặt trong union
+    const n = parseInt(num,10);
+    const left = String((n+99)%100).padStart(2,"0");
+    const right = String((n+1)%100).padStart(2,"0");
+    let s=0;
+    if(unionSet.has(left)) s++;
+    if(unionSet.has(right)) s++;
+    return s; // 0..2
+  }
+
   function compute(D1,D2,D3,hist){
     const f1=freq(D1);
     const U1=new Set(D1), U2=new Set(D2), U3=new Set(D3);
@@ -269,7 +279,7 @@
     }
     const rhythm = detectRhythm(rr12, rr23);
 
-    // diagnostics like v2
+    // diagnostic
     const {head:hCount, tail:tCount} = headTailCounts(D1.concat(D2));
     const hasHoldHT = [...hCount.values()].some(v=>v>=3) || [...tCount.values()].some(v=>v>=3);
     const hasClusterRepeat = inter12.length >= 2;
@@ -281,7 +291,7 @@
 
     const brake = twoLossBrake(hist);
 
-    const union = new Set(D1.concat(D2));
+    const unionSet = new Set(D1.concat(D2));
 
     const rows=[];
     for(let i=0;i<100;i++){
@@ -289,34 +299,31 @@
       const in1=U1.has(num), in2=U2.has(num), in3=U3.has(num);
       const c1=f1.get(num)||0;
 
-      // HARD BAN 3-day run
-      const hardBan = (D3.length>0) ? (in1 && in2 && in3) : false;
-
-      // Force
+      // ===== FORCE =====
       let force=0;
       if(in1 && in2) force=3;
       else if(in1) force=2;
       else if(in2) force=1;
 
-      // D1 penalty (phạt như trước)
+      // phạt dày D1 (giữ nguyên)
       if(c1>=2) force -= 2;
       else if(c1===1 && !in2) force -= 1;
 
-      // Cluster
+      // ===== CLUSTER =====
       let cluster=0;
       if(in1 && in2) cluster += 2;
       const rev = num[1]+num[0];
-      if((in1||in2) && union.has(rev) && rev!==num) cluster += 1;
+      if((in1||in2) && unionSet.has(rev) && rev!==num) cluster += 1;
       if(hasClusterRepeat && in1 && in2) cluster += 1;
       if(safeMode) cluster = Math.max(0, cluster-1);
 
-      // Head/Tail
+      // ===== HEAD/TAIL =====
       let headtail=0;
       const head=num[0], tail=num[1];
       if((hCount.get(head)||0) >= 3) headtail += 2;
       if((tCount.get(tail)||0) >= 3) headtail += 2;
 
-      // Dump penalty (mềm)
+      // ===== DUMP penalty mềm =====
       let dumpPenalty=0;
       const {head:h1, tail:t1} = headTailCounts(D1);
       if(in1 && ((h1.get(head)||0) >= 5 || (t1.get(tail)||0) >= 5)) dumpPenalty -= 2;
@@ -330,8 +337,7 @@
       else if(total>=6 && trues>=2 && dumpPenalty===0) tier="REAL";
       else tier="RICKY";
 
-      // ===== V2.3 SELECTOR GROUP =====
-      // Group by phase
+      // ===== SELECTOR GROUP by PHASE (same as v2.3) =====
       let group=3;
       if(phase==="PHA BẬT"){
         if(in2 && !in1) group=1;
@@ -350,37 +356,68 @@
         else group=4;
       }
 
-      // phạt dày D1 (freq>=2) như trước (đẩy xuống)
+      // phạt dày D1 (freq>=2) đẩy xuống
       if(c1>=2) group += 2;
 
-      // HARD BAN overrides (cấm tuyệt đối TOP1)
-      const banRank = hardBan ? 1 : 0; // 1 means banned
+      // ===== BANS =====
+      // HARD BAN: D3-D2-D1
+      const hardBan = (D3.length>0) ? (in1 && in2 && in3) : false;
 
-      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2,in3,group,hardBan,banRank});
+      // Anti-HeadTail-only BAN: Cluster=0 & Force=1 (tránh số bám đầu/đuôi rác)
+      const antiHTOnly = (cluster===0 && force===1);
+
+      // banRank: 1 means "cannot be TOP1"
+      const banRank = (hardBan || antiHTOnly) ? 1 : 0;
+
+      const nb = neighborSupport(num, unionSet);
+
+      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2,in3,group,hardBan,antiHTOnly,banRank,nb});
     }
 
-    // Table rank (like v2): by total etc.
+    // Ranking table comparator (unchanged)
     function rankCmp(a,b){
       if(b.total!==a.total) return b.total-a.total;
       if(b.cluster!==a.cluster) return b.cluster-a.cluster;
       if(b.headtail!==a.headtail) return b.headtail-a.headtail;
       if(b.force!==a.force) return b.force-a.force;
       if(a.c1!==b.c1) return a.c1-b.c1;
+      // keep stable: show smaller first in table (display-only)
       return a.num.localeCompare(b.num);
     }
 
-    // TOP selection comparator (CORE LOCK + HARD BAN)
+    // TOP selection comparator (CORE LOCK + bans + new tie-break)
     function topCmp(a,b){
-      if(a.banRank!==b.banRank) return a.banRank-b.banRank;       // banned always loses
-      if(a.group!==b.group) return a.group-b.group;               // phase group
+      // banned always loses
+      if(a.banRank!==b.banRank) return a.banRank-b.banRank;
+
+      // phase group first
+      if(a.group!==b.group) return a.group-b.group;
+
+      // tier
       const ta=tierRank(a.tier), tb=tierRank(b.tier);
-      if(ta!==tb) return ta-tb;                                   // stronger tier within same group
+      if(ta!==tb) return ta-tb;
+
+      // strong structure
       if(b.headtail!==a.headtail) return b.headtail-a.headtail;
       if(b.cluster!==a.cluster) return b.cluster-a.cluster;
       if(b.force!==a.force) return b.force-a.force;
+
+      // new: neighbor support (objective, not "small number")
+      if(b.nb!==a.nb) return b.nb-a.nb;
+
+      // new: prefer not in D3 (avoid carry/xả)
+      const aNotD3 = a.in3 ? 0 : 1;
+      const bNotD3 = b.in3 ? 0 : 1;
+      if(bNotD3!==aNotD3) return bNotD3-aNotD3;
+
+      // existing: avoid dày D1
       if(a.c1!==b.c1) return a.c1-b.c1;
+
+      // total as backstop
       if(b.total!==a.total) return b.total-a.total;
-      return a.num.localeCompare(b.num);
+
+      // final fallback: choose larger number (deterministic, not "small")
+      return b.num.localeCompare(a.num);
     }
 
     const top1 = rows.slice().sort(topCmp)[0];
@@ -392,17 +429,21 @@
   function renderTable(rows, limit){
     const top = rows.slice(0, limit);
     let html = `<table><thead><tr>
-      <th>#</th><th>Số</th><th>Total</th><th>Cluster</th><th>HeadTail</th><th>Force</th><th>Penalty</th><th>Tầng</th>
+      <th>#</th><th>Số</th><th>Total</th><th>Cluster</th><th>HeadTail</th><th>Force</th><th>Neighbor</th><th>Tầng</th>
     </tr></thead><tbody>`;
     top.forEach((r,i)=>{
+      const flags = [
+        r.hardBan ? "⛔3D" : "",
+        r.antiHTOnly ? "⛔HT" : ""
+      ].filter(Boolean).join(" ");
       html += `<tr>
         <td>${i+1}</td>
-        <td class="mono" style="font-weight:950">${r.num}${r.hardBan ? " ⛔" : ""}</td>
+        <td class="mono" style="font-weight:950">${r.num}${flags ? " <span title='BAN'>"+flags+"</span>" : ""}</td>
         <td><b>${r.total}</b></td>
         <td>${r.cluster}</td>
         <td>${r.headtail}</td>
         <td>${r.force}</td>
-        <td>${r.dumpPenalty}</td>
+        <td>${r.nb}</td>
         <td>${setTag(r.tier)}</td>
       </tr>`;
     });
@@ -416,19 +457,12 @@
     parts.push(`<b>${info.phase}</b> • RR12=${(info.rr12*100).toFixed(1)}%`);
     parts.push(info.rr23===null ? `• RR23=-- (NO D3)` : `• RR23=${(info.rr23*100).toFixed(1)}%`);
     parts.push(`• Nhịp: <b>${info.rhythm}</b>`);
-    parts.push(`<br>Chọn theo ưu tiên: <b>HARD BAN (D3–D2–D1) → group theo pha → tier → headtail → cluster → force → chống dày D1</b>.`);
-    if(t.hardBan) parts.push(`<br><b>NOTE:</b> số này bị HARD BAN nhưng vẫn xuất hiện ở bảng tổng; TOP1 sẽ không chọn số bị ban.`);
-    // Explain why chosen
-    parts.push(`<br>TOP1 ${t.num}: group=${t.group}, tier=${t.tier}, D1freq=${t.c1}, in(D2,D1)=(${t.in2?'1':'0'},${t.in1?'1':'0'}), inD3=${t.in3?'1':'0'}.`);
-    if(D3RequiredButMissing(info)){
-      parts.push(`<br><b>CẢNH BÁO:</b> chưa dán D3 nên HARD BAN 3 ngày không hoạt động.`);
+    parts.push(`<br>Ưu tiên: <b>BAN</b> → group pha → tier → headtail → cluster → force → neighbor → tránh D3 → tránh dày D1.`);
+    parts.push(`<br>TOP1 ${t.num}: group=${t.group}, tier=${t.tier}, D1freq=${t.c1}, neighbor=${t.nb}, inD3=${t.in3?'1':'0'}.`);
+    if(info.rr23===null){
+      parts.push(`<br><b>CẢNH BÁO:</b> chưa dán D3 nên BAN 3 ngày không hoạt động.`);
     }
     return parts.join(" ");
-  }
-
-  function D3RequiredButMissing(info){
-    // helper: if rr23 is null, D3 missing.
-    return info.rr23===null;
   }
 
   function renderHist(){
@@ -517,6 +551,7 @@
     $("topCluster").textContent = String(info.top1.cluster);
     $("topHT").textContent = String(info.top1.headtail);
     $("topForce").textContent = String(info.top1.force);
+    $("topNb").textContent = String(info.top1.nb);
     $("topWhy").innerHTML = topExplain(info);
 
     $("rank").innerHTML = renderTable(info.rows, showLimit);
