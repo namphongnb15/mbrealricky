@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v2 — Chuẩn thi đấu</title>
+  <title>MB STABLE LOCK v2.3 — CORE LOCK (Phase + D3)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,10 +88,13 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v2 — Chuẩn thi đấu</h1>
+  <h1>MB STABLE LOCK v2.3 — CORE LOCK</h1>
   <div class="sub">
-    Nhập <b>D1–D2–D3</b> (dán nguyên format: <span class="mono">ĐB: ... G7: ...</span>) → hệ quét 00–99, phân tầng <b>REAL+/REAL/RICKY</b>, chốt <b>TOP 1</b>.
-    Có <b>lịch sử</b>, <b>ngày chốt</b>, <b>xóa lịch sử</b>, có <b>Safe Mode</b> và <b>2-loss brake</b> (dựa trên lịch sử ông đánh dấu Trúng/Trượt).
+    Giữ nguyên UI. Selector lõi theo pha + D3:
+    <b>RR12</b>=repeat(D1∩D2)/unique(D1) → pha chính.
+    <b>RR23</b>=repeat(D2∩D3)/unique(D2) → nhận nhịp/đổi pha.
+    <b>HARD BAN</b>: số xuất hiện <b>D3–D2–D1</b> bị cấm tuyệt đối TOP1.
+    Giữ <b>phạt dày D1</b> (freq D1 ≥2) như trước.
   </div>
 
   <div class="grid">
@@ -101,7 +104,7 @@
           <label>Ngày chốt</label>
           <input id="pickDate" type="date" />
         </div>
-        <div class="pill">D1 & D2 bắt buộc • D3 chỉ để đọc trạng thái</div>
+        <div class="pill">D1 & D2 bắt buộc • D3 khuyến nghị để đọc nhịp</div>
       </div>
 
       <div class="hr"></div>
@@ -112,7 +115,7 @@
       <label>D2</label>
       <textarea id="inD2" placeholder="Dán KQ ngày D2 (format giải)"></textarea>
 
-      <label>D3 (đọc trạng thái)</label>
+      <label>D3 (đọc nhịp + HARD BAN 3 ngày)</label>
       <textarea id="inD3" placeholder="Dán KQ ngày D3 (format giải)"></textarea>
 
       <div class="row" style="margin-top:10px">
@@ -122,15 +125,18 @@
       </div>
 
       <div class="hint">
-        Trích số: lấy <b>2 số cuối</b> của mọi cụm số trong KQ (kể cả ĐB). Các chữ như “ĐB:”, “G1:” không ảnh hưởng.
+        Trích số: lấy <b>2 số cuối</b> của mọi cụm số trong KQ (kể cả ĐB).
       </div>
     </div>
 
     <div class="card" id="outCard" style="display:none">
       <div class="row" style="justify-content:space-between">
-        <div class="pill">Repeat-rate D2→D1: <strong id="repeatRate">--</strong></div>
+        <div class="pill">RR12 (D2→D1): <strong id="rr12">--</strong></div>
+        <div class="pill">RR23 (D3→D2): <strong id="rr23">--</strong></div>
+        <div class="pill">PHA: <strong id="phase">--</strong></div>
+        <div class="pill">NHỊP: <strong id="rhythm">--</strong></div>
         <div class="pill">RISK: <strong id="risk">--</strong></div>
-        <div class="pill">Safe Mode: <strong id="safe">--</strong></div>
+        <div class="pill">Safe: <strong id="safe">--</strong></div>
         <div class="pill">2-loss brake: <strong id="brake">--</strong></div>
       </div>
 
@@ -147,9 +153,7 @@
       <div class="hr"></div>
 
       <div class="row" style="justify-content:space-between; align-items:flex-end">
-        <div class="hint" style="margin:0">
-          Bảng xếp hạng: Total / Cluster / HeadTail / Force. Top mặc định 20.
-        </div>
+        <div class="hint" style="margin:0">Bảng xếp hạng (Top 20 / 50): Total / Cluster / HeadTail / Force</div>
         <button class="btn secondary" id="toggleBtn">Hiện Top 50</button>
       </div>
       <div id="rank"></div>
@@ -159,7 +163,7 @@
       <div class="row" style="justify-content:space-between">
         <div>
           <div style="font-weight:950">Lịch sử chốt</div>
-          <div class="hint" style="margin-top:4px">Ông có thể đánh dấu <b>Trúng</b> / <b>Trượt</b>. 2-loss brake sẽ dựa vào 2 bản ghi gần nhất bị đánh dấu Trượt.</div>
+          <div class="hint" style="margin-top:4px">Đánh dấu <b>Trúng</b> / <b>Trượt</b>. 2-loss brake dựa trên <b>2 bản ghi gần nhất</b> bị Trượt liên tiếp.</div>
         </div>
         <div class="row">
           <button class="btn secondary" id="copyBtn">COPY JSON</button>
@@ -174,7 +178,7 @@
 <script>
 (() => {
   const $ = (id)=>document.getElementById(id);
-  const KEY = "mb_stable_lock_v2_history";
+  const KEY = "mb_stable_lock_v23_history";
 
   function todayISO(){
     const d=new Date();
@@ -190,7 +194,6 @@
   }
   function saveHist(a){ localStorage.setItem(KEY, JSON.stringify(a)); }
 
-  // Parse pasted lottery text. Extract numeric tokens then last 2 digits.
   function extractLo(text){
     const tokens = text.replace(/\r/g,"").split(/\s+/).map(s=>s.trim()).filter(Boolean);
     const out=[];
@@ -223,173 +226,167 @@
     return `<span class="tag rk">RICKY</span>`;
   }
 
-  function unionSet(a,b){ const s=new Set(a); for(const x of b) s.add(x); return s; }
-
-  // Detect 2-loss brake: last 2 marked LOSE.
   function twoLossBrake(hist){
-    const marked = hist.filter(x=>x.outcome==="LOSE").sort((a,b)=> (b.date||"").localeCompare(a.date||""));
-    return marked.length>=2; // last two loses exist (not necessarily consecutive calendar days)
+    const sorted = hist.slice().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    const decided = sorted.filter(x=>x.outcome==="WIN" || x.outcome==="LOSE");
+    if(decided.length < 2) return false;
+    return decided[0].outcome==="LOSE" && decided[1].outcome==="LOSE";
+  }
+
+  function detectPhase(rr12){
+    if(rr12 < 0.25) return "PHA BẬT";
+    if(rr12 >= 0.30) return "PHA GIỮ";
+    return "TRUNG TÍNH";
+  }
+
+  function detectRhythm(rr12, rr23){
+    if(rr23 === null) return "NO D3";
+    const p12 = detectPhase(rr12);
+    const p23 = detectPhase(rr23);
+    if(p12 === p23) return "ỔN ĐỊNH";
+    if(p23==="PHA GIỮ" && p12==="PHA BẬT") return "GIỮ → BẬT (GÃY NHỊP)";
+    if(p23==="PHA BẬT" && p12==="PHA GIỮ") return "BẬT → GIỮ (VÀO NHỊP)";
+    return "ĐỔI PHA (MỜ)";
+  }
+
+  function tierRank(tier){
+    if(tier==="REAL+") return 0;
+    if(tier==="REAL") return 1;
+    return 2;
   }
 
   function compute(D1,D2,D3,hist){
-    const f1=freq(D1), f2=freq(D2);
-    const U1=new Set(D1), U2=new Set(D2);
-    const inter=[...U1].filter(x=>U2.has(x));
-    const repeatRate = inter.length / (U1.size || 1);
+    const f1=freq(D1);
+    const U1=new Set(D1), U2=new Set(D2), U3=new Set(D3);
+    const inter12=[...U1].filter(x=>U2.has(x));
+    const rr12 = inter12.length / (U1.size || 1);
+    const phase = detectPhase(rr12);
 
+    let rr23 = null;
+    if(D3.length>0){
+      const inter23=[...U2].filter(x=>U3.has(x));
+      rr23 = inter23.length / (U2.size || 1);
+    }
+    const rhythm = detectRhythm(rr12, rr23);
+
+    // diagnostics like v2
     const {head:hCount, tail:tCount} = headTailCounts(D1.concat(D2));
     const hasHoldHT = [...hCount.values()].some(v=>v>=3) || [...tCount.values()].some(v=>v>=3);
-
-    // "cluster repeat >=2 numbers" proxy: total repeated numbers >=2
-    const totalRepeatNums = inter.length;
-    const hasClusterRepeat = totalRepeatNums >= 2;
-
-    // xả mạnh D1
+    const hasClusterRepeat = inter12.length >= 2;
     const dupCount = [...f1.values()].filter(v=>v>=2).length;
     const maxFreq = Math.max(0, ...f1.values());
     const xaManh = (dupCount>=3) || (maxFreq>=3);
-
-    // RISK HIGH if any criteria
-    const riskHigh = (repeatRate < 0.30) || (!hasClusterRepeat) || (!hasHoldHT) || xaManh;
+    const riskHigh = (rr12 < 0.30) || (!hasClusterRepeat) || (!hasHoldHT) || xaManh;
     const safeMode = riskHigh;
 
     const brake = twoLossBrake(hist);
 
-    const allNums = Array.from({length:100},(_,i)=>String(i).padStart(2,"0"));
-
-    // Dump cluster penalty: if head or tail too dense in D1 (>=5)
-    const {head:h1, tail:t1} = headTailCounts(D1);
-    const dumpHeads = new Set([...h1.entries()].filter(([k,v])=>v>=5).map(([k])=>k));
-    const dumpTails = new Set([...t1.entries()].filter(([k,v])=>v>=5).map(([k])=>k));
-
-    const union = unionSet(D1,D2); // for đảo/gương check
+    const union = new Set(D1.concat(D2));
 
     const rows=[];
-    for(const num of allNums){
-      // Force (locked)
-      let force=0;
-      const in1=U1.has(num), in2=U2.has(num);
+    for(let i=0;i<100;i++){
+      const num=String(i).padStart(2,"0");
+      const in1=U1.has(num), in2=U2.has(num), in3=U3.has(num);
       const c1=f1.get(num)||0;
 
+      // HARD BAN 3-day run
+      const hardBan = (D3.length>0) ? (in1 && in2 && in3) : false;
+
+      // Force
+      let force=0;
       if(in1 && in2) force=3;
       else if(in1) force=2;
       else if(in2) force=1;
 
-      // D1 penalty rules (locked)
+      // D1 penalty (phạt như trước)
       if(c1>=2) force -= 2;
       else if(c1===1 && !in2) force -= 1;
 
-      // Cluster (max 4): +2 if repeat, +1 đảo/gương, +1 if repeat-cluster condition and this num repeats
+      // Cluster
       let cluster=0;
       if(in1 && in2) cluster += 2;
-
       const rev = num[1]+num[0];
       if((in1||in2) && union.has(rev) && rev!==num) cluster += 1;
-
       if(hasClusterRepeat && in1 && in2) cluster += 1;
-
-      // Safe mode lowers cluster influence
       if(safeMode) cluster = Math.max(0, cluster-1);
 
       // Head/Tail
       let headtail=0;
       const head=num[0], tail=num[1];
-      const hc = (hCount.get(head)||0);
-      const tc = (tCount.get(tail)||0);
-      if(hc>=3) headtail += 2;
-      if(tc>=3) headtail += 2;
+      if((hCount.get(head)||0) >= 3) headtail += 2;
+      if((tCount.get(tail)||0) >= 3) headtail += 2;
 
-      // Dump penalty
-      let dumpPenalty = 0;
-      if(in1 && (dumpHeads.has(head) || dumpTails.has(tail))) dumpPenalty -= 2;
+      // Dump penalty (mềm)
+      let dumpPenalty=0;
+      const {head:h1, tail:t1} = headTailCounts(D1);
+      if(in1 && ((h1.get(head)||0) >= 5 || (t1.get(tail)||0) >= 5)) dumpPenalty -= 2;
 
       const total = cluster + headtail + force + dumpPenalty;
 
-      // Tiering (locked)
-      const trues = [
-        cluster>=2, headtail>=2, force>=2
-      ].filter(Boolean).length;
-
+      // Tiering
+      const trues = [cluster>=2, headtail>=2, force>=2].filter(Boolean).length;
       let tier="RICKY";
       if(total>=8 && cluster>=3 && c1<2 && dumpPenalty===0) tier="REAL+";
       else if(total>=6 && trues>=2 && dumpPenalty===0) tier="REAL";
-      else if(total>=5 && (cluster>=2 || headtail>=2 || force>=2)) tier="RICKY";
       else tier="RICKY";
 
-      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2});
+      // ===== V2.3 SELECTOR GROUP =====
+      // Group by phase
+      let group=3;
+      if(phase==="PHA BẬT"){
+        if(in2 && !in1) group=1;
+        else if(!in2 && in1 && c1===1) group=2;
+        else if(in1 && in2) group=3;
+        else group=4;
+      }else if(phase==="PHA GIỮ"){
+        if(in1 && in2) group=1;
+        else if(in2 && !in1) group=2;
+        else if(!in2 && in1 && c1===1) group=3;
+        else group=4;
+      }else{
+        if(in2 && !in1) group=1;
+        else if(in1 && in2) group=2;
+        else if(!in2 && in1 && c1===1) group=3;
+        else group=4;
+      }
+
+      // phạt dày D1 (freq>=2) như trước (đẩy xuống)
+      if(c1>=2) group += 2;
+
+      // HARD BAN overrides (cấm tuyệt đối TOP1)
+      const banRank = hardBan ? 1 : 0; // 1 means banned
+
+      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2,in3,group,hardBan,banRank});
     }
 
-    // Base sort (selector tie-break, deterministic)
-    function baseCmp(a,b){
+    // Table rank (like v2): by total etc.
+    function rankCmp(a,b){
       if(b.total!==a.total) return b.total-a.total;
+      if(b.cluster!==a.cluster) return b.cluster-a.cluster;
+      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
+      if(b.force!==a.force) return b.force-a.force;
+      if(a.c1!==b.c1) return a.c1-b.c1;
+      return a.num.localeCompare(b.num);
+    }
+
+    // TOP selection comparator (CORE LOCK + HARD BAN)
+    function topCmp(a,b){
+      if(a.banRank!==b.banRank) return a.banRank-b.banRank;       // banned always loses
+      if(a.group!==b.group) return a.group-b.group;               // phase group
+      const ta=tierRank(a.tier), tb=tierRank(b.tier);
+      if(ta!==tb) return ta-tb;                                   // stronger tier within same group
+      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
       if(b.cluster!==a.cluster) return b.cluster-a.cluster;
       if(b.force!==a.force) return b.force-a.force;
-      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
-      if(a.c1!==b.c1) return a.c1-b.c1; // anti-dump
-      return a.num.localeCompare(b.num);
-    }
-
-    // Safe mode comparator for TOP1 (locked): Head/Tail > force2day > lower penalties > cluster > total
-    function safeCmp(a,b){
-      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
-      const a2 = (a.in1 && a.in2) ? 1 : 0;
-      const b2 = (b.in1 && b.in2) ? 1 : 0;
-      if(b2!==a2) return b2-a2;
-      // lower penalties (dump & d1 density)
       if(a.c1!==b.c1) return a.c1-b.c1;
-      if(b.cluster!==a.cluster) return b.cluster-a.cluster;
       if(b.total!==a.total) return b.total-a.total;
       return a.num.localeCompare(b.num);
     }
 
-    rows.sort(baseCmp);
+    const top1 = rows.slice().sort(topCmp)[0];
+    rows.sort(rankCmp);
 
-    // Selector chooses within tier order, but if brake ON -> do NOT select REAL+ (locked rule)
-    const candidates = {
-      rp: rows.filter(x=>x.tier==="REAL+"),
-      r: rows.filter(x=>x.tier==="REAL"),
-      rk: rows.filter(x=>x.tier==="RICKY"),
-    };
-
-    let poolName = "REAL+";
-    let pool = candidates.rp;
-
-    if(brake){
-      poolName = "REAL";
-      pool = candidates.r.length ? candidates.r : candidates.rk;
-    }else{
-      if(!pool.length){
-        poolName = "REAL";
-        pool = candidates.r.length ? candidates.r : candidates.rk;
-      }
-    }
-
-    // choose TOP1
-    let top1;
-    if(safeMode){
-      const sortedPool = pool.slice().sort(safeCmp);
-      top1 = sortedPool[0];
-    }else{
-      top1 = pool[0];
-    }
-
-    // For display: apply base sort already, but we want rank list by total desc -> baseCmp handles that.
-    return {
-      rows,
-      top1,
-      repeatRate,
-      riskHigh,
-      safeMode,
-      brake,
-      signals:{
-        totalRepeatNums,
-        hasHoldHT,
-        xaManh,
-        dupCount,
-        maxFreq
-      },
-      poolName
-    };
+    return { rows, top1, rr12, rr23, phase, rhythm, riskHigh, safeMode, brake };
   }
 
   function renderTable(rows, limit){
@@ -400,7 +397,7 @@
     top.forEach((r,i)=>{
       html += `<tr>
         <td>${i+1}</td>
-        <td class="mono" style="font-weight:950">${r.num}</td>
+        <td class="mono" style="font-weight:950">${r.num}${r.hardBan ? " ⛔" : ""}</td>
         <td><b>${r.total}</b></td>
         <td>${r.cluster}</td>
         <td>${r.headtail}</td>
@@ -413,14 +410,25 @@
     return html;
   }
 
-  function summarize(info, top1){
-    const s = info.signals;
-    const parts = [];
-    parts.push(`Selector pool: <b>${info.poolName}</b>.`);
-    parts.push(`Repeat-rate: <span class="mono">${(info.repeatRate*100).toFixed(1)}%</span>, repeat nums: <b>${s.totalRepeatNums}</b>.`);
-    parts.push(`Hold head/tail: <b>${s.hasHoldHT ? "YES" : "NO"}</b>, xả mạnh D1: <b>${s.xaManh ? "YES" : "NO"}</b> (dup=${s.dupCount}, maxFreq=${s.maxFreq}).`);
-    parts.push(`TOP1 tie-break: Cụm → Lực → Đầu/đuôi → chống dày D1 (khi Safe Mode thì ưu tiên Đầu/đuôi → lực 2 ngày → chống dày).`);
+  function topExplain(info){
+    const t = info.top1;
+    const parts=[];
+    parts.push(`<b>${info.phase}</b> • RR12=${(info.rr12*100).toFixed(1)}%`);
+    parts.push(info.rr23===null ? `• RR23=-- (NO D3)` : `• RR23=${(info.rr23*100).toFixed(1)}%`);
+    parts.push(`• Nhịp: <b>${info.rhythm}</b>`);
+    parts.push(`<br>Chọn theo ưu tiên: <b>HARD BAN (D3–D2–D1) → group theo pha → tier → headtail → cluster → force → chống dày D1</b>.`);
+    if(t.hardBan) parts.push(`<br><b>NOTE:</b> số này bị HARD BAN nhưng vẫn xuất hiện ở bảng tổng; TOP1 sẽ không chọn số bị ban.`);
+    // Explain why chosen
+    parts.push(`<br>TOP1 ${t.num}: group=${t.group}, tier=${t.tier}, D1freq=${t.c1}, in(D2,D1)=(${t.in2?'1':'0'},${t.in1?'1':'0'}), inD3=${t.in3?'1':'0'}.`);
+    if(D3RequiredButMissing(info)){
+      parts.push(`<br><b>CẢNH BÁO:</b> chưa dán D3 nên HARD BAN 3 ngày không hoạt động.`);
+    }
     return parts.join(" ");
+  }
+
+  function D3RequiredButMissing(info){
+    // helper: if rr23 is null, D3 missing.
+    return info.rr23===null;
   }
 
   function renderHist(){
@@ -449,7 +457,7 @@
             </div>
           </div>
           <div class="hint" style="margin:0">
-            Risk: <b>${it.meta.riskHigh ? "HIGH" : "NORMAL"}</b> • Safe: <b>${it.meta.safeMode ? "ON" : "OFF"}</b> • Repeat: <span class="mono">${(it.meta.repeatRate*100).toFixed(1)}%</span> • 2-loss brake (lúc chốt): <b>${it.meta.brake ? "ON" : "OFF"}</b>
+            Pha: <b>${it.meta.phase}</b> • Nhịp: <b>${it.meta.rhythm}</b> • RR12: <span class="mono">${(it.meta.rr12*100).toFixed(1)}%</span> • RR23: ${it.meta.rr23===null ? "<span class='mono'>--</span>" : "<span class='mono'>"+(it.meta.rr23*100).toFixed(1)+"%</span>"} • Risk: <b>${it.meta.riskHigh ? "HIGH" : "NORMAL"}</b> • Safe: <b>${it.meta.safeMode ? "ON" : "OFF"}</b> • Brake: <b>${it.meta.brake ? "ON" : "OFF"}</b>
           </div>
         </div>
       `;
@@ -487,7 +495,7 @@
     $("c3").textContent = String(D3.length);
 
     if(D1.length===0 || D2.length===0){
-      alert("Cần dán ít nhất D1 và D2 (để chấm điểm 2 ngày).");
+      alert("Cần dán ít nhất D1 và D2.");
       return;
     }
 
@@ -495,7 +503,10 @@
     const info = compute(D1,D2,D3,histNow);
 
     $("outCard").style.display = "block";
-    $("repeatRate").textContent = (info.repeatRate*100).toFixed(1) + "%";
+    $("rr12").textContent = (info.rr12*100).toFixed(1) + "%";
+    $("rr23").textContent = (info.rr23===null) ? "--" : (info.rr23*100).toFixed(1) + "%";
+    $("phase").textContent = info.phase;
+    $("rhythm").textContent = info.rhythm;
     $("risk").textContent = info.riskHigh ? "RISK HIGH" : "NORMAL";
     $("safe").textContent = info.safeMode ? "ON" : "OFF";
     $("brake").textContent = info.brake ? "ON" : "OFF";
@@ -506,15 +517,14 @@
     $("topCluster").textContent = String(info.top1.cluster);
     $("topHT").textContent = String(info.top1.headtail);
     $("topForce").textContent = String(info.top1.force);
-    $("topWhy").innerHTML = summarize(info, info.top1);
+    $("topWhy").innerHTML = topExplain(info);
 
     $("rank").innerHTML = renderTable(info.rows, showLimit);
 
-    // Save history (overwrite same date)
     const item = {
       date,
       top1: {num: info.top1.num, tier: info.top1.tier, total: info.top1.total, cluster: info.top1.cluster, headtail: info.top1.headtail, force: info.top1.force},
-      meta: { riskHigh: info.riskHigh, safeMode: info.safeMode, brake: info.brake, repeatRate: info.repeatRate },
+      meta: { phase: info.phase, rhythm: info.rhythm, rr12: info.rr12, rr23: info.rr23, riskHigh: info.riskHigh, safeMode: info.safeMode, brake: info.brake },
       raw: { D1: raw1, D2: raw2, D3: raw3 },
       outcome: "UNK"
     };
@@ -535,7 +545,6 @@
   function toggle(){
     showLimit = (showLimit===20) ? 50 : 20;
     $("toggleBtn").textContent = (showLimit===20) ? "Hiện Top 50" : "Chỉ Top 20";
-    // rerun rank view if outCard shown
     if($("outCard").style.display==="none") return;
     const D1 = extractLo($("inD1").value||"");
     const D2 = extractLo($("inD2").value||"");
@@ -560,7 +569,6 @@
     });
   }
 
-  // init
   $("pickDate").value = todayISO();
   $("runBtn").addEventListener("click", run);
   $("clearBtn").addEventListener("click", clearInputs);
