@@ -497,9 +497,9 @@
     parts.push(`<b>${info.phase}</b> • RR12=${(info.rr12*100).toFixed(1)}%`);
     parts.push(info.rr23===null ? `• RR23=-- (NO D3)` : `• RR23=${(info.rr23*100).toFixed(1)}%`);
     parts.push(`• Nhịp: <b>${info.rhythm}</b>`);
-    parts.push(`<br>Ưu tiên: <b>BAN</b> → group pha → tier → headtail → cluster → force → neighbor → tránh D3 → tránh dày D1.
+    parts.push(`<br>Ưu tiên: <b>BAN</b> → group pha → tier → headtail → cluster → force → neighbor → tránh D3 → tránh dày D1.`);
     parts.push(`<br>Cooldown block (3d): <span class="mono">${cdList}</span>`);
-    parts.push(`<br>PHA BẬT override: <b>${info.phase==="PHA BẬT" ? "ON (Group 1/2 gate)" : "OFF"}</b>`);`);
+    parts.push(`<br>PHA BẬT override: <b>${info.phase==="PHA BẬT" ? "ON (Group 1/2 gate)" : "OFF"}</b>`);
     parts.push(`<br>TOP1 ${t.num}: group=${t.group}, tier=${t.tier}, D1freq=${t.c1}, neighbor=${t.nb}, inD3=${t.in3?'1':'0'}.`);
     if(info.rr23===null){
       parts.push(`<br><b>CẢNH BÁO:</b> chưa dán D3 nên BAN 3 ngày không hoạt động.`);
