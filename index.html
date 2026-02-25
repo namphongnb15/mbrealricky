@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v2.5 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
+  <title>MB STABLE LOCK v3.0 – HARD PHASE SPLIT | MB STABLE LOCK v3.0 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v2.5 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
+  <h1>MB STABLE LOCK v3.0 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
   <div class="sub">
     v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
     <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
@@ -284,7 +284,8 @@
   }
 
 
-  function compute(D1,D2,D3,hist,currentDate){
+  let currentPhase = '';
+function compute(D1,D2,D3,hist,currentDate){
     const cdSet = cooldownSet(hist, currentDate || todayISO(), 3);
     const f1=freq(D1);
     const U1=new Set(D1), U2=new Set(D2), U3=new Set(D3);
@@ -405,7 +406,7 @@
 
     // Ranking table comparator (unchanged)
     
-    // 🔒 REAL+ GIỮ-STRONG LOCK + PHASE MATRIX + PRIZE-WEIGHT FORCE (LOCK):
+    // 🔒 REAL+ GIỮ-STRONG LOCK (LOCK):
     // REAL+ chỉ hợp lệ khi:
     //  - Phase = PHA GIỮ
     //  - rr12 >= 0.30
@@ -430,16 +431,36 @@ function rankCmp(a,b){
     }
 
     // TOP selection comparator (CORE LOCK + bans + new tie-break)
-    function topCmp(a,b){
-      if(a.banRank!==b.banRank) return a.banRank-b.banRank;
+    
+function topCmp(a,b){
+
+  if(a.banRank!==b.banRank) return a.banRank-b.banRank;
+
+  // ===== HARD PHASE SPLIT =====
+  if(currentPhase === "PHA BẬT"){
+      const aNew = (a.in2===1 && a.in1===0)?1:0;
+      const bNew = (b.in2===1 && b.in1===0)?1:0;
+      if(aNew!==bNew) return bNew-aNew;
+
       if(a.prizeForce!==b.prizeForce) return b.prizeForce-a.prizeForce;
-      if(a.group!==b.group) return a.group-b.group;
-      if(a.tier!==b.tier) return (a.tier==="REAL+"?0:a.tier==="REAL"?1:2)-(b.tier==="REAL+"?0:b.tier==="REAL"?1:2);
+
+      const aHoldPenalty = (a.force===3 && a.in1===1)?1:0;
+      const bHoldPenalty = (b.force===3 && b.in1===1)?1:0;
+      if(aHoldPenalty!==bHoldPenalty) return aHoldPenalty-bHoldPenalty;
+  }
+
+  if(currentPhase === "PHA GIỮ"){
       if(a.force!==b.force) return b.force-a.force;
       if(a.cluster!==b.cluster) return b.cluster-a.cluster;
-      if(a.headtail!==b.headtail) return b.headtail-a.headtail;
-      return b.num-a.num;
-    }
+      if(a.prizeForce!==b.prizeForce) return b.prizeForce-a.prizeForce;
+  }
+
+  if(a.tier!==b.tier) return (a.tier==="REAL+"?0:a.tier==="REAL"?1:2)-(b.tier==="REAL+"?0:b.tier==="REAL"?1:2);
+  if(a.headtail!==b.headtail) return b.headtail-a.headtail;
+
+  return b.num-a.num;
+}
+
 
     // PHA BẬT OVERRIDE (LOCK): ưu tiên bắt số bật (Group 1) / số mới (Group 2) nếu còn ứng viên hợp lệ
     function pickTop(rowsAll){
@@ -454,6 +475,7 @@ function rankCmp(a,b){
     const top1 = pickTop(rows);
     rows.sort(rankCmp);
 
+    currentPhase = phase;
     return { rows, top1, rr12, rr23, phase, rhythm, riskHigh, safeMode, brake, cdSet };
   }
 
