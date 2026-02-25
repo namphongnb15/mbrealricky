@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v3.2 CLEAN CORE – HARD PHASE SPLIT + CLEAN CORE | MB STABLE LOCK v3.2 CLEAN CORE — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
+  <title>MB STABLE LOCK v3.3 FORCE D2+D3 – HARD PHASE SPLIT + CLEAN CORE | MB STABLE LOCK v3.3 FORCE D2+D3 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v3.2 CLEAN CORE — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
+  <h1>MB STABLE LOCK v3.3 FORCE D2+D3 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
   <div class="sub">
     v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
     <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
@@ -320,15 +320,17 @@ function compute(D1,D2,D3,hist,currentDate){
       const in1=U1.has(num), in2=U2.has(num), in3=U3.has(num);
       const c1=f1.get(num)||0;
 
-      // ===== FORCE =====
+      // ===== FORCE (ForceWeighted: D2+D3 only; D1 chỉ để cấm) =====
       let force=0;
-      if(in1 && in2) force=3;
-      else if(in1) force=2;
-      else if(in2) force=1;
+      // D1 (in1) KHÔNG cộng/không trừ điểm lực nữa.
+      // Lực chỉ tính từ D2 & D3:
+      if(in2 && in3) force=3;
+      else if(in2) force=2;
+      else if(in3) force=1;
 
-      // phạt dày D1 (giữ nguyên)
-      if(c1>=2) force -= 2;
-      else if(c1===1 && !in2) force -= 1;
+      // phạt dày theo D2 (để tránh “bị kéo” bởi số đang xả ở D2)
+      if(c2>=2) force -= 2;
+      else if(c2===1 && !in3) force -= 1;
 
       // ===== CLUSTER =====
       let cluster=0;
