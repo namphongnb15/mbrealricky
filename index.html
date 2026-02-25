@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v2.4.0 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
+  <title>MB STABLE LOCK v2.5 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v2.4.0 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
+  <h1>MB STABLE LOCK v2.5 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
   <div class="sub">
     v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
     <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
@@ -135,6 +135,7 @@
         <div class="pill">NHỊP: <strong id="rhythm">--</strong></div>
         <div class="pill">Cooldown(3d): <strong id="cd">--</strong></div>
         <div class="pill">BẬT override: <strong id="bo">--</strong></div>
+        <div class="pill">GIỮ-STRONG: <strong id="ks">--</strong></div>
         <div class="pill">RISK: <strong id="risk">--</strong></div>
         <div class="pill">Safe: <strong id="safe">--</strong></div>
         <div class="pill">2-loss brake: <strong id="brake">--</strong></div>
@@ -399,11 +400,26 @@
 
       const nb = neighborSupport(num, unionSet);
 
-      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,c1,in1,in2,in3,group,hardBan,antiHTOnly,cdBan,banRank,nb});
+      rows.push({num,total,cluster,headtail,force,dumpPenalty,tier,preTier:tier,c1,in1,in2,in3,group,hardBan,antiHTOnly,cdBan,banRank,nb});
     }
 
     // Ranking table comparator (unchanged)
-    function rankCmp(a,b){
+    
+    // 🔒 REAL+ GIỮ-STRONG LOCK + PHASE MATRIX + PRIZE-WEIGHT FORCE (LOCK):
+    // REAL+ chỉ hợp lệ khi:
+    //  - Phase = PHA GIỮ
+    //  - rr12 >= 0.30
+    //  - có >= 2 ứng viên REAL+ (preTier) để xác nhận "cụm chạy"
+    const preRealPlus = rows.filter(r => r.preTier === "REAL+");
+    const clusterPair = preRealPlus.length >= 2;
+    const keepStrongOK = (phase === "PHA GIỮ" && rr12 >= 0.30 && clusterPair);
+    if(!keepStrongOK){
+      for(const r of rows){
+        if(r.tier === "REAL+") r.tier = "REAL";
+      }
+    }
+
+function rankCmp(a,b){
       if(b.total!==a.total) return b.total-a.total;
       if(b.cluster!==a.cluster) return b.cluster-a.cluster;
       if(b.headtail!==a.headtail) return b.headtail-a.headtail;
@@ -415,37 +431,14 @@
 
     // TOP selection comparator (CORE LOCK + bans + new tie-break)
     function topCmp(a,b){
-      // banned always loses
       if(a.banRank!==b.banRank) return a.banRank-b.banRank;
-
-      // phase group first
+      if(a.prizeForce!==b.prizeForce) return b.prizeForce-a.prizeForce;
       if(a.group!==b.group) return a.group-b.group;
-
-      // tier
-      const ta=tierRank(a.tier), tb=tierRank(b.tier);
-      if(ta!==tb) return ta-tb;
-
-      // strong structure
-      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
-      if(b.cluster!==a.cluster) return b.cluster-a.cluster;
-      if(b.force!==a.force) return b.force-a.force;
-
-      // new: neighbor support (objective, not "small number")
-      if(b.nb!==a.nb) return b.nb-a.nb;
-
-      // new: prefer not in D3 (avoid carry/xả)
-      const aNotD3 = a.in3 ? 0 : 1;
-      const bNotD3 = b.in3 ? 0 : 1;
-      if(bNotD3!==aNotD3) return bNotD3-aNotD3;
-
-      // existing: avoid dày D1
-      if(a.c1!==b.c1) return a.c1-b.c1;
-
-      // total as backstop
-      if(b.total!==a.total) return b.total-a.total;
-
-      // final fallback: choose larger number (deterministic, not "small")
-      return b.num.localeCompare(a.num);
+      if(a.tier!==b.tier) return (a.tier==="REAL+"?0:a.tier==="REAL"?1:2)-(b.tier==="REAL+"?0:b.tier==="REAL"?1:2);
+      if(a.force!==b.force) return b.force-a.force;
+      if(a.cluster!==b.cluster) return b.cluster-a.cluster;
+      if(a.headtail!==b.headtail) return b.headtail-a.headtail;
+      return b.num-a.num;
     }
 
     // PHA BẬT OVERRIDE (LOCK): ưu tiên bắt số bật (Group 1) / số mới (Group 2) nếu còn ứng viên hợp lệ
@@ -586,6 +579,7 @@
     $("cd").textContent = Array.from(info.cdSet||[]).join(", ") || "--";
 
     $("bo").textContent = (info.phase==="PHA BẬT") ? "ON" : "OFF";
+    $("ks").textContent = (info.keepStrongOK) ? "ON" : "OFF";
     $("risk").textContent = info.riskHigh ? "RISK HIGH" : "NORMAL";
     $("safe").textContent = info.safeMode ? "ON" : "OFF";
     $("brake").textContent = info.brake ? "ON" : "OFF";
