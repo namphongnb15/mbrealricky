@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v2.3.2 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
+  <title>MB STABLE LOCK v2.3.3 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v2.3.2 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
+  <h1>MB STABLE LOCK v2.3.3 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
   <div class="sub">
     v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
     <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
@@ -134,6 +134,7 @@
         <div class="pill">PHA: <strong id="phase">--</strong></div>
         <div class="pill">NHỊP: <strong id="rhythm">--</strong></div>
         <div class="pill">Cooldown(3d): <strong id="cd">--</strong></div>
+        <div class="pill">BẬT override: <strong id="bo">--</strong></div>
         <div class="pill">RISK: <strong id="risk">--</strong></div>
         <div class="pill">Safe: <strong id="safe">--</strong></div>
         <div class="pill">2-loss brake: <strong id="brake">--</strong></div>
@@ -447,7 +448,17 @@
       return b.num.localeCompare(a.num);
     }
 
-    const top1 = rows.slice().sort(topCmp)[0];
+    // PHA BẬT OVERRIDE (LOCK): ưu tiên bắt số bật (Group 1) / số mới (Group 2) nếu còn ứng viên hợp lệ
+    function pickTop(rowsAll){
+      const unbanned = rowsAll.filter(r=>r.banRank===0);
+      if(unbanned.length===0) return rowsAll.slice().sort(topCmp)[0];
+      if(phase==="PHA BẬT"){
+        const pool = unbanned.filter(r=>r.group===1 || r.group===2);
+        if(pool.length>0) return pool.slice().sort(topCmp)[0];
+      }
+      return unbanned.slice().sort(topCmp)[0];
+    }
+    const top1 = pickTop(rows);
     rows.sort(rankCmp);
 
     return { rows, top1, rr12, rr23, phase, rhythm, riskHigh, safeMode, brake, cdSet };
@@ -486,7 +497,9 @@
     parts.push(`<b>${info.phase}</b> • RR12=${(info.rr12*100).toFixed(1)}%`);
     parts.push(info.rr23===null ? `• RR23=-- (NO D3)` : `• RR23=${(info.rr23*100).toFixed(1)}%`);
     parts.push(`• Nhịp: <b>${info.rhythm}</b>`);
-    parts.push(`<br>Ưu tiên: <b>BAN</b> → group pha → tier → headtail → cluster → force → neighbor → tránh D3 → tránh dày D1.`);
+    parts.push(`<br>Ưu tiên: <b>BAN</b> → group pha → tier → headtail → cluster → force → neighbor → tránh D3 → tránh dày D1.
+    parts.push(`<br>Cooldown block (3d): <span class="mono">${cdList}</span>`);
+    parts.push(`<br>PHA BẬT override: <b>${info.phase==="PHA BẬT" ? "ON (Group 1/2 gate)" : "OFF"}</b>`);`);
     parts.push(`<br>TOP1 ${t.num}: group=${t.group}, tier=${t.tier}, D1freq=${t.c1}, neighbor=${t.nb}, inD3=${t.in3?'1':'0'}.`);
     if(info.rr23===null){
       parts.push(`<br><b>CẢNH BÁO:</b> chưa dán D3 nên BAN 3 ngày không hoạt động.`);
@@ -571,6 +584,8 @@
     $("phase").textContent = info.phase;
     $("rhythm").textContent = info.rhythm;
     $("cd").textContent = Array.from(info.cdSet||[]).join(", ") || "--";
+
+    $("bo").textContent = (info.phase==="PHA BẬT") ? "ON" : "OFF";
     $("risk").textContent = info.riskHigh ? "RISK HIGH" : "NORMAL";
     $("safe").textContent = info.safeMode ? "ON" : "OFF";
     $("brake").textContent = info.brake ? "ON" : "OFF";
