@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v3.0 – HARD PHASE SPLIT | MB STABLE LOCK v3.0 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
+  <title>MB STABLE LOCK v3.2 – CLEAN CORE (HEADTAIL REMOVED) | MB STABLE LOCK v3.2 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v3.0 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
+  <h1>MB STABLE LOCK v3.2 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
   <div class="sub">
     v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
     <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
@@ -423,8 +423,7 @@ function compute(D1,D2,D3,hist,currentDate){
 function rankCmp(a,b){
       if(b.total!==a.total) return b.total-a.total;
       if(b.cluster!==a.cluster) return b.cluster-a.cluster;
-      if(b.headtail!==a.headtail) return b.headtail-a.headtail;
-      if(b.force!==a.force) return b.force-a.force;
+            if(b.force!==a.force) return b.force-a.force;
       if(a.c1!==b.c1) return a.c1-b.c1;
       // keep stable: show smaller first in table (display-only)
       return a.num.localeCompare(b.num);
@@ -432,22 +431,34 @@ function rankCmp(a,b){
 
     // TOP selection comparator (CORE LOCK + bans + new tie-break)
     
+
 function topCmp(a,b){
 
   if(a.banRank!==b.banRank) return a.banRank-b.banRank;
 
-  // ===== HARD PHASE SPLIT =====
   if(currentPhase === "PHA BẬT"){
       const aNew = (a.in2===1 && a.in1===0)?1:0;
       const bNew = (b.in2===1 && b.in1===0)?1:0;
       if(aNew!==bNew) return bNew-aNew;
 
       if(a.prizeForce!==b.prizeForce) return b.prizeForce-a.prizeForce;
-
-      const aHoldPenalty = (a.force===3 && a.in1===1)?1:0;
-      const bHoldPenalty = (b.force===3 && b.in1===1)?1:0;
-      if(aHoldPenalty!==bHoldPenalty) return aHoldPenalty-bHoldPenalty;
+      if(a.cluster!==b.cluster) return b.cluster-a.cluster;
+      if(a.force!==b.force) return b.force-a.force;
   }
+
+  if(currentPhase === "PHA GIỮ"){
+      if(a.prizeForce!==b.prizeForce) return b.prizeForce-a.prizeForce;
+      if(a.force!==b.force) return b.force-a.force;
+      if(a.cluster!==b.cluster) return b.cluster-a.cluster;
+  }
+
+  if(a.tier!==b.tier)
+      return (a.tier==="REAL+"?0:a.tier==="REAL"?1:2)
+           - (b.tier==="REAL+"?0:b.tier==="REAL"?1:2);
+
+  return b.num-a.num;
+}
+
 
   if(currentPhase === "PHA GIỮ"){
       if(a.force!==b.force) return b.force-a.force;
@@ -456,8 +467,7 @@ function topCmp(a,b){
   }
 
   if(a.tier!==b.tier) return (a.tier==="REAL+"?0:a.tier==="REAL"?1:2)-(b.tier==="REAL+"?0:b.tier==="REAL"?1:2);
-  if(a.headtail!==b.headtail) return b.headtail-a.headtail;
-
+  
   return b.num-a.num;
 }
 
