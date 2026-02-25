@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v3.3 FORCE D2+D3 – HARD PHASE SPLIT + CLEAN CORE | MB STABLE LOCK v3.3 FORCE D2+D3 — CORE LOCK (Cooldown + REAL+ GIỮ) (D3 + Anti-HeadTail)</title>
+  <title>MB STABLE LOCK v3.4 – FORCE (DISPLAY ONLY) | HARD PHASE SPLIT + CLEAN CORE</title>
   <style>
     :root{
       --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v3.3 FORCE D2+D3 — CORE LOCK (Cooldown + REAL+ GIỮ)</h1>
+  <h1>MB STABLE LOCK v3.4 — FORCE (DISPLAY ONLY) — CORE LOCK</h1>
   <div class="sub">
     v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1),
     <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
@@ -426,7 +426,7 @@ function rankCmp(a,b){
       if(b.total!==a.total) return b.total-a.total;
       if(b.cluster!==a.cluster) return b.cluster-a.cluster;
       if(b.headtail!==a.headtail) return b.headtail-a.headtail;
-      if(b.force!==a.force) return b.force-a.force;
+      if(b.nb!==a.nb) return b.nb-a.nb;
       if(a.c1!==b.c1) return a.c1-b.c1;
       // keep stable: show smaller first in table (display-only)
       return a.num.localeCompare(b.num);
@@ -446,23 +446,12 @@ function topCmp(a,b){
       const bNew = (b.in2===1 && b.in1===0)?1:0;
       if(aNew!==bNew) return bNew-aNew;
 
-      // Prize force ưu tiên cao nhất
-      if(a.prizeForce!==b.prizeForce) return b.prizeForce-a.prizeForce;
-
-      // Cluster chỉ phụ
+      // Force chỉ hiển thị (không dùng để chốt)
       if(a.cluster!==b.cluster) return b.cluster-a.cluster;
-
-      // Force không còn auto top
-      if(a.force!==b.force) return b.force-a.force;
   }
 
   if(currentPhase === "PHA GIỮ"){
-      // Prize force trước
-      if(a.prizeForce!==b.prizeForce) return b.prizeForce-a.prizeForce;
-
-      // Force quan trọng nhưng không độc tôn
-      if(a.force!==b.force) return b.force-a.force;
-
+      // Force chỉ hiển thị (không dùng để chốt)
       if(a.cluster!==b.cluster) return b.cluster-a.cluster;
   }
 
@@ -526,7 +515,7 @@ function topCmp(a,b){
     parts.push(`<b>${info.phase}</b> • RR12=${(info.rr12*100).toFixed(1)}%`);
     parts.push(info.rr23===null ? `• RR23=-- (NO D3)` : `• RR23=${(info.rr23*100).toFixed(1)}%`);
     parts.push(`• Nhịp: <b>${info.rhythm}</b>`);
-    parts.push(`<br>Ưu tiên: <b>BAN</b> → group pha → tier → headtail → cluster → force → neighbor → tránh D3 → tránh dày D1.`);
+    parts.push(`<br>Ưu tiên: <b>BAN</b> → group pha → tier → headtail → cluster → neighbor → tránh D3 → tránh dày D1.`);
     parts.push(`<br>Cooldown block (3d): <span class="mono">${cdList}</span>`);
     parts.push(`<br>PHA BẬT override: <b>${info.phase==="PHA BẬT" ? "ON (Group 1/2 gate)" : "OFF"}</b>`);
     parts.push(`<br>TOP1 ${t.num}: group=${t.group}, tier=${t.tier}, D1freq=${t.c1}, neighbor=${t.nb}, inD3=${t.in3?'1':'0'}.`);
