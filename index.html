@@ -2,656 +2,667 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MB STABLE LOCK v3.4 — FORCE (DISPLAY ONLY) — CORE LOCK</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>MB STABLE LOCK v1.0 — Chốt 1 số</title>
   <style>
     :root{
-      --bg:#070a12;
-      --card:#0b1222;
-      --card2:#0e1830;
-      --text:#e8eefc;
-      --muted:#97a6c6;
-      --line:rgba(255,255,255,.08);
-      --good:#2de3a3;
-      --warn:#ffcc66;
-      --bad:#ff4d6d;
-      --btn:#18264a;
-      --btn2:#131d3a;
-      --shadow: 0 20px 50px rgba(0,0,0,.35);
-      --radius:18px;
+      --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
+      --accent:#21e6c1; --warn:#ffcc66; --danger:#ff4d6d; --ok:#2ee59d;
+      --line:#233245;
+      --realplus:#1f8a3b; --real:#8a7a1f; --ricky:#1f5f8a;
     }
-
-    *{box-sizing:border-box;}
+    *{box-sizing:border-box}
     body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(900px 500px at 20% 0%, rgba(45,227,163,.10), transparent 55%),
-                  radial-gradient(700px 450px at 90% 20%, rgba(102,204,255,.08), transparent 55%),
-                  var(--bg);
-      color:var(--text);
-      padding:20px 14px 40px;
+      margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+      background:linear-gradient(180deg, #070a0f 0%, var(--bg) 100%);
+      color:var(--text); padding:18px; padding-bottom:calc(18px + env(safe-area-inset-bottom));
     }
-
-    .wrap{max-width:780px;margin:0 auto;}
-    h1{margin:10px 6px 6px;font-size:22px;letter-spacing:.2px;}
-    .sub{margin:0 6px 18px;color:var(--muted);line-height:1.35;}
-
+    h1{margin:0 0 8px 0; font-size:20px; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:13px; margin-bottom:14px; line-height:1.35}
+    .grid{display:grid; gap:12px}
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      background:rgba(18,26,36,.96);
       border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+      border-radius:14px; padding:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
     }
-
-    .inner{padding:16px;}
-
-    .pillrow{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px;}
-    .pill{
-      padding:8px 12px;
-      border-radius:999px;
-      background: rgba(255,255,255,.03);
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .sectionTitle{
-      margin:16px 6px 10px;
-      font-size:18px;
-      letter-spacing:.2px;
-    }
-
-    label{display:block;color:var(--muted);font-size:13px;margin:0 0 8px;}
-
-    .input{
-      width:100%;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background: rgba(8,13,28,.65);
-      color:var(--text);
-      padding:12px 12px;
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:8px}
+    textarea{
+      width:100%; min-height:150px; resize:vertical;
+      background:#0c121b; color:var(--text);
+      border:1px solid var(--line); border-radius:12px;
+      padding:12px; font-size:14px; line-height:1.35;
       outline:none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
-
-    textarea.input{min-height:120px;resize:vertical;line-height:1.35;}
-
-    .grid{display:grid;gap:14px;}
-
-    .btnrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:14px;}
-
-    button{
-      border:0;
-      border-radius:14px;
-      padding:12px 16px;
-      font-weight:700;
-      letter-spacing:.2px;
-      cursor:pointer;
-      transition: transform .04s ease, filter .15s ease;
-      user-select:none;
+    input[type="date"]{
+      width:100%; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line); background:#0c121b; color:var(--text);
+      font-size:14px;
     }
-
-    button:active{transform: translateY(1px) scale(.99);}
-
-    .primary{
-      background: linear-gradient(180deg, rgba(45,227,163,1), rgba(45,227,163,.75));
-      color:#04140f;
-      box-shadow: 0 14px 30px rgba(45,227,163,.22);
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn{
+      border:0; border-radius:12px; padding:11px 14px; font-weight:700;
+      background:var(--accent); color:#001313; cursor:pointer;
     }
-
-    .ghost{
-      background: rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid var(--line);
+    .btn.secondary{background:#223244; color:var(--text); border:1px solid var(--line)}
+    .btn.danger{background:var(--danger); color:#140005}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px; border:1px solid var(--line);
+      background:#0c121b; color:var(--muted); font-size:12px;
     }
-
-    .danger{
-      background: linear-gradient(180deg, rgba(255,77,109,1), rgba(255,77,109,.75));
-      color:#21040a;
-      box-shadow: 0 14px 30px rgba(255,77,109,.18);
+    .pill strong{color:var(--text)}
+    .pill.green{background:rgba(31,138,59,.18); color:#c7ffdf; border-color:rgba(46,229,157,.35)}
+    .pill.red{background:rgba(255,77,109,.14); color:#ffd2dc; border-color:rgba(255,77,109,.35)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    table{width:100%; border-collapse:collapse; margin-top:10px}
+    th,td{border-bottom:1px solid var(--line); padding:8px 6px; text-align:center; font-size:13px}
+    th{color:var(--muted); font-weight:700}
+    .tag{
+      display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:800;
+      border:1px solid rgba(255,255,255,.12);
     }
-
-    .small{
-      padding:10px 12px;
-      font-size:13px;
-      font-weight:800;
-      border-radius:12px;
+    .tag.realplus{background:rgba(31,138,59,.22); color:#c7ffdf; border-color:rgba(46,229,157,.35)}
+    .tag.real{background:rgba(138,122,31,.22); color:#fff1b8; border-color:rgba(255,204,102,.35)}
+    .tag.ricky{background:rgba(31,95,138,.22); color:#cfe8ff; border-color:rgba(120,200,255,.28)}
+    .top1{
+      border:1px solid rgba(255,77,109,.35);
+      background:rgba(255,77,109,.12);
+      border-radius:14px; padding:12px; margin-top:12px;
     }
-
-    .status{
-      margin-top:12px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      color:var(--muted);
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
+    .top1 h3{margin:0 0 8px 0; font-size:14px}
+    .big{
+      font-size:28px; font-weight:900; letter-spacing:.8px;
+      display:inline-flex; align-items:center; gap:10px;
     }
-
-    .status .mono{font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
-
-    .note{color:var(--muted);font-size:13px;margin-top:10px;line-height:1.4;}
-
-    .historyHead{
-      display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;
-      margin:8px 0 14px;
+    .muted{color:var(--muted)}
+    .hint{color:var(--muted); font-size:12px; margin-top:8px; line-height:1.35}
+    .hr{height:1px; background:var(--line); margin:12px 0}
+    .history-item{
+      border:1px solid var(--line); background:#0c121b; border-radius:14px;
+      padding:12px; display:grid; gap:8px;
     }
-
-    .historyList{display:grid;gap:12px;}
-
-    .item{
-      background: rgba(255,255,255,.03);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px;
+    .history-head{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+    .kqbox{font-size:12px; color:var(--muted); line-height:1.35}
+    .kqbox .mono{color:var(--text)}
+    .smallbtn{
+      padding:8px 10px; border-radius:10px; border:1px solid var(--line);
+      background:#111a24; color:var(--text); cursor:pointer; font-weight:800; font-size:12px;
     }
-
-    .itemTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
-
-    .chip{
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
-    }
-
-    .chip.good{color:#062017;background:rgba(45,227,163,.10);border-color:rgba(45,227,163,.25)}
-    .chip.bad{color:#2a0710;background:rgba(255,77,109,.12);border-color:rgba(255,77,109,.30)}
-    .chip.warn{color:#241a05;background:rgba(255,204,102,.14);border-color:rgba(255,204,102,.28)}
-
-    .metaLine{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.35;}
-
-    .itemBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
-
-    .divider{height:1px;background:var(--line);margin:14px 0;}
-
-    .footer{margin-top:18px;color:var(--muted);font-size:12px;line-height:1.35;}
-
-    .twoCol{display:grid;grid-template-columns:1fr;gap:14px;}
-    @media (min-width:720px){
-      .twoCol{grid-template-columns:1fr 1fr;}
-    }
+    .smallbtn.danger{background:rgba(255,77,109,.12); border-color:rgba(255,77,109,.35); color:#ffd1db}
+    .foot{margin-top:12px; font-size:12px; color:var(--muted); line-height:1.4}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>MB STABLE LOCK v3.4 — FORCE (DISPLAY ONLY) — CORE LOCK</h1>
-    <p class="sub">
-      v2.3 + khoá thêm: <b>HARD BAN 3-day</b> (D3–D2–D1 cấm TOP1), <b>Anti-HeadTail-only</b> (Cluster=0 &amp; Force=1 cấm TOP1),
-      tie-break không chọn số nhô (đứng) ở D3 → cuối cùng chọn số lớn hơn.
-    </p>
+  <h1>MB STABLE LOCK v1.0</h1>
+  <div class="sub">
+    Dán KQ theo format: <span class="mono">ĐB: 52062 … G7: 34 84 51 98</span> →
+    hệ tự quét 00–99, phân tầng <b>REAL+/REAL/RICKY</b>, chốt <b>TOP 1</b>, lưu lịch sử ngay trên iPhone (LocalStorage).
+  </div>
 
+  <div class="grid">
     <div class="card">
-      <div class="inner">
-        <div class="grid">
-          <div>
-            <label>Ngày chốt</label>
-            <input id="pickDate" class="input" type="date" />
-            <div class="pillrow">
-              <div class="pill">D1 &amp; D2 bắt buộc • D3 khuyến nghị</div>
-            </div>
-          </div>
-
-          <div>
-            <label>D1 (mới nhất)</label>
-            <textarea id="kq1" class="input" placeholder="Dán KQ ngày D1 (format giải)"></textarea>
-          </div>
-          <div>
-            <label>D2</label>
-            <textarea id="kq2" class="input" placeholder="Dán KQ ngày D2 (format giải)"></textarea>
-          </div>
-          <div>
-            <label>D3 (nhịp + HARD BAN 3 ngày)</label>
-            <textarea id="kq3" class="input" placeholder="Dán KQ ngày D3 (format giải)"></textarea>
-          </div>
-
-          <div class="btnrow">
-            <button id="runBtn" class="primary">CHẠY &amp; CHỐT</button>
-            <button id="clearBtn" class="ghost">XOÁ Ô NHẬP</button>
-            <div class="status" style="flex:1">
-              <div class="mono">Trích D1: <span id="c1">0</span> • D2: <span id="c2">0</span> • D3: <span id="c3">0</span></div>
-              <div class="mono">TOP1: <b id="top1">--</b> <span id="tier" class="chip">--</span></div>
-            </div>
-          </div>
-
-          <div class="note">
-            Trích số: lấy <b>2 số cuối</b> của mọi cụm số trong KQ (kể cả ĐB).<br/>
-            Lưu ý: loại các số “tâm linh” kiểu &lt; / &gt; (số lớn hơn / bé hơn) — <b>không đưa vào chốt</b>.
-          </div>
-
+      <div class="row">
+        <div style="flex:1; min-width:180px">
+          <label>Ngày chốt</label>
+          <input id="pickDate" type="date" />
         </div>
+        <div class="pill"><strong>Nhập 1 ngày</strong><span class="muted">→ chốt & lưu lịch sử</span></div>
       </div>
 
-      <div class="divider"></div>
+      <div class="hr"></div>
 
-      <div class="inner">
-        <div class="sectionTitle">Lịch sử chốt</div>
-        <div class="sub" style="margin:0 0 12px;">
-          Đánh dấu <b>Trúng / Trượt</b>. 2-loss brake dựa trên 2 bản ghi gần nhất bị Trượt liên tiếp.
-        </div>
-        <div class="historyHead">
-          <div class="btnrow" style="margin:0">
-            <button id="copyJsonBtn" class="ghost small">COPY JSON</button>
-            <button id="clearHistoryBtn" class="danger small">XOÁ LỊCH SỬ</button>
-          </div>
-          <div class="mono" id="summary">—</div>
-        </div>
-        <div id="history" class="historyList"></div>
+      <label>Dán kết quả (1 ngày)</label>
+      <textarea id="kqInput" placeholder="Ví dụ:
+ĐB: 52062
+G1: 57796
+G2: 79745 30666
+G3: 65247 95051 68829 00009 25760 27583
+G4: 4836 3722 1276 8236
+G5: 5922 1188 0449 4561 3565 4500
+G6: 811 013 869
+G7: 34 84 51 98"></textarea>
 
-        <div class="footer">
-          <b>Core lock</b>: app này chỉ giúp chuẩn hoá cách trích số, chấm, khoá lọc, lưu lịch sử — không đảm bảo kết quả thực tế.
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="runBtn">CHẠY & CHỐT</button>
+        <button class="btn secondary" id="clearInputBtn">XÓA Ô NHẬP</button>
+        <span class="pill">Đã trích: <strong id="extractCount">0</strong> số lô</span>
+      </div>
+
+      <div class="hint">
+        Quy tắc trích số: lấy <b>2 số cuối</b> của tất cả giải (kể cả ĐB). Nếu dòng có nhiều số thì lấy hết.
+      </div>
+    </div>
+
+    <div class="card" id="outCard" style="display:none">
+      <div class="row" style="justify-content:space-between">
+        <div class="pill">Trạng thái: <strong id="riskStatus">NORMAL</strong></div>
+        <div class="pill">Safe Mode: <strong id="safeMode">OFF</strong></div>
+      </div>
+
+      <div class="top1" id="top1Box" style="display:none">
+        <h3>TOP 1 (Chốt 1 con)</h3>
+        <div class="big"><span id="top1Num">--</span> <span id="top1Tier" class="tag">--</span></div>
+        <div class="hint" id="top1Why"></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row" style="justify-content:space-between; align-items:flex-end">
+        <div>
+          <div class="muted" style="font-size:12px">Bảng xếp hạng (Top 20)</div>
+          <div class="hint" style="margin:6px 0 0 0">Cột: Tổng / Cụm / Đầu-đuôi / Lực (đã gồm phạt theo rule).</div>
         </div>
+        <button class="btn secondary" id="toggleAllBtn">Hiện Top 50</button>
+      </div>
+
+      <div id="rankTable"></div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div style="font-weight:900">Lịch sử chốt</div>
+          <div class="hint" style="margin-top:4px">Lưu trên máy của ông. Xóa lịch sử sẽ xóa hết.</div>
+        </div>
+        <div class="row">
+          <button class="btn secondary" id="exportBtn">COPY JSON</button>
+          <button class="btn danger" id="clearHistoryBtn">XÓA LỊCH SỬ</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div id="history"></div>
+      <div class="foot">
+        Gợi ý up GitHub Pages: repo → Settings → Pages → Deploy from branch → chọn <b>main</b> / <b>/ (root)</b>.
       </div>
     </div>
   </div>
 
 <script>
 (() => {
-  // ========== Utilities ==========
   const $ = (id) => document.getElementById(id);
-  const pad2 = (n) => String(n).padStart(2,'0');
 
-  function todayISO(){
-    const d = new Date();
-    const tzOff = d.getTimezoneOffset();
-    const local = new Date(d.getTime() - tzOff*60000);
-    return local.toISOString().slice(0,10);
+  // ====== Storage ======
+  const STORAGE_KEY = "mb_stable_lock_history_v1";
+
+  function loadHistory(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){
+      return [];
+    }
+  }
+  function saveHistory(items){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }
 
-  // Parse all numbers in pasted KQ and return last 2 digits as strings
-  function extractLast2(text){
+  // ====== Helpers ======
+  function todayISO(){
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const dd = String(d.getDate()).padStart(2,"0");
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  // Extract all numbers from pasted text lines like "G3: 65247 95051 ...".
+  // Take last 2 digits of each numeric token.
+  function extractLo2Digits(text){
+    const tokens = text
+      .replace(/[\r]/g, "")
+      .split(/\s+/)
+      .map(t => t.trim())
+      .filter(Boolean);
+
     const out = [];
-    if(!text) return out;
-    // Grab digit groups length 2..6
-    const matches = text.match(/\d{2,6}/g) || [];
-    for(const m of matches){
-      out.push(m.slice(-2));
+    for(const tok of tokens){
+      if(!/^\d+$/.test(tok)) continue;
+      const last2 = tok.slice(-2).padStart(2,"0");
+      out.push(last2);
     }
     return out;
   }
 
-  function freqMap(nums){
+  function freqMap(arr){
     const m = new Map();
-    for(const x of nums){
-      m.set(x, (m.get(x)||0)+1);
-    }
+    for(const x of arr) m.set(x, (m.get(x)||0)+1);
     return m;
   }
 
-  function headTailFreq(nums){
-    const head = Array(10).fill(0);
-    const tail = Array(10).fill(0);
-    for(const n of nums){
-      const h = Number(n[0]);
-      const t = Number(n[1]);
-      head[h]++; tail[t]++;
+  function headTailCounts(arr){
+    const head = new Map();
+    const tail = new Map();
+    for(const x of arr){
+      const h = x[0], t = x[1];
+      head.set(h, (head.get(h)||0)+1);
+      tail.set(t, (tail.get(t)||0)+1);
     }
     return {head, tail};
   }
 
-  function intersectionSize(setA, setB){
-    let c=0;
-    for(const v of setA){ if(setB.has(v)) c++; }
-    return c;
+  // ===== Selector v3.5 (clean + ổn định) =====
+  // - 1 số/ngày
+  // - Cấm số đã về ở D1 (thực tế ngày gần nhất)
+  // - Cooldown 3 ngày theo lịch sử chốt
+  // - Nếu cùng 1 số bị chốt 2 ngày liên tiếp → ngày 3 cấm số đó
+  // - Mode A/B: thua 1 ngày thì đảo mode (dựa trên kết quả bạn tick TRÚNG/TRƯỢT trong lịch sử)
+  // - Force CHỈ HIỂN THỊ (D2+D3), KHÔNG tham gia tie-break
+
+  // Fixed pseudo-random order for final tie-break (không dùng số to/bé).
+  const FINAL_ORDER = (()=>{
+    const arr = Array.from({length:100}, (_,i)=>String(i).padStart(2,"0"));
+    let seed = 20260213;
+    function rnd(){
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 4294967296;
+    }
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(rnd()*(i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    const idx = new Map();
+    arr.forEach((v,i)=>idx.set(v,i));
+    return idx;
+  })();
+
+  function splitDaysFromRaw(raw){
+    const text = (raw||"").replace(/\r/g, "");
+    const hasDMarkers = /\bD1\s*:/i.test(text) && /\bD2\s*:/i.test(text);
+    if(hasDMarkers){
+      const grab = (label) => {
+        const re = new RegExp(`\\b${label}\\s*:[\\s\\S]*?(?=\\n\\s*D[123]\\s*:|$)`, "i");
+        const m = text.match(re);
+        return m ? m[0] : "";
+      };
+      return { D1: grab("D1"), D2: grab("D2"), D3: grab("D3") };
+    }
+    const parts = text.split(/\n\s*(?=KQ\b)/g).filter(s=>s.trim().length>0);
+    if(parts.length>=2){
+      return { D1: parts[0], D2: parts[1]||"", D3: parts[2]||"" };
+    }
+    return { D1: text, D2: "", D3: "" };
   }
 
-  function jaccard(setA, setB){
-    const inter = intersectionSize(setA, setB);
-    const uni = new Set([...setA, ...setB]).size;
-    return uni===0 ? 0 : inter/uni;
+  function topK(map, k){
+    return [...map.entries()].sort((a,b)=>{
+      if(b[1]!==a[1]) return b[1]-a[1];
+      return a[0].localeCompare(b[0]);
+    }).slice(0,k);
   }
 
-  // ========== Scoring core (stable, simple, deterministic) ==========
-  // Goal: always output 1 number/day, avoid "HARD BAN 3-day" and "Anti-HeadTail-only".
-  // Also avoids "standing" numbers (ra >=2 lần ở D1) unless forced.
+  function tierPriority(t){
+    if(t==="REAL+") return 3;
+    if(t==="REAL") return 2;
+    return 1;
+  }
 
-  function computeTop1(D1, D2, D3){
-    const set1 = new Set(D1);
-    const set2 = new Set(D2);
-    const set3 = new Set(D3);
+  function computeNextMode(){
+    const hist = loadHistory().sort((a,b)=> (a.date||"").localeCompare(b.date||""));
+    if(hist.length===0) return "A";
+    const last = hist[hist.length-1];
+    const lastRes = (last.result||"").toUpperCase();
+    if(lastRes==="TRƯỢT") return (last.modeUsed==="A") ? "B" : "A";
+    return last.modeUsed || "A";
+  }
 
-    const f1 = freqMap(D1);
-    const f2 = freqMap(D2);
-    const f3 = freqMap(D3);
+  function isCooldownBanned(num, dateISO){
+    const hist = loadHistory().sort((a,b)=> (a.date||"").localeCompare(b.date||""));
+    const prev = hist.filter(h => (h.date||"") < dateISO).slice(-3);
+    return prev.some(h => h?.top1?.num === num);
+  }
 
-    const ht1 = headTailFreq(D1);
-    const ht2 = headTailFreq(D2);
+  function isThirdDayRepeatBan(num, dateISO){
+    const hist = loadHistory().sort((a,b)=> (a.date||"").localeCompare(b.date||""));
+    const prev = hist.filter(h => (h.date||"") < dateISO).slice(-2);
+    if(prev.length<2) return false;
+    return prev[0]?.top1?.num === num && prev[1]?.top1?.num === num;
+  }
 
-    // Candidate score
-    // - Base = head strength (D1+D2) + tail strength (D1+D2)
-    // - Force = 1 if appears in D1 or D2, + bonus
-    // - Cluster = 1 if both head and tail are in top-3 frequency of their distributions
-    // - Penalties: HARD BAN 3-day (if appeared in D1 or D2 or D3) => ban; standing in D1 (freq>=2) => heavy penalty
+  function computeScores(rawText, dateISO){
+    const days = splitDaysFromRaw(rawText);
+    const d1 = extractLo2Digits(days.D1);
+    const d2 = extractLo2Digits(days.D2);
+    const d3 = extractLo2Digits(days.D3);
 
-    // Precompute top3 heads/tails
-    function topKIdx(arr, k){
-      const pairs = arr.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v||a.i-b.i);
-      return new Set(pairs.slice(0,k).map(p=>p.i));
-    }
-    const topH = topKIdx(ht1.head.map((v,i)=>v+ht2.head[i]), 3);
-    const topT = topKIdx(ht1.tail.map((v,i)=>v+ht2.tail[i]), 3);
+    const f1 = freqMap(d1);
+    const f2 = freqMap(d2);
+    const f3 = freqMap(d3);
+    const fAll = freqMap([...d1, ...d2, ...d3]);
 
-    const scored = [];
+    const mode = computeNextMode();
+    const {head: h1, tail: t1} = headTailCounts(d1);
+    const {head: h2, tail: t2} = headTailCounts(d2);
+    const {head: h3, tail: t3} = headTailCounts(d3);
 
-    for(let i=0;i<100;i++){
-      const n = pad2(i);
-
-      // HARD BAN 3-day: D3–D2–D1 cấm TOP1
-      if(set1.has(n) || set2.has(n) || set3.has(n)){
-        continue;
-      }
-
-      const h = Number(n[0]);
-      const t = Number(n[1]);
-
-      const headScore = (ht1.head[h] + ht2.head[h]);
-      const tailScore = (ht1.tail[t] + ht2.tail[t]);
-
-      // Force (simple): support from D1/D2 neighborhood via head/tail strength
-      const force = (headScore + tailScore) >= 6 ? 2 : ((headScore + tailScore) >= 4 ? 1 : 0);
-
-      // Cluster: head and tail both in top3 combined distribution
-      const cluster = (topH.has(h) && topT.has(t)) ? 1 : 0;
-
-      // Anti-HeadTail-only ban: Cluster=0 & Force=1 => ban
-      if(cluster===0 && force===1){
-        continue;
-      }
-
-      // Penalty: "standing" on D1 (appears >=2 times)
-      const standingPenalty = (f1.get(n)||0) >= 2 ? 30 : 0;
-
-      // Total score
-      const total = (headScore*4 + tailScore*4) + (cluster*8) + (force*3) - standingPenalty;
-
-      scored.push({n, total, headScore, tailScore, cluster, force});
+    function combineHT(a1,a2,a3, w1,w2,w3){
+      const out = new Map();
+      const add = (m, w)=>{ for(const [k,v] of m.entries()) out.set(k, (out.get(k)||0) + v*w); };
+      add(a1,w1); add(a2,w2); add(a3,w3);
+      return out;
     }
 
-    // If all candidates banned (rare), fall back to minimal-ban rule: allow not in D1 & D2 (still ban D1/D2), ignore D3
-    if(scored.length===0){
-      for(let i=0;i<100;i++){
-        const n=pad2(i);
-        if(set1.has(n) || set2.has(n)) continue;
-        const h=Number(n[0]), t=Number(n[1]);
-        const headScore=(ht1.head[h]+ht2.head[h]);
-        const tailScore=(ht1.tail[t]+ht2.tail[t]);
-        const force=(headScore+tailScore)>=6?2:((headScore+tailScore)>=4?1:0);
-        const cluster=(topH.has(h)&&topT.has(t))?1:0;
-        if(cluster===0 && force===1) continue;
-        const total=(headScore*4+tailScore*4)+(cluster*8)+(force*3);
-        scored.push({n,total,headScore,tailScore,cluster,force});
-      }
-    }
+    const headW = (mode==="B") ? [1.2, 1.0, 0.6] : [1.0, 0.8, 0.5];
+    const tailW = (mode==="A") ? [1.2, 1.0, 0.6] : [1.0, 0.8, 0.5];
+    const H = combineHT(h1,h2,h3, ...headW);
+    const T = combineHT(t1,t2,t3, ...tailW);
 
-    scored.sort((a,b)=> b.total-a.total || b.cluster-a.cluster || b.force-a.force || (Number(b.n)-Number(a.n)));
+    const topHeads = topK(H, 3).map(([k])=>k);
+    const topTails = topK(T, 3).map(([k])=>k);
 
-    const top1 = scored[0];
-    const top2 = scored[1] || null;
-    const margin = top2 ? (top1.total - top2.total) : top1.total;
-
-    // Phase / rhythm (lightweight heuristics)
-    const rr12 = jaccard(new Set(D1), new Set(D2));
-    const rr23 = jaccard(new Set(D2), new Set(D3));
-
-    let phase = 'TRUNG TÍNH';
-    if(rr12 >= 0.30) phase = 'PHA GIỮ';
-    if(rr12 <= 0.18) phase = 'PHA BẬT';
-
-    let rhythm = 'ỔN ĐỊNH';
-    if(Math.abs(rr12-rr23) >= 0.12) rhythm = 'ĐỔI PHA (MỜ)';
-    if(Math.abs(rr12-rr23) >= 0.20) rhythm = 'ĐỔI PHA (RÕ)';
-
-    const riskHigh = margin < 6 || (phase==='PHA GIỮ' && margin < 8);
+    const dupCount = [...f1.values()].filter(v=>v>=2).length;
+    const maxFreq = Math.max(0, ...f1.values());
+    const riskHigh = dupCount>=6 || maxFreq>=3;
     const safeMode = riskHigh;
 
-    return {
-      top1,
-      meta: { phase, rhythm, rr12: Number(rr12.toFixed(4)), rr23: Number(rr23.toFixed(4)), riskHigh, safeMode, brake:false },
-      aux: { margin }
-    };
-  }
+    const pool = [];
+    for(const hh of topHeads){
+      for(const tt of topTails){
+        pool.push(`${hh}${tt}`);
+      }
+    }
+    const poolSet = new Set(pool);
 
-  // ========== History store ==========
-  const LS_KEY = 'mb_stable_lock_v34_history';
-
-  function loadHistory(){
-    try{
-      return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-    }catch{ return []; }
-  }
-
-  function saveHistory(list){
-    localStorage.setItem(LS_KEY, JSON.stringify(list));
-  }
-
-  function computeBrake(list){
-    // brake ON if last 2 items are TRƯỢT
-    if(list.length < 2) return false;
-    const a = list[list.length-1];
-    const b = list[list.length-2];
-    return (a.result==='TRƯỢT' && b.result==='TRƯỢT');
-  }
-
-  function renderHistory(){
-    const list = loadHistory();
-    const root = $('history');
-    root.innerHTML='';
-
-    const win = list.filter(x=>x.result==='TRÚNG').length;
-    const lose = list.filter(x=>x.result==='TRƯỢT').length;
-    $('summary').textContent = `Tổng: ${list.length} • Trúng: ${win} • Trượt: ${lose}`;
-
-    if(list.length===0){
-      const empty = document.createElement('div');
-      empty.className='item';
-      empty.innerHTML = `<div class="metaLine">Chưa có lịch sử.</div>`;
-      root.appendChild(empty);
-      return;
+    function clusterScore(num){
+      const h = num[0], t = num[1];
+      let sameH = 0, sameT = 0;
+      for(const x of poolSet){
+        if(x===num) continue;
+        if(x[0]===h) sameH++;
+        if(x[1]===t) sameT++;
+      }
+      const base = (sameH>0?1:0) + (sameT>0?1:0);
+      const density = Math.min(2, Math.floor((sameH+sameT)/2));
+      return base + density; // 0..4
     }
 
-    // newest first
-    const rev = [...list].reverse();
+    const results = [];
+    for(let i=0;i<100;i++){
+      const num = String(i).padStart(2,"0");
+      const h = num[0], t = num[1];
 
-    for(const it of rev){
-      const node = document.createElement('div');
-      node.className='item';
+      const bannedByD1 = (f1.get(num)||0) > 0;
+      const bannedByCooldown = isCooldownBanned(num, dateISO);
+      const bannedByRepeat3 = isThirdDayRepeatBan(num, dateISO);
+      const banned = bannedByD1 || bannedByCooldown || bannedByRepeat3;
 
-      const chipCls = it.result==='TRÚNG' ? 'chip good' : (it.result==='TRƯỢT' ? 'chip bad' : 'chip warn');
-      const tier = it.top1?.tier || it.top1?.tierName || it.top1?.tier || 'REAL';
+      const headScore = (H.get(h)||0);
+      const tailScore = (T.get(t)||0);
+      const headtail = headScore + tailScore;
 
-      node.innerHTML = `
-        <div class="itemTop">
-          <div class="mono"><b>Ngày:</b> ${it.date}</div>
-          <div class="mono"><b>Chốt:</b> ${it.top1?.num ?? it.top1?.n ?? '--'} <span class="chip">${tier}</span></div>
-        </div>
-        <div class="itemBtns">
-          <button class="small" data-act="TRƯỢT">TRƯỢT</button>
-          <button class="small" data-act="TRÚNG">Trúng</button>
-          <button class="small" data-act="TRƯỢT2">Trượt</button>
-          <button class="small" data-act="RESET">Reset</button>
-          <button class="small" data-act="DEL" style="background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.30);color:#ff9aa8">Xoá</button>
-          <span class="${chipCls}">${it.result || '—'}</span>
-        </div>
-        <div class="metaLine">
-          <b>Pha:</b> ${it.meta?.phase ?? '—'} • <b>Nhịp:</b> ${it.meta?.rhythm ?? '—'} • <b>RR12:</b> ${(it.meta?.rr12 ?? 0)*100} % • <b>RR23:</b> ${(it.meta?.rr23 ?? 0)*100} % • <b>Risk:</b> ${it.meta?.riskHigh ? 'HIGH' : 'LOW'} • <b>Safe:</b> ${it.meta?.safeMode ? 'ON' : 'OFF'} • <b>Brake:</b> ${it.meta?.brake ? 'ON' : 'OFF'}
-        </div>
-      `;
+      const inPool = poolSet.has(num);
+      let cluster = inPool ? clusterScore(num) : 0;
+      if(safeMode) cluster = Math.max(0, cluster-1);
 
-      // Wire buttons
-      const btns = node.querySelectorAll('button[data-act]');
-      for(const b of btns){
-        b.classList.add('ghost');
-        b.style.border='1px solid var(--line)';
-        b.style.background='rgba(255,255,255,.04)';
-        b.style.color='var(--text)';
-        b.addEventListener('click', () => {
-          const act = b.getAttribute('data-act');
-          const list2 = loadHistory();
-          const idx = list2.findIndex(x => x.id === it.id);
-          if(idx===-1) return;
+      const p2 = (f2.get(num)||0) > 0;
+      const p3 = (f3.get(num)||0) > 0;
+      let presence = 0;
+      if(p2) presence += 2;
+      if(p3) presence += 1;
 
-          if(act==='DEL'){
-            list2.splice(idx,1);
-          }else if(act==='RESET'){
-            list2[idx].result = '';
-          }else if(act==='TRÚNG'){
-            list2[idx].result = 'TRÚNG';
-          }else if(act==='TRƯỢT' || act==='TRƯỢT2'){
-            list2[idx].result = 'TRƯỢT';
-          }
+      const force = (f2.get(num)||0) + (f3.get(num)||0); // display only
+      const freqAll = fAll.get(num)||0;
 
-          // recompute brake flag for all items based on running order
-          // (brake is a property of the "current" day, but we store it per record for display)
-          for(let i=0;i<list2.length;i++){
-            const prefix = list2.slice(0,i+1);
-            list2[i].meta = list2[i].meta || {};
-            list2[i].meta.brake = computeBrake(prefix);
-          }
+      let total = 0;
+      total += inPool ? 6 : 0;
+      total += cluster * 3;
+      total += Math.round(headtail);
+      total += presence;
+      if(banned) total = -999;
 
-          saveHistory(list2);
-          renderHistory();
-        });
+      let tier = "RICKY";
+      if(!banned){
+        if(inPool && cluster>=2 && presence>=2) tier = "REAL+";
+        else if(inPool && cluster>=1) tier = "REAL";
+        else tier = "RICKY";
       }
 
-      root.appendChild(node);
+      results.push({
+        num,
+        total,
+        cluster,
+        headTailScore: Math.round(headtail),
+        force,
+        tier,
+        banned,
+        bannedByD1,
+        bannedByCooldown,
+        bannedByRepeat3,
+        freqAll
+      });
     }
-  }
 
-  function copyJSON(){
-    const list = loadHistory();
-    const txt = JSON.stringify(list, null, 2);
-    navigator.clipboard.writeText(txt).then(()=>{
-      alert('Đã copy JSON lịch sử.');
-    }).catch(()=>{
-      // fallback
-      const ta = document.createElement('textarea');
-      ta.value = txt;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-      alert('Đã copy JSON lịch sử.');
+    results.sort((a,b)=>{
+      const tp = tierPriority(b.tier) - tierPriority(a.tier);
+      if(tp!==0) return tp;
+      if(b.total!==a.total) return b.total-a.total;
+      if(b.cluster!==a.cluster) return b.cluster-a.cluster;
+      if(b.headTailScore!==a.headTailScore) return b.headTailScore-a.headTailScore;
+      if(a.freqAll!==b.freqAll) return a.freqAll-b.freqAll;
+      return (FINAL_ORDER.get(a.num)||0) - (FINAL_ORDER.get(b.num)||0);
     });
+
+    return {
+      results,
+      mode,
+      riskHigh,
+      safeMode,
+      topHeads,
+      topTails,
+      dupCount,
+      maxFreq,
+      extracted: {d1:d1.length, d2:d2.length, d3:d3.length}
+    };
   }
 
-  // ========== Main action ==========
-  function updateCounts(){
-    const D1 = extractLast2($('kq1').value);
-    const D2 = extractLast2($('kq2').value);
-    const D3 = extractLast2($('kq3').value);
-    $('c1').textContent = D1.length;
-    $('c2').textContent = D2.length;
-    $('c3').textContent = D3.length;
+  function pickTop1(sorted){
+    const ok = (x)=> (x && x.total>-900 && !x.banned);
+    const realplus = sorted.filter(x=>x.tier==="REAL+" && ok(x));
+    const real = sorted.filter(x=>x.tier==="REAL" && ok(x));
+    const ricky = sorted.filter(x=>x.tier==="RICKY" && ok(x));
+    if(realplus.length>=1) return realplus[0];
+    if(real.length>=1) return real[0];
+    return ricky[0];
   }
 
-  function run(){
-    const date = $('pickDate').value || todayISO();
-    const D1 = extractLast2($('kq1').value);
-    const D2 = extractLast2($('kq2').value);
-    const D3 = extractLast2($('kq3').value);
+  function tierTag(tier){
+    if(tier==="REAL+") return `<span class="tag realplus">REAL+</span>`;
+    if(tier==="REAL") return `<span class="tag real">REAL</span>`;
+    return `<span class="tag ricky">RICKY</span>`;
+  }
 
-    updateCounts();
+  function renderTable(sorted, limit){
+    const top = sorted.slice(0, limit);
+    let html = `<table>
+      <thead><tr>
+        <th>#</th><th>Số</th><th>Tổng</th><th>Cụm</th><th>Đầu/đuôi</th><th>Lực</th><th>Tầng</th>
+      </tr></thead><tbody>`;
+    top.forEach((r, idx)=>{
+      html += `<tr>
+        <td>${idx+1}</td>
+        <td class="mono" style="font-weight:900">${r.num}</td>
+        <td><b>${r.total}</b></td>
+        <td>${r.cluster}</td>
+        <td>${r.headTailScore}</td>
+        <td>${r.force}</td>
+        <td>${tierTag(r.tier)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+    return html;
+  }
 
-    if(D1.length===0 || D2.length===0){
-      alert('Thiếu dữ liệu: D1 và D2 là bắt buộc.');
+  function summarizeWhy(info, top1){
+    const reasons = [];
+    reasons.push(`Mode hôm nay: <b>${info.mode}</b> (thua ngày trước thì tự đảo mode).`);
+    reasons.push(`Selector ưu tiên theo tầng: <b>${top1.tier}</b>.`);
+    reasons.push(`Tie-break: Tổng → Cụm → Đầu/đuôi → chống dày (tần suất 3 ngày) → thứ tự cố định.`);
+    reasons.push(`<b>Force</b> chỉ hiển thị (D2+D3), không dùng để chốt.`);
+    if(top1.banned){
+      const why = [
+        top1.bannedByD1 ? "Cấm vì đã về D1" : "",
+        top1.bannedByCooldown ? "Cooldown 3 ngày" : "",
+        top1.bannedByRepeat3 ? "Cấm ngày 3 (lặp 2 ngày)" : "",
+      ].filter(Boolean).join(" • ");
+      reasons.push(`<span class="danger">Số bị CẤM</span>: ${why||""}.`);
+    }
+    if(info.safeMode) reasons.push(`Safe Mode ON (chỉ giảm Cụm), vì D1 nhiễu (dup=${info.dupCount}, maxFreq=${info.maxFreq}).`);
+    else reasons.push(`Trạng thái <b>Normal</b>: Cụm được tính bình thường.`);
+    reasons.push(`Top heads: <span class="mono">${(info.topHeads||[]).join(" ")||"-"}</span> • Top tails: <span class="mono">${(info.topTails||[]).join(" ")||"-"}</span>.`);
+    reasons.push(`Trích số: D1=${info.extracted?.d1||0}, D2=${info.extracted?.d2||0}, D3=${info.extracted?.d3||0}.`);
+    return reasons.join(" ");
+  }
+
+  // ====== History UI ======
+  function renderHistory(){
+    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    const box = $("history");
+    if(items.length===0){
+      box.innerHTML = `<div class="muted">Chưa có lịch sử.</div>`;
+      return;
+    }
+    box.innerHTML = items.map((it, idx)=>{
+      const res = (it.result||"").toUpperCase();
+      const resTag = res ? `<span class="pill ${res==='TRÚNG'?'green':'red'}">${res}</span>` : `<span class="pill">CHƯA DÒ</span>`;
+      return `
+      <div class="history-item">
+        <div class="history-head">
+          <div class="pill">Ngày: <strong class="mono">${it.date}</strong></div>
+          <div class="pill">Chốt: <strong class="mono">${it.top1.num}</strong> ${tierTag(it.top1.tier)}</div>
+          <div class="pill">Mode: <strong class="mono">${it.modeUsed||"A"}</strong></div>
+          ${resTag}
+          <button class="smallbtn" onclick="window.__markHistory(${idx}, 'TRÚNG')">TRÚNG</button>
+          <button class="smallbtn danger" onclick="window.__markHistory(${idx}, 'TRƯỢT')">TRƯỢT</button>
+          <button class="smallbtn ghost" onclick="window.__viewHistory(${idx})">Xem KQ</button>
+          <button class="smallbtn danger" onclick="window.__delHistory(${idx})">Xóa</button>
+        </div>
+        <div class="kqbox">
+          Đã trích <b>${it.extractedCount}</b> số lô. Top head: <span class="mono">${(it.meta.topHeads||[]).join(" ")||"-"}</span>,
+          Top tail: <span class="mono">${(it.meta.topTails||[]).join(" ")||"-"}</span>.
+          Risk: <b>${it.meta.riskHigh ? "HIGH" : "NORMAL"}</b>, Safe: <b>${it.meta.safeMode ? "ON" : "OFF"}</b>
+        </div>
+      </div>
+    `;
+    }).join("");
+  }
+
+  window.__markHistory = (sortedIndexInUI, result) => {
+    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    if(!items[sortedIndexInUI]) return;
+    items[sortedIndexInUI].result = result;
+    saveHistory(items);
+    renderHistory();
+  };
+
+  window.__viewHistory = (sortedIndexInUI) => {
+    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    const it = items[sortedIndexInUI];
+    alert(it?.rawKQ || "(Không có rawKQ)");
+  };
+
+  window.__delHistory = (sortedIndexInUI) => {
+    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    items.splice(sortedIndexInUI, 1);
+    saveHistory(items);
+    renderHistory();
+  };
+
+  // ====== Actions ======
+  let showLimit = 20;
+
+  function runAndRender(){
+    const date = $("pickDate").value || todayISO();
+    const raw = $("kqInput").value || "";
+    const days = splitDaysFromRaw(raw);
+    const lo1 = extractLo2Digits(days.D1);
+    const lo2 = extractLo2Digits(days.D2);
+    const lo3 = extractLo2Digits(days.D3);
+    const extractedTotal = lo1.length + lo2.length + lo3.length;
+    $("extractCount").textContent = String(extractedTotal);
+
+    if(lo1.length===0){
+      alert("Không trích được D1. Dán 1–3 ngày KQ (khuyên dán theo thứ tự mới → cũ). Nếu 3 ngày, có thể dán theo dạng D1:/D2:/D3:.");
       return;
     }
 
-    const res = computeTop1(D1,D2,D3);
+    const info = computeScores(raw, date);
+    const top1 = pickTop1(info.results);
 
-    // Determine tier label (display only)
-    // Use a simple mapping: if total >= 80 => REAL+, else REAL
-    const tier = (res.top1.total >= 80) ? 'REAL+' : 'REAL';
+    $("outCard").style.display = "block";
+    $("riskStatus").textContent = info.riskHigh ? "RISK HIGH" : "NORMAL";
+    $("safeMode").textContent = info.safeMode ? "ON" : "OFF";
 
-    // Show
-    $('top1').textContent = res.top1.n;
-    $('tier').textContent = tier;
-    $('tier').className = 'chip ' + (tier==='REAL+' ? 'good' : '');
+    $("top1Box").style.display = "block";
+    $("top1Num").textContent = top1.num;
 
-    // Save to history
-    const list = loadHistory();
+    // Replace tier placeholder safely
+    const tierEl = document.createElement("span");
+    tierEl.innerHTML = tierTag(top1.tier);
+    const oldTier = document.getElementById("top1Tier");
+    if(oldTier) oldTier.replaceWith(tierEl.firstChild);
 
-    // avoid duplicate date records: replace if same date exists
-    const id = `${date}__${Math.random().toString(16).slice(2)}`;
-    const record = {
-      id,
+    $("top1Why").innerHTML = summarizeWhy(info, top1);
+    $("rankTable").innerHTML = renderTable(info.results, showLimit);
+
+    const hist = loadHistory();
+    const item = {
       date,
-      top1: {
-        num: res.top1.n,
-        tier,
-        total: res.top1.total,
-        cluster: res.top1.cluster,
-        headtail: res.top1.headScore + res.top1.tailScore,
-        force: res.top1.force
-      },
-      meta: {
-        phase: res.meta.phase,
-        rhythm: res.meta.rhythm,
-        rr12: res.meta.rr12,
-        rr23: res.meta.rr23,
-        riskHigh: res.meta.riskHigh,
-        safeMode: res.meta.safeMode,
-        brake: false
-      },
-      raw: {
-        D1: $('kq1').value.trim(),
-        D2: $('kq2').value.trim(),
-        D3: $('kq3').value.trim()
-      },
-      result: ''
+      extractedCount: extractedTotal,
+      top1: { num: top1.num, tier: top1.tier, total: top1.total, cluster: top1.cluster, headTail: top1.headTailScore, force: top1.force },
+      modeUsed: info.mode,
+      result: "",
+      meta: { riskHigh: info.riskHigh, safeMode: info.safeMode, topHeads: info.topHeads, topTails: info.topTails, dupCount: info.dupCount, maxFreq: info.maxFreq },
+      rawKQ: raw
     };
 
-    // replace existing same date if any
-    const idx = list.findIndex(x => x.date === date);
-    if(idx >= 0) list[idx] = {...record, id: list[idx].id};
-    else list.push(record);
-
-    // recompute brake
-    for(let i=0;i<list.length;i++){
-      const prefix = list.slice(0,i+1);
-      list[i].meta.brake = computeBrake(prefix);
-    }
-
-    saveHistory(list);
+    const idx = hist.findIndex(x => x.date === date);
+    if(idx>=0) hist[idx] = item; else hist.push(item);
+    saveHistory(hist);
     renderHistory();
+
+    setTimeout(()=> $("outCard").scrollIntoView({behavior:"smooth", block:"start"}), 50);
   }
 
-  function clearInputs(){
-    $('kq1').value='';
-    $('kq2').value='';
-    $('kq3').value='';
-    $('top1').textContent='--';
-    $('tier').textContent='--';
-    $('tier').className='chip';
-    updateCounts();
+  function clearInput(){
+    $("kqInput").value = "";
+    $("extractCount").textContent = "0";
   }
 
   function clearHistory(){
-    if(!confirm('Xoá toàn bộ lịch sử?')) return;
-    localStorage.removeItem(LS_KEY);
+    if(!confirm("Xóa toàn bộ lịch sử chốt trên máy?")) return;
+    localStorage.removeItem(STORAGE_KEY);
     renderHistory();
   }
 
-  // ========== Init ==========
-  $('pickDate').value = todayISO();
-  ['kq1','kq2','kq3'].forEach(id => {
-    $(id).addEventListener('input', updateCounts);
-  });
+  function exportJSON(){
+    const data = loadHistory();
+    const text = JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(text).then(()=>{
+      alert("Đã copy JSON lịch sử vào clipboard.");
+    }).catch(()=>{
+      prompt("Copy JSON:", text);
+    });
+  }
 
-  $('runBtn').addEventListener('click', run);
-  $('clearBtn').addEventListener('click', clearInputs);
-  $('copyJsonBtn').addEventListener('click', copyJSON);
-  $('clearHistoryBtn').addEventListener('click', clearHistory);
+  function toggleAll(){
+    showLimit = (showLimit===20) ? 50 : 20;
+    $("toggleAllBtn").textContent = (showLimit===20) ? "Hiện Top 50" : "Chỉ Top 20";
 
-  updateCounts();
+    const raw = $("kqInput").value || "";
+    const lo = extractLo2Digits(raw);
+    if(lo.length===0) return;
+    const info = computeScores(lo);
+    $("rankTable").innerHTML = renderTable(info.results, showLimit);
+  }
+
+  // ====== Init ======
+  $("pickDate").value = todayISO();
+  $("runBtn").addEventListener("click", runAndRender);
+  $("clearInputBtn").addEventListener("click", clearInput);
+  $("clearHistoryBtn").addEventListener("click", clearHistory);
+  $("exportBtn").addEventListener("click", exportJSON);
+  $("toggleAllBtn").addEventListener("click", toggleAll);
+
   renderHistory();
 })();
 </script>
