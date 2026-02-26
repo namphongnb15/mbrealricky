@@ -1,670 +1,212 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MB STABLE LOCK v1.0 — Chốt 1 số</title>
-  <style>
-    :root{
-      --bg:#0b0f14; --card:#121a24; --muted:#8aa0b6; --text:#e7eef7;
-      --accent:#21e6c1; --warn:#ffcc66; --danger:#ff4d6d; --ok:#2ee59d;
-      --line:#233245;
-      --realplus:#1f8a3b; --real:#8a7a1f; --ricky:#1f5f8a;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
-      background:linear-gradient(180deg, #070a0f 0%, var(--bg) 100%);
-      color:var(--text); padding:18px; padding-bottom:calc(18px + env(safe-area-inset-bottom));
-    }
-    h1{margin:0 0 8px 0; font-size:20px; letter-spacing:.2px}
-    .sub{color:var(--muted); font-size:13px; margin-bottom:14px; line-height:1.35}
-    .grid{display:grid; gap:12px}
-    .card{
-      background:rgba(18,26,36,.96);
-      border:1px solid var(--line);
-      border-radius:14px; padding:14px;
-      box-shadow:0 10px 30px rgba(0,0,0,.25);
-    }
-    label{display:block; font-size:12px; color:var(--muted); margin-bottom:8px}
-    textarea{
-      width:100%; min-height:150px; resize:vertical;
-      background:#0c121b; color:var(--text);
-      border:1px solid var(--line); border-radius:12px;
-      padding:12px; font-size:14px; line-height:1.35;
-      outline:none;
-    }
-    input[type="date"]{
-      width:100%; padding:10px 12px; border-radius:12px;
-      border:1px solid var(--line); background:#0c121b; color:var(--text);
-      font-size:14px;
-    }
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .btn{
-      border:0; border-radius:12px; padding:11px 14px; font-weight:700;
-      background:var(--accent); color:#001313; cursor:pointer;
-    }
-    .btn.secondary{background:#223244; color:var(--text); border:1px solid var(--line)}
-    .btn.danger{background:var(--danger); color:#140005}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px; border-radius:999px; border:1px solid var(--line);
-      background:#0c121b; color:var(--muted); font-size:12px;
-    }
-    .pill strong{color:var(--text)}
-    .pill.green{background:rgba(31,138,59,.18); color:#c7ffdf; border-color:rgba(46,229,157,.35)}
-    .pill.red{background:rgba(255,77,109,.14); color:#ffd2dc; border-color:rgba(255,77,109,.35)}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    table{width:100%; border-collapse:collapse; margin-top:10px}
-    th,td{border-bottom:1px solid var(--line); padding:8px 6px; text-align:center; font-size:13px}
-    th{color:var(--muted); font-weight:700}
-    .tag{
-      display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:800;
-      border:1px solid rgba(255,255,255,.12);
-    }
-    .tag.realplus{background:rgba(31,138,59,.22); color:#c7ffdf; border-color:rgba(46,229,157,.35)}
-    .tag.real{background:rgba(138,122,31,.22); color:#fff1b8; border-color:rgba(255,204,102,.35)}
-    .tag.ricky{background:rgba(31,95,138,.22); color:#cfe8ff; border-color:rgba(120,200,255,.28)}
-    .top1{
-      border:1px solid rgba(255,77,109,.35);
-      background:rgba(255,77,109,.12);
-      border-radius:14px; padding:12px; margin-top:12px;
-    }
-    .top1 h3{margin:0 0 8px 0; font-size:14px}
-    .big{
-      font-size:28px; font-weight:900; letter-spacing:.8px;
-      display:inline-flex; align-items:center; gap:10px;
-    }
-    .muted{color:var(--muted)}
-    .hint{color:var(--muted); font-size:12px; margin-top:8px; line-height:1.35}
-    .hr{height:1px; background:var(--line); margin:12px 0}
-    .history-item{
-      border:1px solid var(--line); background:#0c121b; border-radius:14px;
-      padding:12px; display:grid; gap:8px;
-    }
-    .history-head{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
-    .kqbox{font-size:12px; color:var(--muted); line-height:1.35}
-    .kqbox .mono{color:var(--text)}
-    .smallbtn{
-      padding:8px 10px; border-radius:10px; border:1px solid var(--line);
-      background:#111a24; color:var(--text); cursor:pointer; font-weight:800; font-size:12px;
-    }
-    .smallbtn.danger{background:rgba(255,77,109,.12); border-color:rgba(255,77,109,.35); color:#ffd1db}
-    .foot{margin-top:12px; font-size:12px; color:var(--muted); line-height:1.4}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MB STABLE v1 - TOP1 LOCK</title>
+<style>
+body{
+  background:#0f172a;
+  color:#e2e8f0;
+  font-family:system-ui;
+  padding:20px;
+  max-width:900px;
+  margin:auto;
+}
+h1{font-size:22px}
+.box{
+  background:#1e293b;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+textarea,input{
+  width:100%;
+  background:#0f172a;
+  color:#e2e8f0;
+  border:1px solid #334155;
+  border-radius:6px;
+  padding:8px;
+}
+button{
+  padding:8px 12px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+}
+.btn{background:#22c55e;color:black}
+.btn2{background:#475569;color:white}
+.btn3{background:#ef4444;color:white}
+.result{
+  font-size:28px;
+  font-weight:bold;
+  text-align:center;
+  margin-top:10px;
+}
+.history-item{
+  background:#0f172a;
+  padding:10px;
+  border-radius:6px;
+  margin-bottom:8px;
+}
+.small{font-size:12px;color:#94a3b8}
+</style>
 </head>
 <body>
-  <h1>MB STABLE LOCK v1.0</h1>
-  <div class="sub">
-    Dán KQ theo format: <span class="mono">ĐB: 52062 … G7: 34 84 51 98</span> →
-    hệ tự quét 00–99, phân tầng <b>REAL+/REAL/RICKY</b>, chốt <b>TOP 1</b>, lưu lịch sử ngay trên iPhone (LocalStorage).
-  </div>
 
-  <div class="grid">
-    <div class="card">
-      <div class="row">
-        <div style="flex:1; min-width:180px">
-          <label>Ngày chốt</label>
-          <input id="pickDate" type="date" />
-        </div>
-        <div class="pill"><strong>Nhập 1 ngày</strong><span class="muted">→ chốt & lưu lịch sử</span></div>
-      </div>
+<h1>MB STABLE v1 — CHỐT TOP 1 (LOCK)</h1>
 
-      <div class="hr"></div>
+<div class="box">
+<label>Ngày chốt</label>
+<input type="date" id="ngay">
+</div>
 
-      <label>Dán kết quả (1 ngày)</label>
-      <textarea id="kqInput" placeholder="Ví dụ:
-ĐB: 52062
-G1: 57796
-G2: 79745 30666
-G3: 65247 95051 68829 00009 25760 27583
-G4: 4836 3722 1276 8236
-G5: 5922 1188 0449 4561 3565 4500
-G6: 811 013 869
-G7: 34 84 51 98"></textarea>
+<div class="box">
+<label>D1 (mới nhất)</label>
+<textarea id="d1" rows="3"></textarea>
+<button class="btn3" onclick="clearBox('d1')">Xoá D1</button>
+</div>
 
-      <div class="row" style="margin-top:10px">
-        <button class="btn" id="runBtn">CHẠY & CHỐT</button>
-        <button class="btn secondary" id="clearInputBtn">XÓA Ô NHẬP</button>
-        <span class="pill">Đã trích: <strong id="extractCount">0</strong> số lô</span>
-      </div>
+<div class="box">
+<label>D2</label>
+<textarea id="d2" rows="3"></textarea>
+<button class="btn3" onclick="clearBox('d2')">Xoá D2</button>
+</div>
 
-      <div class="hint">
-        Quy tắc trích số: lấy <b>2 số cuối</b> của tất cả giải (kể cả ĐB). Nếu dòng có nhiều số thì lấy hết.
-      </div>
-    </div>
+<div class="box">
+<label>D3 (nhịp)</label>
+<textarea id="d3" rows="3"></textarea>
+<button class="btn3" onclick="clearBox('d3')">Xoá D3</button>
+</div>
 
-    <div class="card" id="outCard" style="display:none">
-      <div class="row" style="justify-content:space-between">
-        <div class="pill">Trạng thái: <strong id="riskStatus">NORMAL</strong></div>
-        <div class="pill">Safe Mode: <strong id="safeMode">OFF</strong></div>
-      </div>
+<div class="box">
+<button class="btn" onclick="runSystem()">CHẠY & CHỐT</button>
+<div class="result" id="top1">--</div>
+<div class="small" id="gate"></div>
+</div>
 
-      <div class="top1" id="top1Box" style="display:none">
-        <h3>TOP 1 (Chốt 1 con)</h3>
-        <div class="big"><span id="top1Num">--</span> <span id="top1Tier" class="tag">--</span></div>
-        <div class="hint" id="top1Why"></div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="row" style="justify-content:space-between; align-items:flex-end">
-        <div>
-          <div class="muted" style="font-size:12px">Bảng xếp hạng (Top 20)</div>
-          <div class="hint" style="margin:6px 0 0 0">Cột: Tổng / Cụm / Đầu-đuôi / Lực (đã gồm phạt theo rule).</div>
-        </div>
-        <button class="btn secondary" id="toggleAllBtn">Hiện Top 50</button>
-      </div>
-
-      <div id="rankTable"></div>
-    </div>
-
-    <div class="card">
-      <div class="row" style="justify-content:space-between">
-        <div>
-          <div style="font-weight:900">Lịch sử chốt</div>
-          <div class="hint" style="margin-top:4px">Lưu trên máy của ông. Xóa lịch sử sẽ xóa hết.</div>
-        </div>
-        <div class="row">
-          <button class="btn secondary" id="exportBtn">COPY JSON</button>
-          <button class="btn danger" id="clearHistoryBtn">XÓA LỊCH SỬ</button>
-        </div>
-      </div>
-      <div class="hr"></div>
-      <div id="history"></div>
-      <div class="foot">
-        Gợi ý up GitHub Pages: repo → Settings → Pages → Deploy from branch → chọn <b>main</b> / <b>/ (root)</b>.
-      </div>
-    </div>
-  </div>
+<div class="box">
+<h3>Lịch sử</h3>
+<div id="history"></div>
+<button class="btn2" onclick="exportJSON()">COPY JSON</button>
+</div>
 
 <script>
-(() => {
-  const $ = (id) => document.getElementById(id);
+let historyData=[];
 
-  // ====== Storage ======
-  const STORAGE_KEY = "mb_stable_lock_history_v1";
+function clearBox(id){
+  document.getElementById(id).value="";
+}
 
-  function loadHistory(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    }catch(e){
-      return [];
-    }
-  }
-  function saveHistory(items){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }
+function extractLo(str){
+  let nums=str.match(/\d+/g)||[];
+  return nums.map(n=>n.slice(-2).padStart(2,"0"));
+}
 
-  // ====== Helpers ======
-  function todayISO(){
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const dd = String(d.getDate()).padStart(2,"0");
-    return `${yyyy}-${mm}-${dd}`;
-  }
+function countHeadTail(arr){
+  let head={},tail={};
+  arr.forEach(n=>{
+    let h=n[0],t=n[1];
+    head[h]=(head[h]||0)+1;
+    tail[t]=(tail[t]||0)+1;
+  });
+  return {head,tail};
+}
 
-  // Extract all numbers from pasted text lines like "G3: 65247 95051 ...".
-  // Take last 2 digits of each numeric token.
-  function extractLo2Digits(text){
-    const tokens = text
-      .replace(/[\r]/g, "")
-      .split(/\s+/)
-      .map(t => t.trim())
-      .filter(Boolean);
+function top3(obj){
+  return Object.entries(obj)
+  .sort((a,b)=>b[1]-a[1])
+  .slice(0,3)
+  .map(x=>x[0]);
+}
 
-    const out = [];
-    for(const tok of tokens){
-      if(!/^\d+$/.test(tok)) continue;
-      const last2 = tok.slice(-2).padStart(2,"0");
-      out.push(last2);
-    }
-    return out;
-  }
+function clusterScore(arr){
+  let freq={};
+  arr.forEach(n=>freq[n]=(freq[n]||0)+1);
+  let clusters=Object.values(freq).filter(v=>v>=2).length;
+  return clusters>=2?2:clusters==1?1:0;
+}
 
-  function freqMap(arr){
-    const m = new Map();
-    for(const x of arr) m.set(x, (m.get(x)||0)+1);
-    return m;
+function runSystem(){
+  let d1=extractLo(document.getElementById("d1").value);
+  let d2=extractLo(document.getElementById("d2").value);
+  let d3=extractLo(document.getElementById("d3").value);
+
+  if(d1.length==0||d2.length==0){
+    alert("D1 và D2 bắt buộc");
+    return;
   }
 
-  function headTailCounts(arr){
-    const head = new Map();
-    const tail = new Map();
-    for(const x of arr){
-      const h = x[0], t = x[1];
-      head.set(h, (head.get(h)||0)+1);
-      tail.set(t, (tail.get(t)||0)+1);
-    }
-    return {head, tail};
-  }
+  let all=[...d1,...d2];
+  let c=countHeadTail(all);
+  let topHead=top3(c.head);
+  let topTail=top3(c.tail);
 
-  // ===== Selector v3.5 (clean + ổn định) =====
-  // - 1 số/ngày
-  // - Cấm số đã về ở D1 (thực tế ngày gần nhất)
-  // - Cooldown 3 ngày theo lịch sử chốt
-  // - Nếu cùng 1 số bị chốt 2 ngày liên tiếp → ngày 3 cấm số đó
-  // - Mode A/B: thua 1 ngày thì đảo mode (dựa trên kết quả bạn tick TRÚNG/TRƯỢT trong lịch sử)
-  // - Force CHỈ HIỂN THỊ (D2+D3), KHÔNG tham gia tie-break
-
-  // Fixed pseudo-random order for final tie-break (không dùng số to/bé).
-  const FINAL_ORDER = (()=>{
-    const arr = Array.from({length:100}, (_,i)=>String(i).padStart(2,"0"));
-    let seed = 20260213;
-    function rnd(){
-      seed = (seed * 1664525 + 1013904223) >>> 0;
-      return seed / 4294967296;
-    }
-    for(let i=arr.length-1;i>0;i--){
-      const j = Math.floor(rnd()*(i+1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    const idx = new Map();
-    arr.forEach((v,i)=>idx.set(v,i));
-    return idx;
-  })();
-
-  function splitDaysFromRaw(raw){
-    const text = (raw||"").replace(/\r/g, "");
-    const hasDMarkers = /\bD1\s*:/i.test(text) && /\bD2\s*:/i.test(text);
-    if(hasDMarkers){
-      const grab = (label) => {
-        const re = new RegExp(`\\b${label}\\s*:[\\s\\S]*?(?=\\n\\s*D[123]\\s*:|$)`, "i");
-        const m = text.match(re);
-        return m ? m[0] : "";
-      };
-      return { D1: grab("D1"), D2: grab("D2"), D3: grab("D3") };
-    }
-    const parts = text.split(/\n\s*(?=KQ\b)/g).filter(s=>s.trim().length>0);
-    if(parts.length>=2){
-      return { D1: parts[0], D2: parts[1]||"", D3: parts[2]||"" };
-    }
-    return { D1: text, D2: "", D3: "" };
-  }
-
-  function topK(map, k){
-    return [...map.entries()].sort((a,b)=>{
-      if(b[1]!==a[1]) return b[1]-a[1];
-      return a[0].localeCompare(b[0]);
-    }).slice(0,k);
-  }
-
-  function tierPriority(t){
-    if(t==="REAL+") return 3;
-    if(t==="REAL") return 2;
-    return 1;
-  }
-
-  function computeNextMode(){
-    const hist = loadHistory().sort((a,b)=> (a.date||"").localeCompare(b.date||""));
-    if(hist.length===0) return "A";
-    const last = hist[hist.length-1];
-    const lastRes = (last.result||"").toUpperCase();
-    if(lastRes==="TRƯỢT") return (last.modeUsed==="A") ? "B" : "A";
-    return last.modeUsed || "A";
-  }
-
-  function isCooldownBanned(num, dateISO){
-    const hist = loadHistory().sort((a,b)=> (a.date||"").localeCompare(b.date||""));
-    const prev = hist.filter(h => (h.date||"") < dateISO).slice(-3);
-    return prev.some(h => h?.top1?.num === num);
-  }
-
-  function isThirdDayRepeatBan(num, dateISO){
-    const hist = loadHistory().sort((a,b)=> (a.date||"").localeCompare(b.date||""));
-    const prev = hist.filter(h => (h.date||"") < dateISO).slice(-2);
-    if(prev.length<2) return false;
-    return prev[0]?.top1?.num === num && prev[1]?.top1?.num === num;
-  }
-
-  function computeScores(rawText, dateISO){
-    const days = splitDaysFromRaw(rawText);
-    const d1 = extractLo2Digits(days.D1);
-    const d2 = extractLo2Digits(days.D2);
-    const d3 = extractLo2Digits(days.D3);
-
-    const f1 = freqMap(d1);
-    const f2 = freqMap(d2);
-    const f3 = freqMap(d3);
-    const fAll = freqMap([...d1, ...d2, ...d3]);
-
-    const mode = computeNextMode();
-    const {head: h1, tail: t1} = headTailCounts(d1);
-    const {head: h2, tail: t2} = headTailCounts(d2);
-    const {head: h3, tail: t3} = headTailCounts(d3);
-
-    function combineHT(a1,a2,a3, w1,w2,w3){
-      const out = new Map();
-      const add = (m, w)=>{ for(const [k,v] of m.entries()) out.set(k, (out.get(k)||0) + v*w); };
-      add(a1,w1); add(a2,w2); add(a3,w3);
-      return out;
-    }
-
-    const headW = (mode==="B") ? [1.2, 1.0, 0.6] : [1.0, 0.8, 0.5];
-    const tailW = (mode==="A") ? [1.2, 1.0, 0.6] : [1.0, 0.8, 0.5];
-    const H = combineHT(h1,h2,h3, ...headW);
-    const T = combineHT(t1,t2,t3, ...tailW);
-
-    const topHeads = topK(H, 3).map(([k])=>k);
-    const topTails = topK(T, 3).map(([k])=>k);
-
-    const dupCount = [...f1.values()].filter(v=>v>=2).length;
-    const maxFreq = Math.max(0, ...f1.values());
-    const riskHigh = dupCount>=6 || maxFreq>=3;
-    const safeMode = riskHigh;
-
-    const pool = [];
-    for(const hh of topHeads){
-      for(const tt of topTails){
-        pool.push(`${hh}${tt}`);
-      }
-    }
-    const poolSet = new Set(pool);
-
-    function clusterScore(num){
-      const h = num[0], t = num[1];
-      let sameH = 0, sameT = 0;
-      for(const x of poolSet){
-        if(x===num) continue;
-        if(x[0]===h) sameH++;
-        if(x[1]===t) sameT++;
-      }
-      const base = (sameH>0?1:0) + (sameT>0?1:0);
-      const density = Math.min(2, Math.floor((sameH+sameT)/2));
-      return base + density; // 0..4
-    }
-
-    const results = [];
-    for(let i=0;i<100;i++){
-      const num = String(i).padStart(2,"0");
-      const h = num[0], t = num[1];
-
-      const bannedByD1 = (f1.get(num)||0) > 0;
-      const bannedByCooldown = isCooldownBanned(num, dateISO);
-      const bannedByRepeat3 = isThirdDayRepeatBan(num, dateISO);
-      const banned = bannedByD1 || bannedByCooldown || bannedByRepeat3;
-
-      const headScore = (H.get(h)||0);
-      const tailScore = (T.get(t)||0);
-      const headtail = headScore + tailScore;
-
-      const inPool = poolSet.has(num);
-      let cluster = inPool ? clusterScore(num) : 0;
-      if(safeMode) cluster = Math.max(0, cluster-1);
-
-      const p2 = (f2.get(num)||0) > 0;
-      const p3 = (f3.get(num)||0) > 0;
-      let presence = 0;
-      if(p2) presence += 2;
-      if(p3) presence += 1;
-
-      const force = (f2.get(num)||0) + (f3.get(num)||0); // display only
-      const freqAll = fAll.get(num)||0;
-
-      let total = 0;
-      total += inPool ? 6 : 0;
-      total += cluster * 3;
-      total += Math.round(headtail);
-      total += presence;
-      if(banned) total = -999;
-
-      let tier = "RICKY";
-      if(!banned){
-        if(inPool && cluster>=2 && presence>=2) tier = "REAL+";
-        else if(inPool && cluster>=1) tier = "REAL";
-        else tier = "RICKY";
-      }
-
-      results.push({
-        num,
-        total,
-        cluster,
-        headTailScore: Math.round(headtail),
-        force,
-        tier,
-        banned,
-        bannedByD1,
-        bannedByCooldown,
-        bannedByRepeat3,
-        freqAll
-      });
-    }
-
-    results.sort((a,b)=>{
-      const tp = tierPriority(b.tier) - tierPriority(a.tier);
-      if(tp!==0) return tp;
-      if(b.total!==a.total) return b.total-a.total;
-      if(b.cluster!==a.cluster) return b.cluster-a.cluster;
-      if(b.headTailScore!==a.headTailScore) return b.headTailScore-a.headTailScore;
-      if(a.freqAll!==b.freqAll) return a.freqAll-b.freqAll;
-      return (FINAL_ORDER.get(a.num)||0) - (FINAL_ORDER.get(b.num)||0);
+  let candidates=[];
+  topHead.forEach(h=>{
+    topTail.forEach(t=>{
+      candidates.push(h+t);
     });
+  });
 
-    return {
-      results,
-      mode,
-      riskHigh,
-      safeMode,
-      topHeads,
-      topTails,
-      dupCount,
-      maxFreq,
-      extracted: {d1:d1.length, d2:d2.length, d3:d3.length}
-    };
-  }
+  let scores={};
 
-  function pickTop1(sorted){
-    const ok = (x)=> (x && x.total>-900 && !x.banned);
-    const realplus = sorted.filter(x=>x.tier==="REAL+" && ok(x));
-    const real = sorted.filter(x=>x.tier==="REAL" && ok(x));
-    const ricky = sorted.filter(x=>x.tier==="RICKY" && ok(x));
-    if(realplus.length>=1) return realplus[0];
-    if(real.length>=1) return real[0];
-    return ricky[0];
-  }
+  candidates.forEach(n=>{
+    let h=n[0],t=n[1];
+    let headScore=(c.head[h]||0)*5;
+    let tailScore=(c.tail[t]||0)*5;
+    let cl=clusterScore(all)*10;
+    let total=headScore+tailScore+cl;
+    scores[n]=total;
+  });
 
-  function tierTag(tier){
-    if(tier==="REAL+") return `<span class="tag realplus">REAL+</span>`;
-    if(tier==="REAL") return `<span class="tag real">REAL</span>`;
-    return `<span class="tag ricky">RICKY</span>`;
-  }
+  let sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  let top=sorted[0][0];
 
-  function renderTable(sorted, limit){
-    const top = sorted.slice(0, limit);
-    let html = `<table>
-      <thead><tr>
-        <th>#</th><th>Số</th><th>Tổng</th><th>Cụm</th><th>Đầu/đuôi</th><th>Lực</th><th>Tầng</th>
-      </tr></thead><tbody>`;
-    top.forEach((r, idx)=>{
-      html += `<tr>
-        <td>${idx+1}</td>
-        <td class="mono" style="font-weight:900">${r.num}</td>
-        <td><b>${r.total}</b></td>
-        <td>${r.cluster}</td>
-        <td>${r.headTailScore}</td>
-        <td>${r.force}</td>
-        <td>${tierTag(r.tier)}</td>
-      </tr>`;
-    });
-    html += `</tbody></table>`;
-    return html;
-  }
+  let gateScore=clusterScore(all)+clusterScore(d3);
+  document.getElementById("gate").innerText="Gate: "+gateScore;
 
-  function summarizeWhy(info, top1){
-    const reasons = [];
-    reasons.push(`Mode hôm nay: <b>${info.mode}</b> (thua ngày trước thì tự đảo mode).`);
-    reasons.push(`Selector ưu tiên theo tầng: <b>${top1.tier}</b>.`);
-    reasons.push(`Tie-break: Tổng → Cụm → Đầu/đuôi → chống dày (tần suất 3 ngày) → thứ tự cố định.`);
-    reasons.push(`<b>Force</b> chỉ hiển thị (D2+D3), không dùng để chốt.`);
-    if(top1.banned){
-      const why = [
-        top1.bannedByD1 ? "Cấm vì đã về D1" : "",
-        top1.bannedByCooldown ? "Cooldown 3 ngày" : "",
-        top1.bannedByRepeat3 ? "Cấm ngày 3 (lặp 2 ngày)" : "",
-      ].filter(Boolean).join(" • ");
-      reasons.push(`<span class="danger">Số bị CẤM</span>: ${why||""}.`);
-    }
-    if(info.safeMode) reasons.push(`Safe Mode ON (chỉ giảm Cụm), vì D1 nhiễu (dup=${info.dupCount}, maxFreq=${info.maxFreq}).`);
-    else reasons.push(`Trạng thái <b>Normal</b>: Cụm được tính bình thường.`);
-    reasons.push(`Top heads: <span class="mono">${(info.topHeads||[]).join(" ")||"-"}</span> • Top tails: <span class="mono">${(info.topTails||[]).join(" ")||"-"}</span>.`);
-    reasons.push(`Trích số: D1=${info.extracted?.d1||0}, D2=${info.extracted?.d2||0}, D3=${info.extracted?.d3||0}.`);
-    return reasons.join(" ");
-  }
+  document.getElementById("top1").innerText=top;
 
-  // ====== History UI ======
-  function renderHistory(){
-    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
-    const box = $("history");
-    if(items.length===0){
-      box.innerHTML = `<div class="muted">Chưa có lịch sử.</div>`;
-      return;
-    }
-    box.innerHTML = items.map((it, idx)=>{
-      const res = (it.result||"").toUpperCase();
-      const resTag = res ? `<span class="pill ${res==='TRÚNG'?'green':'red'}">${res}</span>` : `<span class="pill">CHƯA DÒ</span>`;
-      return `
-      <div class="history-item">
-        <div class="history-head">
-          <div class="pill">Ngày: <strong class="mono">${it.date}</strong></div>
-          <div class="pill">Chốt: <strong class="mono">${it.top1.num}</strong> ${tierTag(it.top1.tier)}</div>
-          <div class="pill">Mode: <strong class="mono">${it.modeUsed||"A"}</strong></div>
-          ${resTag}
-          <button class="smallbtn" onclick="window.__markHistory(${idx}, 'TRÚNG')">TRÚNG</button>
-          <button class="smallbtn danger" onclick="window.__markHistory(${idx}, 'TRƯỢT')">TRƯỢT</button>
-          <button class="smallbtn ghost" onclick="window.__viewHistory(${idx})">Xem KQ</button>
-          <button class="smallbtn danger" onclick="window.__delHistory(${idx})">Xóa</button>
-        </div>
-        <div class="kqbox">
-          Đã trích <b>${it.extractedCount}</b> số lô. Top head: <span class="mono">${(it.meta.topHeads||[]).join(" ")||"-"}</span>,
-          Top tail: <span class="mono">${(it.meta.topTails||[]).join(" ")||"-"}</span>.
-          Risk: <b>${it.meta.riskHigh ? "HIGH" : "NORMAL"}</b>, Safe: <b>${it.meta.safeMode ? "ON" : "OFF"}</b>
-        </div>
-      </div>
-    `;
-    }).join("");
-  }
-
-  window.__markHistory = (sortedIndexInUI, result) => {
-    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
-    if(!items[sortedIndexInUI]) return;
-    items[sortedIndexInUI].result = result;
-    saveHistory(items);
-    renderHistory();
-  };
-
-  window.__viewHistory = (sortedIndexInUI) => {
-    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
-    const it = items[sortedIndexInUI];
-    alert(it?.rawKQ || "(Không có rawKQ)");
-  };
-
-  window.__delHistory = (sortedIndexInUI) => {
-    const items = loadHistory().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
-    items.splice(sortedIndexInUI, 1);
-    saveHistory(items);
-    renderHistory();
-  };
-
-  // ====== Actions ======
-  let showLimit = 20;
-
-  function runAndRender(){
-    const date = $("pickDate").value || todayISO();
-    const raw = $("kqInput").value || "";
-    const days = splitDaysFromRaw(raw);
-    const lo1 = extractLo2Digits(days.D1);
-    const lo2 = extractLo2Digits(days.D2);
-    const lo3 = extractLo2Digits(days.D3);
-    const extractedTotal = lo1.length + lo2.length + lo3.length;
-    $("extractCount").textContent = String(extractedTotal);
-
-    if(lo1.length===0){
-      alert("Không trích được D1. Dán 1–3 ngày KQ (khuyên dán theo thứ tự mới → cũ). Nếu 3 ngày, có thể dán theo dạng D1:/D2:/D3:.");
-      return;
-    }
-
-    const info = computeScores(raw, date);
-    const top1 = pickTop1(info.results);
-
-    $("outCard").style.display = "block";
-    $("riskStatus").textContent = info.riskHigh ? "RISK HIGH" : "NORMAL";
-    $("safeMode").textContent = info.safeMode ? "ON" : "OFF";
-
-    $("top1Box").style.display = "block";
-    $("top1Num").textContent = top1.num;
-
-    // Replace tier placeholder safely
-    const tierEl = document.createElement("span");
-    tierEl.innerHTML = tierTag(top1.tier);
-    const oldTier = document.getElementById("top1Tier");
-    if(oldTier) oldTier.replaceWith(tierEl.firstChild);
-
-    $("top1Why").innerHTML = summarizeWhy(info, top1);
-    $("rankTable").innerHTML = renderTable(info.results, showLimit);
-
-    const hist = loadHistory();
-    const item = {
-      date,
-      extractedCount: extractedTotal,
-      top1: { num: top1.num, tier: top1.tier, total: top1.total, cluster: top1.cluster, headTail: top1.headTailScore, force: top1.force },
-      modeUsed: info.mode,
-      result: "",
-      meta: { riskHigh: info.riskHigh, safeMode: info.safeMode, topHeads: info.topHeads, topTails: info.topTails, dupCount: info.dupCount, maxFreq: info.maxFreq },
-      rawKQ: raw
-    };
-
-    const idx = hist.findIndex(x => x.date === date);
-    if(idx>=0) hist[idx] = item; else hist.push(item);
-    saveHistory(hist);
-    renderHistory();
-
-    setTimeout(()=> $("outCard").scrollIntoView({behavior:"smooth", block:"start"}), 50);
-  }
-
-  function clearInput(){
-    $("kqInput").value = "";
-    $("extractCount").textContent = "0";
-  }
-
-  function clearHistory(){
-    if(!confirm("Xóa toàn bộ lịch sử chốt trên máy?")) return;
-    localStorage.removeItem(STORAGE_KEY);
-    renderHistory();
-  }
-
-  function exportJSON(){
-    const data = loadHistory();
-    const text = JSON.stringify(data, null, 2);
-    navigator.clipboard.writeText(text).then(()=>{
-      alert("Đã copy JSON lịch sử vào clipboard.");
-    }).catch(()=>{
-      prompt("Copy JSON:", text);
-    });
-  }
-
-  function toggleAll(){
-    showLimit = (showLimit===20) ? 50 : 20;
-    $("toggleAllBtn").textContent = (showLimit===20) ? "Hiện Top 50" : "Chỉ Top 20";
-
-    const raw = $("kqInput").value || "";
-    const lo = extractLo2Digits(raw);
-    if(lo.length===0) return;
-    const info = computeScores(lo);
-    $("rankTable").innerHTML = renderTable(info.results, showLimit);
-  }
-
-  // ====== Init ======
-  $("pickDate").value = todayISO();
-  $("runBtn").addEventListener("click", runAndRender);
-  $("clearInputBtn").addEventListener("click", clearInput);
-  $("clearHistoryBtn").addEventListener("click", clearHistory);
-  $("exportBtn").addEventListener("click", exportJSON);
-  $("toggleAllBtn").addEventListener("click", toggleAll);
+  let ngay=document.getElementById("ngay").value;
+  historyData.unshift({
+    date:ngay,
+    top1:top,
+    gate:gateScore,
+    result:null
+  });
 
   renderHistory();
-})();
+}
+
+function markResult(index,res){
+  historyData[index].result=res;
+  renderHistory();
+}
+
+function renderHistory(){
+  let html="";
+  historyData.forEach((h,i)=>{
+    html+=`
+      <div class="history-item">
+      <b>${h.date}</b> - Chốt: ${h.top1}
+      <br>Gate: ${h.gate}
+      <br>
+      <button onclick="markResult(${i},'Trúng')" class="btn">Trúng</button>
+      <button onclick="markResult(${i},'Trượt')" class="btn3">Trượt</button>
+      <div class="small">${h.result||""}</div>
+      </div>
+    `;
+  });
+  document.getElementById("history").innerHTML=html;
+}
+
+function exportJSON(){
+  let data=JSON.stringify(historyData,null,2);
+  navigator.clipboard.writeText(data);
+  alert("Đã copy JSON");
+}
 </script>
+
 </body>
 </html>
