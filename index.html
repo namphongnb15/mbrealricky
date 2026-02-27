@@ -192,27 +192,37 @@ function parseDate(raw){
   return `${yyyy}-${mm}-${dd}`;
 }
 function parseOneDay(raw){
-  const text = (raw||"").trim();
+  const text = (raw||"").replace(/\u00A0/g," ").trim(); // normalize NBSP
   if(!text) return null;
 
   const date = parseDate(text);
   if(!date) return { ok:false, err:"Không thấy ngày (dd/mm/yyyy) trong đoạn KQ." };
 
+  // Pre-normalize common variants: G.1 -> G1, G 1 -> G1, ĐB! -> ĐB
+  const normText = text
+    .replace(/G\.\s*(\d)/gi, "G$1")
+    .replace(/G\s+(\d)/gi, "G$1")
+    .replace(/ĐB\s*[!*]*/gi, "ĐB")
+    .replace(/DB\s*[!*]*/gi, "DB")
+    .replace(/[:：]\s*\n/g, ":\n");
+
   const buckets = {DB:[],G1:[],G2:[],G3:[],G4:[],G5:[],G6:[],G7:[]};
-  const lines = text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const lines = normText.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
 
   let current = null;
-  for(const ln of lines){
-    const m = ln.match(/^(ĐB|DB|G1|G2|G3|G4|G5|G6|G7)\s*:\s*(.*)$/i);
+  for(const ln0 of lines){
+    const ln = ln0.replace(/\s+/g," ").trim();
+    // Accept: "ĐB: 12345", "ĐB!: 12345", "G4*: ...", "G3 123 456", "G7= 01 02"
+    const m = ln.match(/^(ĐB|DB|G1|G2|G3|G4|G5|G6|G7)\s*[*!]*\s*(?::|=|\s)\s*(.*)$/i);
     if(m){
       let key = m[1].toUpperCase();
       if(key==="ĐB") key="DB";
       current = key;
-      const rest = m[2] || "";
+      const rest = (m[2] || "").replace(/[,;]/g," ");
       const nums = rest.match(/\d+/g) || [];
       buckets[current].push(...nums);
     }else if(current){
-      const nums = ln.match(/\d+/g) || [];
+      const nums = ln.replace(/[,;]/g," ").match(/\d+/g) || [];
       buckets[current].push(...nums);
     }
   }
@@ -229,7 +239,13 @@ function parseOneDay(raw){
   // MB should be 27 lô
   const lo = [].concat(prizes.DB, prizes.G1, prizes.G2, prizes.G3, prizes.G4, prizes.G5, prizes.G6, prizes.G7);
   if(lo.length !== 27){
-    return { ok:false, err:`Không đủ 27 lô (hiện ${lo.length}). Có thể thiếu/nhầm giải.` };
+    // Helpful hint about likely culprit
+    const hint = (buckets.G3.length!==6) ? " (G3 chuẩn 6 số)" :
+                 (buckets.G4.length!==4) ? " (G4 chuẩn 4 số)" :
+                 (buckets.G5.length!==6) ? " (G5 chuẩn 6 số)" :
+                 (buckets.G6.length!==3) ? " (G6 chuẩn 3 số)" :
+                 (buckets.G7.length!==4) ? " (G7 chuẩn 4 số)" : "";
+    return { ok:false, err:`Không đủ 27 lô (hiện ${lo.length}). Có thể thiếu/nhầm giải.${hint}` };
   }
 
   return { ok:true, date, prizes, lo };
