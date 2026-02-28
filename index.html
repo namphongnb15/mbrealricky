@@ -36,7 +36,7 @@
   </style>
 </head>
 <body>
-  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.3-LOCKED-2026-02-28</span></h1>
+  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.4-LOCKED-2026-02-28</span></h1>
   <div class="small locknote">
     Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
     Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
@@ -434,6 +434,7 @@ function sysCONT(D2,D1,D0){
   const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
   const top2H1 = s1.topHeads.slice(0,2).map(o=>o.i);
   const top2T1 = s1.topTails.slice(0,2).map(o=>o.i);
+  const HS_CONT = intersection(top2H0, top2H1).length; // giữ trục đầu (0..2)
   const top3H3 = topKIdx(agg.freqHead,3);
   const top3T3 = topKIdx(agg.freqTail,3);
 
@@ -446,7 +447,8 @@ function sysCONT(D2,D1,D0){
     if(rep.includes(n)) sc += 50;
     const freqSum = (s0.freqNum[n]||0) + (s1.freqNum[n]||0);
     if(rep.includes(n) && freqSum>=3) sc += 10; // đa giải/đa nháy 2 ngày
-    const w = rep.includes(n) ? 0.5 : 1.0;
+    // Nếu continuation kiểu 'rải' (HS=0) thì bỏ bias top2 đầu/đuôi để tránh kéo lệch.
+    const w = (HS_CONT===0) ? 0.0 : (rep.includes(n) ? 0.5 : 1.0);
     if(top2H0.includes(h)) sc += 20*w;
     if(top2T0.includes(t)) sc += 15*w;
     if(top2H1.includes(h)) sc += 10*w;
@@ -454,6 +456,14 @@ function sysCONT(D2,D1,D0){
     // 3-day stability bonus (helps continuation in rải cụm)
     if(top3H3.includes(h)) sc += 8;
     if(top3T3.includes(t)) sc += 6;
+    if(HS_CONT===0){
+      const tailCount0 = s0.freqTail[t] || 0;
+      const headCount0 = s0.freqHead[h] || 0;
+      // ưu tiên đuôi/đầu ít crowded trong D0 (giảm kéo lệch kiểu 63)
+      const tailRarity = Math.max(0, 6 - tailCount0);
+      const headRarity = Math.max(0, 6 - headCount0);
+      sc += tailRarity * 2 + headRarity * 1;
+    }
     if(s0.freqNum[n]>=2) sc -= 25;
     if(DS_soft) sc -= 15;
     const meta = { hasMirror: hasMirrorInDays(n, days) };
