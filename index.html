@@ -36,7 +36,7 @@
   </style>
 </head>
 <body>
-  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.2-LOCKED-2026-02-28</span></h1>
+  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.3-LOCKED-2026-02-28</span></h1>
   <div class="small locknote">
     Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
     Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
@@ -392,8 +392,8 @@ function finalTieBreak(cands, ctx){
     // 2) prefer hasMirror (dao appeared)
     const ma = a.meta?.hasMirror ? 1:0, mb = b.meta?.hasMirror?1:0;
     if(ma!==mb) return mb - ma;
-    // 3) prefer smaller number
-    return a.n - b.n;
+    // 3) no "số bé" bias: keep original order (stable in modern JS engines)
+    return 0;
   });
   return cands[0];
 }
@@ -413,6 +413,7 @@ function hasMirrorInDays(n, days){
 function sysCONT(D2,D1,D0){
   const s0 = dayStats(D0);
   const s1 = dayStats(D1);
+  const agg = agg3days(D2,D1,D0);
   const rep = repeatSet(D0,D1); // A
   let pool = [];
   if(rep.length>0){
@@ -433,6 +434,8 @@ function sysCONT(D2,D1,D0){
   const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
   const top2H1 = s1.topHeads.slice(0,2).map(o=>o.i);
   const top2T1 = s1.topTails.slice(0,2).map(o=>o.i);
+  const top3H3 = topKIdx(agg.freqHead,3);
+  const top3T3 = topKIdx(agg.freqTail,3);
 
   const DS_soft = (s0.multiNums.filter(x=>x.c>=2).length===1) || (s0.maxTail.val/27>=0.26) || (s0.maxHead.val/27>=0.26);
 
@@ -441,10 +444,16 @@ function sysCONT(D2,D1,D0){
     const h=Math.floor(n/10), t=n%10;
     let sc=0;
     if(rep.includes(n)) sc += 50;
-    if(top2H0.includes(h)) sc += 20;
-    if(top2T0.includes(t)) sc += 15;
-    if(top2H1.includes(h)) sc += 10;
-    if(top2T1.includes(t)) sc += 5;
+    const freqSum = (s0.freqNum[n]||0) + (s1.freqNum[n]||0);
+    if(rep.includes(n) && freqSum>=3) sc += 10; // đa giải/đa nháy 2 ngày
+    const w = rep.includes(n) ? 0.5 : 1.0;
+    if(top2H0.includes(h)) sc += 20*w;
+    if(top2T0.includes(t)) sc += 15*w;
+    if(top2H1.includes(h)) sc += 10*w;
+    if(top2T1.includes(t)) sc += 5*w;
+    // 3-day stability bonus (helps continuation in rải cụm)
+    if(top3H3.includes(h)) sc += 8;
+    if(top3T3.includes(t)) sc += 6;
     if(s0.freqNum[n]>=2) sc -= 25;
     if(DS_soft) sc -= 15;
     const meta = { hasMirror: hasMirrorInDays(n, days) };
