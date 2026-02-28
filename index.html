@@ -2,326 +2,1036 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MB – STABLE (Nhập 3 ngày & Lịch sử chốt)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MB 4-HỆ TRẠNG THÁI (Locked Modes) — Full 27 lô/ngày</title>
   <style>
-    :root{--bg:#0b1220;--card:#111b2e;--muted:#9bb0d0;--text:#e8eefc;--accent:#4ea1ff;--danger:#ff5a6a;--ok:#26d07c;--border:rgba(255,255,255,.10)}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial; background:linear-gradient(180deg,#070c16 0%, #0b1220 70%); color:var(--text)}
-    header{padding:18px 16px 10px}
-    h1{margin:0;font-size:18px;letter-spacing:.2px}
-    .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35}
-    .wrap{padding:12px 16px 20px;max-width:980px;margin:0 auto}
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media (min-width:860px){.grid{grid-template-columns:1fr 1fr}}
-    .card{background:rgba(17,27,46,.92);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    .card h2{margin:0 0 10px;font-size:15px}
-    label{display:block;color:var(--muted);font-size:12px;margin:10px 0 6px}
-    input[type="date"], input[type="text"], textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);border-radius:12px;padding:10px 12px;font-size:14px;outline:none}
-    textarea{min-height:120px;resize:vertical;line-height:1.35}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);padding:10px 12px;border-radius:12px;font-size:13px;cursor:pointer}
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{background:rgba(78,161,255,.18);border-color:rgba(78,161,255,.35)}
-    .btn.danger{background:rgba(255,90,106,.12);border-color:rgba(255,90,106,.35)}
-    .btn.ok{background:rgba(38,208,124,.12);border-color:rgba(38,208,124,.35)}
-    .hint{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.35}
-    .list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
-    .item{border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:12px;padding:10px 10px}
-    .item .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-    .pill{font-size:11px;color:var(--muted)}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    .mini{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .mini .btn{padding:7px 10px;border-radius:10px;font-size:12px}
-    .footer{color:var(--muted);font-size:12px;margin-top:14px;line-height:1.45}
-    .badge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);font-size:11px;color:var(--muted)}
-    .split{display:grid;grid-template-columns:1fr;gap:12px}
-    @media (min-width:860px){.split{grid-template-columns:1.1fr .9fr}}
+    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { margin: 18px; line-height: 1.35; }
+    h1 { margin: 0 0 10px; font-size: 18px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 10px 0; }
+    .card h2 { font-size: 14px; margin: 0 0 8px; }
+    textarea { width: 100%; min-height: 92px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 12px; }
+    button { padding: 8px 10px; border-radius: 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+    button.primary { border-color: #111; }
+    button.danger { border-color: #b00020; color: #b00020; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    label { font-size: 12px; color: #333; }
+    .small { font-size: 12px; color: #555; }
+    .pill { display: inline-block; padding: 2px 8px; border: 1px solid #ccc; border-radius: 999px; font-size: 12px; margin-right: 6px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 920px) { .grid { grid-template-columns: 1fr 1fr; } }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #eee; padding: 8px 6px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { background: #fafafa; position: sticky; top: 0; }
+    .muted { color: #777; }
+    .ok { color: #0a7; }
+    .warn { color: #b80; }
+    .bad { color: #b00020; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .kpi { display:flex; gap:8px; flex-wrap:wrap; }
+    .kpi .pill { border-color:#ddd; background:#fafafa; }
+    .locknote { font-size: 12px; color:#444; }
+    .modeBtn { margin-right: 8px; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>MB – STABLE • Nhập 3 ngày & Lưu lịch sử chốt</h1>
-    <div class="sub">
-      - Nhập dữ liệu 3 ngày (dán KQ hoặc ghi chú).<br>
-      - Mỗi khung có: <span class="badge">Lưu</span> / <span class="badge">Xoá nội dung</span> / <span class="badge">Xoá lịch sử</span>.<br>
-      - Có phần <b>Ngày chốt</b> và <b>Lịch sử chốt</b> (xoá từng dòng hoặc xoá hết).
-    </div>
-  </header>
+  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày</h1>
+  <div class="small locknote">
+    Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
+    Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
+  </div>
 
-  <div class="wrap">
-    <div class="split">
-      <div class="card">
-        <h2>Nhập KQ 3 ngày</h2>
-        <div class="grid" id="days"></div>
-        <div class="footer">
-          Gợi ý: dán nguyên ảnh text/chuỗi số cũng được. Trang này chỉ lưu <b>trên máy</b> (localStorage), không gửi đi đâu.
+  <div class="grid">
+    <div class="card">
+      <h2>1) Nhập KQ (27 lô/ngày)</h2>
+
+      <div class="row" style="align-items:flex-end">
+        <div style="flex: 1 1 240px;">
+          <label>Ngày chốt (bắt buộc)</label><br/>
+          <input id="chotDate" type="date" style="padding:8px 10px;border-radius:10px;border:1px solid #ccc;" />
+        </div>
+        <div style="flex: 2 1 360px;">
+          <label>Ghi chú (tuỳ chọn)</label><br/>
+          <input id="note" type="text" placeholder="VD: Bảng nhiễu, vào nhẹ..." style="width:100%;padding:8px 10px;border-radius:10px;border:1px solid #ccc;" />
         </div>
       </div>
 
-      <div class="card">
-        <h2>Chốt (1 số / ngày)</h2>
-        <label for="pickDate">Ngày chốt</label>
-        <input id="pickDate" type="date" />
-
-        <label for="pickNumber">Số chốt (2 số)</label>
-        <input id="pickNumber" type="text" inputmode="numeric" placeholder="Ví dụ: 45" maxlength="2" />
-
-        <label for="pickNote">Ghi chú (tuỳ chọn)</label>
-        <input id="pickNote" type="text" placeholder="Ví dụ: STABLE Top2×Top3, lọc D0..." />
-
-        <div class="row" style="margin-top:12px">
-          <button class="btn ok" id="savePick">Lưu chốt</button>
-          <button class="btn danger" id="clearPickAll">Xoá toàn bộ lịch sử chốt</button>
+      <div class="card" style="margin-top:12px;">
+        <div class="row" style="justify-content:space-between; align-items:center;">
+          <div><b>D0</b> (ngày gần nhất) — bắt buộc cho mọi mode</div>
+          <button class="danger" id="clearD0">Xoá KQ D0</button>
         </div>
+        <textarea id="inputD0" placeholder="Dán nguyên KQ (ĐB/DB, G1..G7… hoặc chỉ 27 lô). App tự trích 27 lô = 2 số cuối mỗi giải."></textarea>
+        <div class="small muted" id="statD0"></div>
+      </div>
 
-        <div class="hint">* Lưu dạng: <span class="mono">YYYY-MM-DD → NN</span>. Nhập sai thì xoá dòng đó rồi lưu lại.</div>
+      <div class="card" id="boxD1">
+        <div class="row" style="justify-content:space-between; align-items:center;">
+          <div><b>D1</b> (ngày -1)</div>
+          <button class="danger" id="clearD1">Xoá KQ D1</button>
+        </div>
+        <textarea id="inputD1" placeholder="Nhập 27 số của ngày D1"></textarea>
+        <div class="small muted" id="statD1"></div>
+      </div>
 
-        <div class="list" id="pickList"></div>
+      <div class="card" id="boxD2">
+        <div class="row" style="justify-content:space-between; align-items:center;">
+          <div><b>D2</b> (ngày -2)</div>
+          <button class="danger" id="clearD2">Xoá KQ D2</button>
+        </div>
+        <textarea id="inputD2" placeholder="Nhập 27 số của ngày D2"></textarea>
+        <div class="small muted" id="statD2"></div>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="primary" id="btnClassify">Đọc trạng thái bảng</button>
+        <button id="btnResetSession">Reset phiên (mở khoá mode)</button>
+      </div>
+
+      <div class="card" id="classifyCard" style="display:none;">
+        <h2>Trạng thái bảng (Classifier)</h2>
+        <div id="classifyState" style="font-size:14px; margin: 4px 0 6px;"></div>
+        <div class="kpi" id="kpi"></div>
+        <div class="small" id="classifyWhy" style="margin-top:6px;"></div>
+        <div class="small muted" id="classifyConf" style="margin-top:6px;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2) Chọn Mode (4 hệ độc lập — khóa cứng)</h2>
+      <div class="small muted">Bạn quyết định mode sau khi xem classifier. App mặc định <b>không tự nhảy hệ</b>.</div>
+
+      <div style="margin-top:10px;">
+        <button class="modeBtn" id="modeCONT">Mode 1 — CHẠY TIẾP (Continuation)</button>
+        <button class="modeBtn" id="modeDIFF">Mode 2 — XOAY / RẢI (Diffuse)</button>
+        <button class="modeBtn" id="modeDUMP">Mode 3 — XẢ / NHIỄU (Dump)</button>
+        <button class="modeBtn" id="modeRESET">Mode 4 — ĐỔI PHA / RESET</button>
+      </div>
+
+      <div class="card" style="margin-top:12px;">
+        <h2>Mode đang khoá</h2>
+        <div id="lockedMode" style="font-size:14px;"><span class="pill">Chưa chọn</span></div>
+        <div class="small muted" id="modeHint" style="margin-top:6px;"></div>
+      </div>
+
+      <div class="row">
+        <button class="primary" id="btnRun" disabled>Chạy hệ & chốt TOP1</button>
+        <button id="btnSaveHistory" disabled>Lưu vào lịch sử</button>
+      </div>
+
+      <div class="card" id="resultCard" style="display:none;">
+        <h2>Kết quả chốt</h2>
+        <div id="resultMain" style="font-size:16px; margin: 6px 0;"></div>
+        <div class="small" id="resultExplain"></div>
+        <div class="card" id="tieCard" style="display:none; margin-top:10px;">
+          <h2>Hòa điểm — chọn 1 con để chốt (không dùng tiebreak số bé)</h2>
+          <div class="small muted">Khi nhiều con hòa sau các tiêu chí kỹ thuật, app sẽ kê đủ để bạn tự chốt.</div>
+          <div id="tieList" class="small" style="margin-top:8px;"></div>
+          <div style="margin-top:8px;">
+            <button class="primary" id="btnConfirmPick">Xác nhận chốt con đã chọn</button>
+          </div>
+        </div>
+        <div class="small muted" id="resultMeta" style="margin-top:6px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>3) Lịch sử chốt (trúng/trượt + hệ dùng)</h2>
+        <div class="row" style="align-items:center;">
+          <button class="danger" id="btnClearHistory">Xoá lịch sử</button>
+          <span class="small muted">Lưu trên máy (localStorage).</span>
+        </div>
+        <div style="overflow:auto; max-height: 420px; margin-top: 10px;">
+          <table id="histTable">
+            <thead>
+              <tr>
+                <th>Ngày chốt</th>
+                <th>Mode</th>
+                <th>TOP1</th>
+                <th>Classifier</th>
+                <th>KQ</th>
+                <th>Ghi chú</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="histBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
 <script>
-(function(){
-  const LS = {
-    day: (i) => `mb_stable_day_${i}`,
-    dayHist: (i) => `mb_stable_day_${i}_hist`,
-    picks: 'mb_stable_picks'
+/** =========================
+ *  LOCKED SPEC (v1.0)
+ *  - Full 27 lô/ngày
+ *  - 4 modes độc lập, khóa cứng, không trộn.
+ *  - Mỗi mode dùng số ngày theo đề xuất đã chốt:
+ *    CONT: D0+D1 (bắt buộc), D2 optional confirm
+ *    DIFF: D0+D1+D2 (bắt buộc)
+ *    DUMP: D0 (bắt buộc), D1 optional
+ *    RESET: D0+D1+D2 (bắt buộc)
+ *  - Bắt buộc chốt TOP1 cho mọi mode.
+ *  - Lịch sử lưu: ngày chốt, mode, TOP1, classifier state + KPI, trúng/trượt.
+ * ========================= */
+
+const $ = (id)=>document.getElementById(id);
+const LS_KEY = "MB_4MODE_HISTORY_v1";
+
+const MODES = {
+  CONT: { name: "CHẠY TIẾP (Continuation)", need: ["D0","D1"], opt: ["D2"] },
+  DIFF: { name: "XOAY / RẢI (Diffuse)", need: ["D0","D1","D2"], opt: [] },
+  DUMP: { name: "XẢ / NHIỄU (Dump)", need: ["D0"], opt: ["D1"] },
+  RESET:{ name: "ĐỔI PHA / RESET", need: ["D0","D1","D2"], opt: [] },
+};
+
+let session = {
+  lockedMode: null,
+  classifier: null,
+  lastResult: null,
+};
+
+function pad2(n){ n = String(n).trim(); if(n==="") return ""; if(n.length===1) return "0"+n; return n.slice(-2); }
+function isNum2(s){ return /^[0-9]{2}$/.test(s); }
+
+function parseDay(raw){
+  // Accept:
+  // 1) 27 số lô 2 chữ số (00-99) cách nhau bởi bất kỳ ký tự nào
+  // 2) Dán nguyên KQ theo format: ĐB/G1/G2/... (mỗi giải 2-5 chữ số) => lấy 2 số cuối mỗi giải để ra 27 lô
+  // Linh hoạt: DB/ĐB, kq ngày..., KQSX MB ngày..., v.v.
+  let s = String(raw||"");
+
+  // Remove common date patterns to avoid picking year/month/day as lô
+  // Examples: 27/02/2026, 27-02-2026, 27.02.2026
+  s = s.replace(/\b\d{1,2}\s*[\/\-.]\s*\d{1,2}\s*[\/\-.]\s*\d{2,4}\b/g, " ");
+  // Remove standalone years 19xx/20xx
+  s = s.replace(/\b(19\d{2}|20\d{2})\b/g, " ");
+
+  // Grab numeric tokens (1-5 digits) so we can derive last-2
+  const toks = s.match(/\d{1,5}/g) || [];
+  if(toks.length === 0) return { ok:false, msg:"Trống", nums:[] };
+
+  const nums = [];
+  for(const t0 of toks){
+    const t = String(t0);
+    // Skip single-digit tokens (often noise)
+    if(t.length < 2) continue;
+
+    // If already 2 digits -> use directly; else take last 2 digits
+    const two = (t.length === 2) ? t : t.slice(-2);
+
+    if(!/^\d{2}$/.test(two)) continue;
+
+    const v = Number(two);
+    if(v < 0 || v > 99) continue;
+
+    nums.push(v);
+    if(nums.length >= 27) break;
+  }
+
+  if(nums.length === 0) return { ok:false, msg:"Không đọc được số", nums:[] };
+
+  const warn = nums.length !== 27 ? `Đọc được ${nums.length} lô (cần 27). Kiểm tra lại format/dữ liệu.` : "";
+  return { ok: nums.length===27, msg: nums.length===27 ? "OK (đã trích 27 lô từ KQ)" : warn, nums };
+}
+
+function dayStats(nums){
+  const freqNum = Array(100).fill(0);
+  const freqHead= Array(10).fill(0);
+  const freqTail= Array(10).fill(0);
+  for(const v of nums){
+    freqNum[v] += 1;
+    freqHead[Math.floor(v/10)] += 1;
+    freqTail[v%10] += 1;
+  }
+  const uniqNums = new Set(nums);
+  const uniqHeads = new Set(nums.map(v=>Math.floor(v/10)));
+  const uniqTails = new Set(nums.map(v=>v%10));
+
+  const topK = (arr,k)=>{
+    const idx = arr.map((val,i)=>({i,val}));
+    idx.sort((a,b)=> b.val-a.val || a.i-b.i);
+    return idx.slice(0,k);
   };
 
-  const $ = (sel, root=document) => root.querySelector(sel);
-  const el = (tag, attrs={}, children=[]) => {
-    const n = document.createElement(tag);
-    Object.entries(attrs).forEach(([k,v])=>{
-      if(k==='class') n.className=v;
-      else if(k==='html') n.innerHTML=v;
-      else if(k.startsWith('on') && typeof v==='function') n.addEventListener(k.slice(2), v);
-      else n.setAttribute(k, v);
-    });
-    children.forEach(c=> n.appendChild(typeof c==='string' ? document.createTextNode(c) : c));
-    return n;
-  };
+  const topHeads = topK(freqHead,3);
+  const topTails = topK(freqTail,3);
 
-  const readJSON = (key, fallback) => {
-    try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
-    catch(e){ return fallback; }
-  };
-  const writeJSON = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+  const multiNums = [];
+  for(let i=0;i<100;i++) if(freqNum[i]>=2) multiNums.push({n:i, c:freqNum[i]});
+  multiNums.sort((a,b)=>b.c-a.c || a.n-b.n);
 
-  // --------- Days UI ---------
-  const daysRoot = $('#days');
+  const maxHead = topK(freqHead,1)[0];
+  const maxTail = topK(freqTail,1)[0];
 
-  function renderDay(i){
-    const key = LS.day(i);
-    const histKey = LS.dayHist(i);
+  return {freqNum,freqHead,freqTail, uniqNums, uniqHeads, uniqTails, topHeads, topTails, multiNums, maxHead, maxTail};
+}
 
-    const saved = readJSON(key, {date:'', text:''});
-    const hist = readJSON(histKey, []); // [{ts, date, text}]
+function setIntersection(aSet,bSet){
+  let c=0;
+  for(const x of aSet) if(bSet.has(x)) c++;
+  return c;
+}
 
-    const card = el('div', {class:'card'});
-    card.style.padding = '12px';
+function repeatSet(aNums,bNums){
+  const A = new Set(aNums);
+  const B = new Set(bNums);
+  const out = [];
+  for(const x of A) if(B.has(x)) out.push(x);
+  out.sort((x,y)=>x-y);
+  return out;
+}
 
-    const title = el('h2', {}, [`Ngày ${i}`]);
+function agg3days(D2,D1,D0){
+  // aggregate freqHead/freqTail across available days
+  const freqHead=Array(10).fill(0), freqTail=Array(10).fill(0);
+  const days = [D2,D1,D0].filter(Boolean);
+  for(const d of days){
+    const st = dayStats(d);
+    for(let i=0;i<10;i++){ freqHead[i]+=st.freqHead[i]; freqTail[i]+=st.freqTail[i]; }
+  }
+  return {freqHead,freqTail, daysCount: days.length};
+}
 
-    const dateId = `dayDate_${i}`;
-    const textId = `dayText_${i}`;
+function topKIdx(arr,k){
+  const idx = arr.map((val,i)=>({i,val}));
+  idx.sort((a,b)=> b.val-a.val || a.i-b.i);
+  return idx.slice(0,k).map(o=>o.i);
+}
 
-    const dateInput = el('input', {type:'date', id:dateId});
-    dateInput.value = saved.date || '';
+function classifier(D2,D1,D0){
+  // Needs D0 always. Uses D1 & D2 if present. Returns {state,kpi,why,confidence}
+  const s0 = dayStats(D0);
+  const hasD1 = !!D1;
+  const hasD2 = !!D2;
 
-    const textArea = el('textarea', {id:textId, placeholder:'Dán KQ / ghi chú ngày này...'});
-    textArea.value = saved.text || '';
+  const RI = hasD1 ? repeatSet(D0,D1).length : null;
+  const HS = hasD1 ? (()=> {
+    const top2_0 = s0.topHeads.slice(0,2).map(o=>o.i);
+    const top2_1 = dayStats(D1).topHeads.slice(0,2).map(o=>o.i);
+    let c=0;
+    for(const h of top2_0) if(top2_1.includes(h)) c++;
+    return c; // 0-2
+  })() : null;
 
-    const btnSave = el('button', {class:'btn primary'}, ['Lưu khung']);
-    const btnClear = el('button', {class:'btn danger'}, ['Xoá nội dung']);
-    const btnClearHist = el('button', {class:'btn danger'}, ['Xoá lịch sử']);
+  const DS_num = s0.multiNums.filter(x=>x.c>=2).length;
+  const DS_tail = s0.maxTail.val / 27;
+  const DS_head = s0.maxHead.val / 27;
+  const DS = (DS_num>=2) || (DS_tail>=0.30) || (DS_head>=0.30);
 
-    const hint = el('div', {class:'hint'}, [
-      'Lưu khung = lưu nội dung hiện tại + ghi 1 bản vào lịch sử của khung này.'
-    ]);
+  const RoI = s0.uniqHeads.size;
 
-    const list = el('div', {class:'list'});
+  // RI drop check for RESET
+  let RI_prev = null;
+  let RI_drop = false;
+  if(hasD1 && hasD2){
+    RI_prev = repeatSet(D1,D2).length;
+    RI_drop = (RI_prev>=5 && RI<=2);
+  }
 
-    function renderHist(){
-      list.innerHTML = '';
-      const h = readJSON(histKey, []);
-      if(!h.length){
-        list.appendChild(el('div', {class:'hint'}, ['Chưa có lịch sử cho khung này.']));
-        return;
-      }
-      h.slice().reverse().forEach((item, idxFromEnd)=>{
-        const realIdx = h.length - 1 - idxFromEnd;
-        const top = el('div', {class:'top'});
-        const left = el('div', {}, [
-          el('div', {class:'pill mono'}, [
-            `${item.date || '—'} • ${new Date(item.ts).toLocaleString()}`
-          ]),
-          el('div', {class:'mono', style:'margin-top:6px;white-space:pre-wrap;word-break:break-word;'}, [
-            (item.text || '').slice(0, 500) + ((item.text||'').length>500 ? '…' : '')
-          ])
-        ]);
-        const del = el('button', {class:'btn danger'}, ['Xoá']);
-        del.style.height='fit-content';
-        del.addEventListener('click', ()=>{
-          const cur = readJSON(histKey, []);
-          cur.splice(realIdx, 1);
-          writeJSON(histKey, cur);
-          renderHist();
-        });
-        top.appendChild(left);
-        top.appendChild(del);
+  let state = "DIFFUSE";
+  let why = [];
 
-        const box = el('div', {class:'item'});
-        box.appendChild(top);
+  // Priority: DUMP first
+  if(DS){
+    state = "XẢ";
+    why.push(`DS kích hoạt (xả): multiNums=${DS_num}, maxTail=${(DS_tail*100).toFixed(0)}%, maxHead=${(DS_head*100).toFixed(0)}%`);
+  } else if(hasD1 && RI>=6 && HS>=1){
+    state = "CONTINUATION";
+    why.push(`RI=${RI} (≥6) và HS=${HS} (giữ trục)`);
+  } else if(hasD1 && hasD2 && (RI_drop || (HS===0 && RoI>=8))){
+    state = "RESET/ĐẢO PHA";
+    why.push(`Gãy nhịp: RI_prev=${RI_prev} → RI=${RI} hoặc HS=0 & RoI cao`);
+  } else {
+    state = "DIFFUSE";
+    if(hasD1) why.push(`RI=${RI} (không đủ continuation mạnh) & RoI=${RoI} (xoay)`);
+    else why.push(`Thiếu D1 nên mặc định DIFFUSE`);
+  }
 
-        const mini = el('div', {class:'mini'});
-        const restore = el('button', {class:'btn ok'}, ['Khôi phục vào khung']);
-        restore.addEventListener('click', ()=>{
-          dateInput.value = item.date || '';
-          textArea.value = item.text || '';
-          writeJSON(key, {date: dateInput.value, text: textArea.value});
-          // không tự ghi thêm lịch sử khi restore
-        });
-        mini.appendChild(restore);
-        box.appendChild(mini);
+  // Confidence heuristic
+  let conf = 0.55;
+  if(state==="XẢ") conf = 0.78 + Math.min(0.12, DS_num*0.05 + Math.max(0, DS_tail-0.30) + Math.max(0, DS_head-0.30));
+  if(state==="CONTINUATION") conf = 0.70 + Math.min(0.15, (RI-6)*0.03 + (HS-1)*0.05);
+  if(state==="RESET/ĐẢO PHA") conf = 0.68 + (RI_drop?0.10:0) + (RoI>=8?0.05:0);
+  if(state==="DIFFUSE") conf = 0.58 + (RoI>=8?0.08:0) + (hasD1 && RI<=1 ? 0.05 : 0);
 
-        list.appendChild(box);
-      });
+  const kpi = {RI, HS, DS_num, DS_tail, DS_head, RoI, RI_prev};
+  return {state, kpi, why: why.slice(0,2), confidence: Math.min(0.95, conf)};
+}
+
+/** ===== tie-break nền (cố định) ===== */
+
+function finalTieBreak(cands, ctx){
+  // Tie-break kỹ thuật (KHÔNG dùng "chọn số bé" kiểu tâm linh).
+  // 1) prefer lower freq in D0 (avoid xả)
+  // 2) prefer hasMirror (đảo xuất hiện)
+  // Nếu vẫn hòa sau 2 bước => trả về null để người dùng tự chốt.
+  let best = null;
+  let bestKey = null;
+
+  for(const c of cands){
+    const f = ctx.s0.freqNum[c.n];                   // lower is better
+    const m = c.meta?.hasMirror ? 1 : 0;            // higher is better
+    const key = [f, -m];                             // lexicographic
+    if(!bestKey || (key[0] < bestKey[0]) || (key[0]===bestKey[0] && key[1] < bestKey[1])){
+      bestKey = key;
+      best = c;
     }
-
-    btnSave.addEventListener('click', ()=>{
-      const payload = {date: dateInput.value || '', text: textArea.value || ''};
-      writeJSON(key, payload);
-      const cur = readJSON(histKey, []);
-      cur.push({ts: Date.now(), ...payload});
-      writeJSON(histKey, cur);
-      renderHist();
-    });
-
-    btnClear.addEventListener('click', ()=>{
-      dateInput.value = '';
-      textArea.value = '';
-      writeJSON(key, {date:'', text:''});
-    });
-
-    btnClearHist.addEventListener('click', ()=>{
-      writeJSON(histKey, []);
-      renderHist();
-    });
-
-    card.appendChild(title);
-
-    card.appendChild(el('label', {for:dateId}, ['Ngày']));
-    card.appendChild(dateInput);
-
-    card.appendChild(el('label', {for:textId}, ['Nội dung']));
-    card.appendChild(textArea);
-
-    const row = el('div', {class:'row', style:'margin-top:10px'});
-    row.appendChild(btnSave);
-    row.appendChild(btnClear);
-    row.appendChild(btnClearHist);
-    card.appendChild(row);
-    card.appendChild(hint);
-
-    card.appendChild(el('div', {class:'hint', style:'margin-top:10px'}, ['Lịch sử khung:']));
-    card.appendChild(list);
-
-    renderHist();
-    return card;
   }
+  // Check if unique best
+  const winners = cands.filter(c=>{
+    const f = ctx.s0.freqNum[c.n];
+    const m = c.meta?.hasMirror ? 1 : 0;
+    const key = [f, -m];
+    return key[0]===bestKey[0] && key[1]===bestKey[1];
+  });
+  if(winners.length===1) return winners[0];
+  return null; // force manual pick
+}
 
-  for(let i=1;i<=3;i++) daysRoot.appendChild(renderDay(i));
+function hasMirrorInDays(n, days){
+(n, days){
+  const a = n%10, b = Math.floor(n/10);
+  const m = a*10 + b;
+  const sets = days.map(d=>new Set(d));
+  for(const s of sets) if(s.has(m)) return true;
+  return false;
+}
 
-  // --------- Picks ---------
-  const pickDate = $('#pickDate');
-  const pickNumber = $('#pickNumber');
-  const pickNote = $('#pickNote');
-  const pickList = $('#pickList');
+/** =========================
+ *  MODE SYSTEMS (Locked)
+ * ========================= */
 
-  function normalize2Digits(v){
-    const s = String(v||'').trim().replace(/\D/g,'');
-    if(!s) return '';
-    if(s.length===1) return '0'+s;
-    return s.slice(-2);
-  }
-
-  function renderPicks(){
-    pickList.innerHTML = '';
-    const picks = readJSON(LS.picks, []); // [{id, date, number, note, ts}]
-    if(!picks.length){
-      pickList.appendChild(el('div', {class:'hint'}, ['Chưa có lịch sử chốt.']));
-      return;
+function sysCONT(D2,D1,D0){
+  const s0 = dayStats(D0);
+  const s1 = dayStats(D1);
+  const rep = repeatSet(D0,D1); // A
+  let pool = [];
+  if(rep.length>0){
+    pool = rep;
+  } else {
+    const top2H = s0.topHeads.slice(0,2).map(o=>o.i);
+    const top2T = s0.topTails.slice(0,2).map(o=>o.i);
+    for(const h of top2H) for(const t of top2T){
+      const n = h*10+t;
+      pool.push(n);
     }
-    // newest first
-    picks.slice().sort((a,b)=>b.ts-a.ts).forEach(p=>{
-      const box = el('div', {class:'item'});
-      const top = el('div', {class:'top'});
-      const left = el('div', {}, [
-        el('div', {class:'pill mono'}, [`${p.date || '—'} → ${p.number || '—'} • ${new Date(p.ts).toLocaleString()}`]),
-        p.note ? el('div', {style:'margin-top:6px;white-space:pre-wrap;word-break:break-word;'}, [p.note]) : el('div')
-      ]);
-      const del = el('button', {class:'btn danger'}, ['Xoá']);
-      del.addEventListener('click', ()=>{
-        const cur = readJSON(LS.picks, []);
-        const idx = cur.findIndex(x=>x.id===p.id);
-        if(idx>=0){cur.splice(idx,1); writeJSON(LS.picks, cur);}
-        renderPicks();
-      });
-      top.appendChild(left);
-      top.appendChild(del);
-      box.appendChild(top);
-      pickList.appendChild(box);
+    // remove numbers already in D0
+    const set0 = new Set(D0);
+    pool = pool.filter(n=>!set0.has(n));
+  }
+  // score
+  const top2H0 = s0.topHeads.slice(0,2).map(o=>o.i);
+  const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
+  const top2H1 = s1.topHeads.slice(0,2).map(o=>o.i);
+  const top2T1 = s1.topTails.slice(0,2).map(o=>o.i);
+
+  const DS_soft = (s0.multiNums.filter(x=>x.c>=2).length===1) || (s0.maxTail.val/27>=0.26) || (s0.maxHead.val/27>=0.26);
+
+  const days = [D2,D1,D0].filter(Boolean);
+  const scored = pool.map(n=>{
+    const h=Math.floor(n/10), t=n%10;
+    let sc=0;
+    if(rep.includes(n)) sc += 50;
+    if(top2H0.includes(h)) sc += 20;
+    if(top2T0.includes(t)) sc += 15;
+    if(top2H1.includes(h)) sc += 10;
+    if(top2T1.includes(t)) sc += 5;
+    if(s0.freqNum[n]>=2) sc -= 25;
+    if(DS_soft) sc -= 15;
+    const meta = { hasMirror: hasMirrorInDays(n, days) };
+    return {n, score: sc, meta};
+  });
+
+  scored.sort((a,b)=> b.score-a.score || a.n-b.n);
+  const topScore = scored[0]?.score ?? -999;
+  const ties = scored.filter(x=>x.score===topScore);
+  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
+
+  return {top1: pick.n, scored: scored.slice(0,12), note:`CONT: pool=${pool.length}, repeat=${rep.length}`};
+}
+
+function sysDIFF(D2,D1,D0){
+  const s0 = dayStats(D0);
+  const agg = agg3days(D2,D1,D0);
+  const top2H0 = s0.topHeads.slice(0,2).map(o=>o.i);
+  const top2T3 = topKIdx(agg.freqTail,2);
+  const top2H3 = topKIdx(agg.freqHead,2);
+  const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
+
+  const poolSet = new Set();
+  // main: top2Heads(D0) × top2Tails(3day)
+  for(const h of top2H0) for(const t of top2T3) poolSet.add(h*10+t);
+  // secondary: top2Heads(3day) × top2Tails(D0)
+  for(const h of top2H3) for(const t of top2T0) poolSet.add(h*10+t);
+
+  let pool = Array.from(poolSet).sort((a,b)=>a-b);
+
+  // mandatory filters:
+  const set0 = new Set(D0);
+  const set1 = new Set(D1);
+  const set2 = new Set(D2);
+
+  pool = pool.filter(n=>{
+    if(s0.freqNum[n]>=2) return false;                 // no xả D0
+    if(set0.has(n)) return false;                      // no chase D0
+    if(set0.has(n) && set1.has(n) && set2.has(n)) return false; // redundant, already excluded
+    // exclude "appears all 3 days" (neo dài)
+    if(set0.has(n) && set1.has(n) && set2.has(n)) return false;
+    return true;
+  });
+
+  const days = [D2,D1,D0];
+  const scored = pool.map(n=>{
+    const h=Math.floor(n/10), t=n%10;
+    let sc=0;
+    if(top2T3.includes(t)) sc += 35;
+    if(top2H0.includes(h)) sc += 25;
+    if(top2H3.includes(h)) sc += 15;
+    if(top2T0.includes(t)) sc += 15;
+    if(hasMirrorInDays(n, days)) sc += 10;
+    if(set1.has(n)) sc -= 10; // reduce if in D1
+    const meta = { hasMirror: hasMirrorInDays(n, days) };
+    return {n, score: sc, meta};
+  });
+
+  // If after filters pool empty, fall back (locked): remove "no chase D0", keep no xả & no 3-day
+  if(scored.length===0){
+    pool = Array.from(poolSet).sort((a,b)=>a-b).filter(n=>{
+      if(s0.freqNum[n]>=2) return false;
+      if(set0.has(n) && set1.has(n) && set2.has(n)) return false;
+      return true;
     });
   }
 
-  $('#savePick').addEventListener('click', ()=>{
-    const date = pickDate.value || '';
-    const number = normalize2Digits(pickNumber.value);
-    const note = (pickNote.value||'').trim();
+  const scored2 = (scored.length?scored: pool.map(n=>{
+    const h=Math.floor(n/10), t=n%10;
+    let sc=0;
+    if(top2T3.includes(t)) sc += 35;
+    if(top2H0.includes(h)) sc += 25;
+    if(top2H3.includes(h)) sc += 15;
+    if(top2T0.includes(t)) sc += 15;
+    if(hasMirrorInDays(n, days)) sc += 10;
+    if(set0.has(n)) sc -= 20;
+    if(set1.has(n)) sc -= 10;
+    const meta = { hasMirror: hasMirrorInDays(n, days) };
+    return {n, score: sc, meta};
+  }));
 
-    if(!date){ alert('Chưa chọn ngày chốt.'); return; }
-    if(!number){ alert('Chưa nhập số chốt (2 số).'); return; }
+  scored2.sort((a,b)=> b.score-a.score || a.n-b.n);
+  const topScore = scored2[0]?.score ?? -999;
+  const ties = scored2.filter(x=>x.score===topScore);
+  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored2[0];
+  const unresolved = (ties.length>1 && pick===null);
+  const finalPick = unresolved ? null : pick;
 
-    const cur = readJSON(LS.picks, []);
-    cur.push({
-      id: `${Date.now()}_${Math.random().toString(16).slice(2)}`,
-      date, number, note, ts: Date.now()
+  return {top1: finalPick===null ? null : finalPick.n, ties: unresolved ? ties.map(x=>x.n) : [], scored: scored2.slice(0,12), note:`DIFF: pool=${poolSet.size}, filtered=${scored.length}`};
+}
+
+function sysDUMP(D1,D0){
+  const s0 = dayStats(D0);
+  const top2H0 = s0.topHeads.slice(0,2).map(o=>o.i);
+  const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
+
+  const DS_num = s0.multiNums.filter(x=>x.c>=2).length;
+  const dumpTail = (s0.maxTail.val/27>=0.30) ? s0.maxTail.i : null;
+  const dumpHead = (s0.maxHead.val/27>=0.30) ? s0.maxHead.i : null;
+  const dumpNums = new Set(s0.multiNums.filter(x=>x.c>=2).map(x=>x.n));
+
+  const left = (x)=>(x+9)%10, right=(x)=>(x+1)%10;
+
+  let poolSet = new Set();
+  if(dumpTail!==null){
+    const tails = [left(dumpTail), right(dumpTail)];
+    for(const h of top2H0) for(const t of tails) poolSet.add(h*10+t);
+  }
+  if(dumpHead!==null){
+    const heads = [left(dumpHead), right(dumpHead)];
+    for(const h of heads) for(const t of top2T0) poolSet.add(h*10+t);
+  }
+  if(poolSet.size===0){
+    // fallback: top2x top2 and remove dump
+    for(const h of top2H0) for(const t of top2T0) poolSet.add(h*10+t);
+  }
+
+  const set0 = new Set(D0);
+  const set1 = D1 ? new Set(D1) : new Set();
+  let pool = Array.from(poolSet);
+
+  // mandatory filters
+  pool = pool.filter(n=>{
+    if(dumpNums.has(n)) return false;
+    if(dumpHead!==null && Math.floor(n/10)===dumpHead) return false;
+    if(dumpTail!==null && n%10===dumpTail) return false;
+    if(set0.has(n)) return false; // no chase D0
+    return true;
+  });
+
+  const days = [D1,D0].filter(Boolean);
+  const scored = pool.map(n=>{
+    const h=Math.floor(n/10), t=n%10;
+    let sc=0;
+    if(dumpTail!==null && (t===left(dumpTail) || t===right(dumpTail))) sc += 40;
+    if(top2H0.includes(h) && (dumpHead===null || h!==dumpHead)) sc += 25;
+    if(top2T0.includes(t) && (dumpTail===null || t!==dumpTail)) sc += 15;
+    if(hasMirrorInDays(n, days)) sc += 10;
+    if(set1.has(n)) sc -= 15;
+    const meta = { hasMirror: hasMirrorInDays(n, days) };
+    return {n, score: sc, meta};
+  });
+
+  if(scored.length===0){
+    // locked fallback: allow D0 chase but still exclude dump zones
+    const pool2 = Array.from(poolSet).filter(n=>{
+      if(dumpNums.has(n)) return false;
+      if(dumpHead!==null && Math.floor(n/10)===dumpHead) return false;
+      if(dumpTail!==null && n%10===dumpTail) return false;
+      return true;
     });
-    writeJSON(LS.picks, cur);
+    for(const n of pool2) {
+      const h=Math.floor(n/10), t=n%10;
+      let sc=0;
+      if(dumpTail!==null && (t===left(dumpTail) || t===right(dumpTail))) sc += 40;
+      if(top2H0.includes(h) && (dumpHead===null || h!==dumpHead)) sc += 25;
+      if(top2T0.includes(t) && (dumpTail===null || t!==dumpTail)) sc += 15;
+      if(hasMirrorInDays(n, days)) sc += 10;
+      if(set1.has(n)) sc -= 15;
+      scored.push({n, score: sc, meta:{hasMirror: hasMirrorInDays(n, days)}});
+    }
+  }
 
-    // reset inputs except date
-    pickNumber.value = '';
-    pickNote.value = '';
+  scored.sort((a,b)=> b.score-a.score || a.n-b.n);
+  const topScore = scored[0]?.score ?? -999;
+  const ties = scored.filter(x=>x.score===topScore);
+  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
 
-    renderPicks();
+  return {top1: pick.n, scored: scored.slice(0,12), note:`DUMP: dumpTail=${dumpTail}, dumpHead=${dumpHead}, dumpNums=${dumpNums.size}`};
+}
+
+function sysRESET(D2,D1,D0){
+  const s0 = dayStats(D0);
+  const s1 = dayStats(D1);
+  const s2 = dayStats(D2);
+
+  const oldHeads = new Set([...s2.topHeads.slice(0,2).map(o=>o.i), ...s1.topHeads.slice(0,2).map(o=>o.i)]);
+  const oldTails = new Set([...s2.topTails.slice(0,2).map(o=>o.i), ...s1.topTails.slice(0,2).map(o=>o.i)]);
+
+  const newHeads = s0.topHeads.slice(0,3).map(o=>o.i).filter(h=>!oldHeads.has(h));
+  const newTails = s0.topTails.slice(0,3).map(o=>o.i).filter(t=>!oldTails.has(t));
+
+  let poolSet = new Set();
+  for(const h of newHeads) for(const t of newTails) poolSet.add(h*10+t);
+
+  // If too small, relax: allow one side not-new, but still HS=0-ish; here: add (newHeads×top3Tails0) and (top3Heads0×newTails)
+  if(poolSet.size<3){
+    const top3H0 = s0.topHeads.slice(0,3).map(o=>o.i);
+    const top3T0 = s0.topTails.slice(0,3).map(o=>o.i);
+    for(const h of newHeads) for(const t of top3T0) poolSet.add(h*10+t);
+    for(const h of top3H0) for(const t of newTails) poolSet.add(h*10+t);
+  }
+
+  const set0 = new Set(D0);
+  const set1 = new Set(D1);
+
+  let pool = Array.from(poolSet);
+
+  // mandatory filters
+  pool = pool.filter(n=>{
+    const h=Math.floor(n/10), t=n%10;
+    if(oldHeads.has(h) && oldTails.has(t)) return false; // dính kép trục cũ
+    if(set0.has(n)) return false; // no chase D0
+    if(set1.has(n) && set0.has(n)) return false; // redundant
+    // exclude appears 2 days in a row (D1 & D0)
+    if(set1.has(n)) return false;
+    return true;
   });
 
-  $('#clearPickAll').addEventListener('click', ()=>{
-    const ok = confirm('Xoá toàn bộ lịch sử chốt?');
-    if(!ok) return;
-    writeJSON(LS.picks, []);
-    renderPicks();
+  const RoI = s0.uniqHeads.size;
+  const days = [D2,D1,D0];
+
+  const scored = pool.map(n=>{
+    const h=Math.floor(n/10), t=n%10;
+    let sc=0;
+    if(newHeads.includes(h)) sc += 45;
+    if(newTails.includes(t)) sc += 35;
+    if(RoI>=8) sc += 10;
+    if(oldHeads.has(h)) sc -= 20;
+    if(oldTails.has(t)) sc -= 15;
+    if(hasMirrorInDays(n, days)) sc += 5; // small, reset prefers "mới"
+    const meta = { hasMirror: hasMirrorInDays(n, days) };
+    return {n, score: sc, meta};
   });
 
-  // set default date = today
-  try{
-    const t = new Date();
-    const yyyy = t.getFullYear();
-    const mm = String(t.getMonth()+1).padStart(2,'0');
-    const dd = String(t.getDate()).padStart(2,'0');
-    pickDate.value = `${yyyy}-${mm}-${dd}`;
-  }catch(e){}
+  if(scored.length===0){
+    // locked fallback: allow D1 presence but keep oldHeads&oldTails exclusion + no D0 chase
+    pool = Array.from(poolSet).filter(n=>{
+      const h=Math.floor(n/10), t=n%10;
+      if(oldHeads.has(h) && oldTails.has(t)) return false;
+      if(set0.has(n)) return false;
+      return true;
+    });
+    for(const n of pool){
+      const h=Math.floor(n/10), t=n%10;
+      let sc=0;
+      if(newHeads.includes(h)) sc += 45;
+      if(newTails.includes(t)) sc += 35;
+      if(RoI>=8) sc += 10;
+      if(oldHeads.has(h)) sc -= 20;
+      if(oldTails.has(t)) sc -= 15;
+      if(set1.has(n)) sc -= 15;
+      scored.push({n, score: sc, meta:{hasMirror: hasMirrorInDays(n, days)}});
+    }
+  }
 
-  // keep only digits in pickNumber
-  pickNumber.addEventListener('input', ()=>{
-    const s = pickNumber.value.replace(/\D/g,'');
-    pickNumber.value = s.slice(0,2);
+  scored.sort((a,b)=> b.score-a.score || a.n-b.n);
+  const topScore = scored[0]?.score ?? -999;
+  const ties = scored.filter(x=>x.score===topScore);
+  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
+  const unresolved = (ties.length>1 && pick===null);
+  const finalPick = unresolved ? null : pick;
+
+  return {top1: finalPick===null ? null : finalPick.n, ties: unresolved ? ties.map(x=>x.n) : [], scored: scored.slice(0,12), note:`RESET: pool=${poolSet.size}, newHeads=${newHeads.join("")}, newTails=${newTails.join("")}`};
+}
+
+/** =========================
+ *  UI / SESSION
+ * ========================= */
+
+function updateBoxVisibility(){
+  // show boxes based on lockedMode (or default show all)
+  const m = session.lockedMode;
+  const showD1 = !m || MODES[m].need.includes("D1") || MODES[m].opt.includes("D1");
+  const showD2 = !m || MODES[m].need.includes("D2") || MODES[m].opt.includes("D2");
+  $("boxD1").style.display = showD1 ? "" : "none";
+  $("boxD2").style.display = showD2 ? "" : "none";
+}
+
+function setLockedMode(modeKey){
+  if(session.lockedMode) return; // already locked
+  session.lockedMode = modeKey;
+  $("lockedMode").innerHTML = `<span class="pill">${MODES[modeKey].name}</span>`;
+  const need = MODES[modeKey].need.join(", ");
+  const opt = MODES[modeKey].opt.length ? ` (optional: ${MODES[modeKey].opt.join(", ")})` : "";
+  $("modeHint").textContent = `Mode này dùng: ${need}${opt}. App sẽ chỉ chạy đúng hệ này cho tới khi Reset phiên.`;
+  $("btnRun").disabled = false;
+  $("btnSaveHistory").disabled = true;
+  updateBoxVisibility();
+}
+
+function resetSession(){
+  session.lockedMode = null;
+  session.lastResult = null;
+  $("lockedMode").innerHTML = `<span class="pill">Chưa chọn</span>`;
+  $("modeHint").textContent = "";
+  $("btnRun").disabled = true;
+  $("btnSaveHistory").disabled = true;
+  $("resultCard").style.display = "none";
+  updateBoxVisibility();
+}
+
+function renderStats(){
+  const d0 = parseDay($("inputD0").value);
+  $("statD0").textContent = d0.msg;
+  const d1 = parseDay($("inputD1").value);
+  $("statD1").textContent = d1.msg;
+  const d2 = parseDay($("inputD2").value);
+  $("statD2").textContent = d2.msg;
+}
+
+function requireDaysForMode(modeKey, D2, D1, D0){
+  const need = MODES[modeKey].need;
+  const missing = [];
+  for(const d of need){
+    if(d==="D0" && !D0) missing.push("D0");
+    if(d==="D1" && !D1) missing.push("D1");
+    if(d==="D2" && !D2) missing.push("D2");
+  }
+  return missing;
+}
+
+function formatNum(n){ return String(n).padStart(2,"0"); }
+
+function runSystem(){
+  const modeKey = session.lockedMode;
+  if(!modeKey){ alert("Chưa chọn Mode."); return; }
+
+  const p0 = parseDay($("inputD0").value);
+  if(!p0.ok){ alert("D0 chưa đủ 27 số."); return; }
+  const p1 = parseDay($("inputD1").value);
+  const p2 = parseDay($("inputD2").value);
+
+  const D0 = p0.nums;
+  const D1 = p1.ok ? p1.nums : null;
+  const D2 = p2.ok ? p2.nums : null;
+
+  const missing = requireDaysForMode(modeKey, D2, D1, D0);
+  if(missing.length){
+    alert(`Thiếu dữ liệu bắt buộc cho ${MODES[modeKey].name}: ${missing.join(", ")} (mỗi ngày phải đủ 27 số).`);
+    return;
+  }
+
+  // classifier if possible (uses D1/D2 if present)
+  const cls = classifier(D2, D1, D0);
+  session.classifier = cls;
+
+  let out = null;
+  if(modeKey==="CONT") out = sysCONT(D2, D1, D0);
+  if(modeKey==="DIFF") out = sysDIFF(D2, D1, D0);
+  if(modeKey==="DUMP") out = sysDUMP(D1, D0);
+  if(modeKey==="RESET") out = sysRESET(D2, D1, D0);
+
+  session.lastResult = { modeKey, out, cls };
+
+  $("resultCard").style.display = "";
+  // Tie unresolved => user must pick
+  if(out.top1===null){
+    $("tieCard").style.display = "";
+    $("resultMain").innerHTML = `TOP1: <b class=\"mono\">(CHƯA CHỌN)</b> <span class=\"pill\">${MODES[modeKey].name}</span>`;
+    const opts = out.ties || [];
+    $("tieList").innerHTML = opts.map(n=>{
+      const s = formatNum(n);
+      return `<label style=\"display:block;margin:6px 0;\"><input type=\"radio\" name=\"tiePick\" value=\"${s}\"/> <b class=\"mono\">${s}</b></label>`;
+    }).join("");
+    $("btnSaveHistory").disabled = true;
+  } else {
+    $("tieCard").style.display = "none";
+    $("resultMain").innerHTML = `TOP1: <b class=\"mono\">${formatNum(out.top1)}</b> <span class=\"pill\">${MODES[modeKey].name}</span>`;
+  }
+
+  const topList = out.scored.map(x=>`${formatNum(x.n)}(${x.score})`).join(", ");
+  $("resultExplain").innerHTML = `<div class="small"><b>Top candidates</b>: <span class="mono">${topList}</span></div>`;
+  $("resultMeta").innerHTML = `<div class="small muted">Ghi chú hệ: ${out.note}. Classifier: <b>${cls.state}</b> (conf ${(cls.confidence*100).toFixed(0)}%).</div>`;
+  $("btnSaveHistory").disabled = false;
+}
+
+function renderClassifier(){
+  const p0 = parseDay($("inputD0").value);
+  if(!p0.ok){ alert("D0 chưa đủ 27 số."); return; }
+  const p1 = parseDay($("inputD1").value);
+  const p2 = parseDay($("inputD2").value);
+  const D0 = p0.nums;
+  const D1 = p1.ok ? p1.nums : null;
+  const D2 = p2.ok ? p2.nums : null;
+  const cls = classifier(D2,D1,D0);
+  session.classifier = cls;
+
+  $("classifyCard").style.display = "";
+  const st = cls.state;
+  const badge = st==="XẢ" ? "bad" : (st==="CONTINUATION" ? "ok" : (st==="RESET/ĐẢO PHA" ? "warn" : "muted"));
+  $("classifyState").innerHTML = `Trạng thái: <b class="${badge}">${st}</b>`;
+
+  const k = cls.kpi;
+  $("kpi").innerHTML = `
+    <span class="pill">RI: <b>${k.RI===null?"—":k.RI}</b></span>
+    <span class="pill">HS: <b>${k.HS===null?"—":k.HS}</b></span>
+    <span class="pill">DS_num: <b>${k.DS_num}</b></span>
+    <span class="pill">maxTail: <b>${(k.DS_tail*100).toFixed(0)}%</b></span>
+    <span class="pill">maxHead: <b>${(k.DS_head*100).toFixed(0)}%</b></span>
+    <span class="pill">RoI: <b>${k.RoI}</b></span>
+    <span class="pill">RI_prev: <b>${k.RI_prev===null?"—":k.RI_prev}</b></span>
+  `;
+
+  $("classifyWhy").innerHTML = cls.why.map(x=>`• ${x}`).join("<br/>");
+  $("classifyConf").textContent = `Độ tin cậy (heuristic): ${(cls.confidence*100).toFixed(0)}%. Nếu borderline, bạn vẫn quyết mode thủ công.`;
+}
+
+function loadHistory(){
+  const raw = localStorage.getItem(LS_KEY);
+  let rows = [];
+  try { rows = raw ? JSON.parse(raw) : []; } catch(e){ rows=[]; }
+  return rows;
+}
+
+function saveHistory(rows){
+  localStorage.setItem(LS_KEY, JSON.stringify(rows));
+}
+
+function renderHistory(){
+  const rows = loadHistory();
+  const body = $("histBody");
+  body.innerHTML = "";
+  if(rows.length===0){
+    body.innerHTML = `<tr><td colspan="7" class="muted">Chưa có lịch sử.</td></tr>`;
+    return;
+  }
+  for(let i=0;i<rows.length;i++){
+    const r = rows[i];
+    const k = r.classifier?.kpi || {};
+    const clsText = r.classifier ? `${r.classifier.state} (RI:${k.RI ?? "—"}, HS:${k.HS ?? "—"}, DS_num:${k.DS_num ?? "—"}, RoI:${k.RoI ?? "—"})` : "—";
+    const res = r.result;
+    const kq = r.outcome ?? "—";
+    body.innerHTML += `
+      <tr>
+        <td>${r.date || "—"}</td>
+        <td><span class="pill">${r.modeName}</span></td>
+        <td class="mono"><b>${res}</b></td>
+        <td class="small">${clsText}</td>
+        <td>
+          <select data-idx="${i}" class="outSel">
+            <option value="—" ${kq==="—"?"selected":""}>—</option>
+            <option value="TRÚNG" ${kq==="TRÚNG"?"selected":""}>TRÚNG</option>
+            <option value="TRƯỢT" ${kq==="TRƯỢT"?"selected":""}>TRƯỢT</option>
+          </select>
+        </td>
+        <td class="small">${(r.note||"").replace(/</g,"&lt;")}</td>
+        <td><button class="danger" data-del="${i}">Xoá</button></td>
+      </tr>
+    `;
+  }
+
+  // bind deletes
+  body.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const idx = Number(btn.getAttribute("data-del"));
+      const rows = loadHistory();
+      rows.splice(idx,1);
+      saveHistory(rows);
+      renderHistory();
+    });
   });
 
-  renderPicks();
-})();
+  // bind outcome changes
+  body.querySelectorAll("select.outSel").forEach(sel=>{
+    sel.addEventListener("change", ()=>{
+      const idx = Number(sel.getAttribute("data-idx"));
+      const rows = loadHistory();
+      rows[idx].outcome = sel.value;
+      saveHistory(rows);
+      renderHistory();
+    });
+  });
+}
+
+function addCurrentToHistory(){
+  if(!session.lastResult){ alert("Chưa có kết quả chốt để lưu."); return; }
+  const date = $("chotDate").value;
+  if(!date){ alert("Chưa chọn ngày chốt."); return; }
+  const note = $("note").value || "";
+  const { modeKey, out, cls } = session.lastResult;
+
+  const rows = loadHistory();
+  rows.unshift({
+    date,
+    note,
+    modeKey,
+    modeName: MODES[modeKey].name,
+    result: formatNum(out.top1),
+    classifier: cls,
+    outcome: "—",
+    savedAt: new Date().toISOString(),
+  });
+  saveHistory(rows);
+  renderHistory();
+  $("btnSaveHistory").disabled = true;
+}
+
+/** =========================
+ *  Wiring
+ * ========================= */
+function init(){
+  // default date today
+  const today = new Date();
+  const tzOff = today.getTimezoneOffset()*60000;
+  const localISO = new Date(Date.now()-tzOff).toISOString().slice(0,10);
+  $("chotDate").value = localISO;
+
+  // stats update on input
+  ["inputD0","inputD1","inputD2"].forEach(id=>{
+    $(id).addEventListener("input", renderStats);
+  });
+  renderStats();
+
+  // clear buttons
+  $("clearD0").addEventListener("click", ()=>{ $("inputD0").value=""; renderStats(); });
+  $("clearD1").addEventListener("click", ()=>{ $("inputD1").value=""; renderStats(); });
+  $("clearD2").addEventListener("click", ()=>{ $("inputD2").value=""; renderStats(); });
+
+  // classifier
+  $("btnClassify").addEventListener("click", renderClassifier);
+
+  // mode selection
+  $("modeCONT").addEventListener("click", ()=>setLockedMode("CONT"));
+  $("modeDIFF").addEventListener("click", ()=>setLockedMode("DIFF"));
+  $("modeDUMP").addEventListener("click", ()=>setLockedMode("DUMP"));
+  $("modeRESET").addEventListener("click", ()=>setLockedMode("RESET"));
+
+  // reset session
+  $("btnResetSession").addEventListener("click", resetSession);
+
+  // run
+  $("btnRun").addEventListener("click", runSystem);
+
+  // confirm tie pick
+  $("btnConfirmPick").addEventListener("click", ()=>{
+    if(!session.lastResult){ alert("Chưa có kết quả để chốt."); return; }
+    const sel = document.querySelector("input[name='tiePick']:checked");
+    if(!sel){ alert("Chưa chọn con nào trong danh sách hòa."); return; }
+    const picked = sel.value;
+    // set as final TOP1
+    session.lastResult.out.top1 = Number(picked);
+    $("tieCard").style.display = "none";
+    $("resultMain").innerHTML = `TOP1: <b class="mono">${picked}</b> <span class="pill">${MODES[session.lastResult.modeKey].name}</span>`;
+    $("btnSaveHistory").disabled = false;
+  });
+
+  // save history
+  $("btnSaveHistory").addEventListener("click", addCurrentToHistory);
+
+  // clear history
+  $("btnClearHistory").addEventListener("click", ()=>{
+    if(confirm("Xoá toàn bộ lịch sử chốt?")) {
+      localStorage.removeItem(LS_KEY);
+      renderHistory();
+    }
+  });
+
+  updateBoxVisibility();
+  renderHistory();
+}
+init();
+
+
+/* ===============================
+   CLASSIFIER v1.1 (LOCKED)
+   Diffuse adjusted - DS strong only
+   Do NOT modify without version bump
+================================= */
+
+function classifyState(metrics){
+  const { RI, HS, RI_prev, RoI, DS_num, maxHeadPct, maxTailPct } = metrics;
+
+  // 1. CONTINUATION
+  if(RI >= 6 && HS >= 1 && !isStrongDump(metrics)){
+    return "CONTINUATION";
+  }
+
+  // 2. STRONG DUMP only
+  if(isStrongDump(metrics)){
+    return "DUMP";
+  }
+
+  // 3. RESET
+  if((RI_prev >= 5 && RI <= 2) || (HS === 0 && RoI >= 8)){
+    return "RESET";
+  }
+
+  // 4. DIFFUSE (default)
+  return "DIFFUSE";
+}
+
+function isStrongDump(metrics){
+  const { DS_num, maxHeadPct, maxTailPct } = metrics;
+
+  // Strong dump condition (locked):
+  // - DS_num >= 3
+  // - AND head or tail concentration >= 35%
+  if(DS_num >= 3 && (maxHeadPct >= 35 || maxTailPct >= 35)){
+    return true;
+  }
+  return false;
+}
+
+
 </script>
 </body>
 </html>
