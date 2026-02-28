@@ -36,7 +36,7 @@
   </style>
 </head>
 <body>
-  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.4-LOCKED-2026-02-28</span></h1>
+  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.4.1-LOCKED-2026-02-28</span></h1>
   <div class="small locknote">
     Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
     Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
@@ -313,6 +313,11 @@ function topKIdx(arr,k){
   return idx.slice(0,k).map(o=>o.i);
 }
 
+function intersection(a,b){
+  const sb = new Set(b);
+  return a.filter(x=> sb.has(x));
+}
+
 function classifier(D2,D1,D0){
   // Needs D0 always. Uses D1 & D2 if present. Returns {state,kpi,why,confidence}
   const s0 = dayStats(D0);
@@ -471,6 +476,9 @@ function sysCONT(D2,D1,D0){
   });
 
   scored.sort((a,b)=> b.score-a.score || a.n-b.n);
+  if(!scored.length){
+    return {top1:null, cands:[], note:'CONT: scored empty (check input)', debug:{pool:pool.length, rep:rep.length}};
+  }
   const topScore = scored[0]?.score ?? -999;
   const ties = scored.filter(x=>x.score===topScore);
   const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
