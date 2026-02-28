@@ -481,7 +481,7 @@ function sysCONT(D2,D1,D0){
   }
   const topScore = scored[0]?.score ?? -999;
   const ties = scored.filter(x=>x.score===topScore);
-  const pick = autoOK ? (ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0]) : null;
+  const pick = (ties.length>1 ? finalTieBreak(ties, ctx) : scored[0]);
     return {top1: (pick && pick.n!=null ? pick.n : null), scored: scored.slice(0,12), note:`CONT: pool=${pool.length}, repeat=${rep.length}`};
 }
 
@@ -805,33 +805,10 @@ function runSystem(){
   session.classifier = cls;
 
   let out = null;
-  try {
-    if(modeKey==="CONT") out = sysCONT(D2, D1, D0);
-    if(modeKey==="DIFF") out = sysDIFF(D2, D1, D0);
-    if(modeKey==="DUMP") out = sysDUMP(D1, D0);
-    if(modeKey==="RESET") out = sysRESET(D2, D1, D0);
-  } catch(e){
-    console.error(e);
-    session.lastResult = { modeKey, out: null, cls, error: String(e) };
-
-    $("resultCard").style.display = "";
-    $("resultMain").innerHTML = `<b class="bad">Lỗi khi chạy hệ</b> <span class="pill">${MODES[modeKey].name}</span>`;
-    $("resultExplain").innerHTML = `<div class="small">Không chốt được do lỗi JS. (Mở Console để xem chi tiết)</div>`;
-    $("resultMeta").innerHTML = `<div class="small muted">Classifier: <b>${cls.state}</b> (conf ${(cls.confidence*100).toFixed(0)}%).</div>`;
-    $("btnSaveHistory").disabled = true;
-    return;
-  }
-
-  if(!out || !out.scored || !out.scored.length){
-    session.lastResult = { modeKey, out, cls };
-
-    $("resultCard").style.display = "";
-    $("resultMain").innerHTML = `<b class="warn">Không có ứng viên</b> <span class="pill">${MODES[modeKey].name}</span>`;
-    $("resultExplain").innerHTML = `<div class="small">Hệ không sinh được candidate theo rule hiện tại. Thử <b>Reset phiên</b> hoặc kiểm tra đã đủ <b>27 số/ngày</b>.</div>`;
-    $("resultMeta").innerHTML = `<div class="small muted">Classifier: <b>${cls.state}</b> (conf ${(cls.confidence*100).toFixed(0)}%).</div>`;
-    $("btnSaveHistory").disabled = true;
-    return;
-  }
+  if(modeKey==="CONT") out = sysCONT(D2, D1, D0);
+  if(modeKey==="DIFF") out = sysDIFF(D2, D1, D0);
+  if(modeKey==="DUMP") out = sysDUMP(D1, D0);
+  if(modeKey==="RESET") out = sysRESET(D2, D1, D0);
 
   session.lastResult = { modeKey, out, cls };
 
