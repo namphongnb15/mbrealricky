@@ -36,7 +36,7 @@
   </style>
 </head>
 <body>
-  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.4.1-LOCKED-2026-02-28</span></h1>
+  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.5-LOCKED-2026-02-28</span></h1>
   <div class="small locknote">
     Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
     Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
@@ -481,9 +481,8 @@ function sysCONT(D2,D1,D0){
   }
   const topScore = scored[0]?.score ?? -999;
   const ties = scored.filter(x=>x.score===topScore);
-  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
-
-  return {top1: pick.n, scored: scored.slice(0,12), note:`CONT: pool=${pool.length}, repeat=${rep.length}`};
+  const pick = autoOK ? (ties.length>1 ? finalTieBreak(ties, ctx) : scored[0]) : null;
+    return {top1: (pick?pick.n:null), scored: scored.slice(0,12), note:`CONT: pool=${pool.length}, repeat=${rep.length}`};
 }
 
 function sysDIFF(D2,D1,D0){
