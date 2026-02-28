@@ -62,7 +62,7 @@
           <div><b>D0</b> (ngày gần nhất) — bắt buộc cho mọi mode</div>
           <button class="danger" id="clearD0">Xoá KQ D0</button>
         </div>
-        <textarea id="inputD0" placeholder="Dán nguyên KQ (ĐB/DB, G1..G7… hoặc chỉ 27 lô). App tự trích 27 lô = 2 số cuối mỗi giải."></textarea>
+        <textarea id="inputD0" placeholder="Nhập 27 số. Cách nhau bằng dấu cách, dấu phẩy, hoặc xuống dòng. VD: 12 34 05 ..."></textarea>
         <div class="small muted" id="statD0"></div>
       </div>
 
@@ -103,10 +103,10 @@
       <div class="small muted">Bạn quyết định mode sau khi xem classifier. App mặc định <b>không tự nhảy hệ</b>.</div>
 
       <div style="margin-top:10px;">
-        <button class="modeBtn" id="modeCONT">Mode 1 — CHẠY TIẾP (Continuation)</button>
-        <button class="modeBtn" id="modeDIFF">Mode 2 — XOAY / RẢI (Diffuse)</button>
-        <button class="modeBtn" id="modeDUMP">Mode 3 — XẢ / NHIỄU (Dump)</button>
-        <button class="modeBtn" id="modeRESET">Mode 4 — ĐỔI PHA / RESET</button>
+        <button class="modeBtn" id="modeCONT">Mode 1 — CONTINUATION</button>
+        <button class="modeBtn" id="modeDIFF">Mode 2 — DIFFUSE</button>
+        <button class="modeBtn" id="modeDUMP">Mode 3 — XẢ</button>
+        <button class="modeBtn" id="modeRESET">Mode 4 — RESET/ĐẢO PHA</button>
       </div>
 
       <div class="card" style="margin-top:12px;">
@@ -124,14 +124,6 @@
         <h2>Kết quả chốt</h2>
         <div id="resultMain" style="font-size:16px; margin: 6px 0;"></div>
         <div class="small" id="resultExplain"></div>
-        <div class="card" id="tieCard" style="display:none; margin-top:10px;">
-          <h2>Hòa điểm — chọn 1 con để chốt (không dùng tiebreak số bé)</h2>
-          <div class="small muted">Khi nhiều con hòa sau các tiêu chí kỹ thuật, app sẽ kê đủ để bạn tự chốt.</div>
-          <div id="tieList" class="small" style="margin-top:8px;"></div>
-          <div style="margin-top:8px;">
-            <button class="primary" id="btnConfirmPick">Xác nhận chốt con đã chọn</button>
-          </div>
-        </div>
         <div class="small muted" id="resultMeta" style="margin-top:6px;"></div>
       </div>
 
@@ -179,10 +171,10 @@ const $ = (id)=>document.getElementById(id);
 const LS_KEY = "MB_4MODE_HISTORY_v1";
 
 const MODES = {
-  CONT: { name: "CHẠY TIẾP (Continuation)", need: ["D0","D1"], opt: ["D2"] },
-  DIFF: { name: "XOAY / RẢI (Diffuse)", need: ["D0","D1","D2"], opt: [] },
-  DUMP: { name: "XẢ / NHIỄU (Dump)", need: ["D0"], opt: ["D1"] },
-  RESET:{ name: "ĐỔI PHA / RESET", need: ["D0","D1","D2"], opt: [] },
+  CONT: { name: "CONTINUATION", need: ["D0","D1"], opt: ["D2"] },
+  DIFF: { name: "DIFFUSE", need: ["D0","D1","D2"], opt: [] },
+  DUMP: { name: "XẢ", need: ["D0"], opt: ["D1"] },
+  RESET:{ name: "RESET/ĐẢO PHA", need: ["D0","D1","D2"], opt: [] },
 };
 
 let session = {
@@ -195,44 +187,16 @@ function pad2(n){ n = String(n).trim(); if(n==="") return ""; if(n.length===1) r
 function isNum2(s){ return /^[0-9]{2}$/.test(s); }
 
 function parseDay(raw){
-  // Accept:
-  // 1) 27 số lô 2 chữ số (00-99) cách nhau bởi bất kỳ ký tự nào
-  // 2) Dán nguyên KQ theo format: ĐB/G1/G2/... (mỗi giải 2-5 chữ số) => lấy 2 số cuối mỗi giải để ra 27 lô
-  // Linh hoạt: DB/ĐB, kq ngày..., KQSX MB ngày..., v.v.
-  let s = String(raw||"");
-
-  // Remove common date patterns to avoid picking year/month/day as lô
-  // Examples: 27/02/2026, 27-02-2026, 27.02.2026
-  s = s.replace(/\b\d{1,2}\s*[\/\-.]\s*\d{1,2}\s*[\/\-.]\s*\d{2,4}\b/g, " ");
-  // Remove standalone years 19xx/20xx
-  s = s.replace(/\b(19\d{2}|20\d{2})\b/g, " ");
-
-  // Grab numeric tokens (1-5 digits) so we can derive last-2
-  const toks = s.match(/\d{1,5}/g) || [];
-  if(toks.length === 0) return { ok:false, msg:"Trống", nums:[] };
-
-  const nums = [];
-  for(const t0 of toks){
-    const t = String(t0);
-    // Skip single-digit tokens (often noise)
-    if(t.length < 2) continue;
-
-    // If already 2 digits -> use directly; else take last 2 digits
-    const two = (t.length === 2) ? t : t.slice(-2);
-
-    if(!/^\d{2}$/.test(two)) continue;
-
-    const v = Number(two);
-    if(v < 0 || v > 99) continue;
-
-    nums.push(v);
-    if(nums.length >= 27) break;
-  }
-
-  if(nums.length === 0) return { ok:false, msg:"Không đọc được số", nums:[] };
-
-  const warn = nums.length !== 27 ? `Đọc được ${nums.length} lô (cần 27). Kiểm tra lại format/dữ liệu.` : "";
-  return { ok: nums.length===27, msg: nums.length===27 ? "OK (đã trích 27 lô từ KQ)" : warn, nums };
+  // Accept numbers separated by anything non-digit; keep 0-99
+  const toks = (raw||"").match(/\d{1,2}/g) || [];
+  const nums = toks.map(t=>pad2(t)).filter(isNum2).map(x=>Number(x));
+  if(nums.length === 0) return { ok:false, msg:"Trống", nums:[] };
+  // take first 27
+  const used = nums.slice(0,27);
+  const warn = nums.length!==27 ? `Đếm được ${nums.length} số, lấy ${Math.min(nums.length,27)} số đầu.` : "";
+  // validate range
+  for(const v of used){ if(v<0 || v>99) return {ok:false, msg:"Có số ngoài 00-99", nums:[]}; }
+  return { ok: used.length===27, msg: used.length===27 ? "OK (27 số)" : warn, nums: used };
 }
 
 function dayStats(nums){
@@ -314,10 +278,18 @@ function classifier(D2,D1,D0){
     return c; // 0-2
   })() : null;
 
+  // Dump signals
   const DS_num = s0.multiNums.filter(x=>x.c>=2).length;
   const DS_tail = s0.maxTail.val / 27;
   const DS_head = s0.maxHead.val / 27;
-  const DS = (DS_num>=2) || (DS_tail>=0.30) || (DS_head>=0.30);
+
+  /* ===============================
+     CLASSIFIER v1.1 (LOCKED)
+     Diffuse adjusted: chỉ coi là XẢ khi DUMP MẠNH
+     Strong dump when: DS_num>=3 AND (maxTail>=35% OR maxHead>=35%)
+     Do NOT modify without version bump
+  ================================= */
+  const DUMP_STRONG = (DS_num>=3) && (DS_tail>=0.35 || DS_head>=0.35);
 
   const RoI = s0.uniqHeads.size;
 
@@ -326,17 +298,17 @@ function classifier(D2,D1,D0){
   let RI_drop = false;
   if(hasD1 && hasD2){
     RI_prev = repeatSet(D1,D2).length;
-    RI_drop = (RI_prev>=5 && RI<=2);
+    RI_drop = (RI_prev>=5 && RI!==null && RI<=2);
   }
 
   let state = "DIFFUSE";
   let why = [];
 
-  // Priority: DUMP first
-  if(DS){
+  // Priority order (LOCKED): DUMP_STRONG -> CONT -> RESET -> DIFFUSE
+  if(DUMP_STRONG){
     state = "XẢ";
-    why.push(`DS kích hoạt (xả): multiNums=${DS_num}, maxTail=${(DS_tail*100).toFixed(0)}%, maxHead=${(DS_head*100).toFixed(0)}%`);
-  } else if(hasD1 && RI>=6 && HS>=1){
+    why.push(`DUMP MẠNH: multiNums=${DS_num}, maxTail=${(DS_tail*100).toFixed(0)}%, maxHead=${(DS_head*100).toFixed(0)}%`);
+  } else if(hasD1 && RI!==null && RI>=6 && HS>=1){
     state = "CONTINUATION";
     why.push(`RI=${RI} (≥6) và HS=${HS} (giữ trục)`);
   } else if(hasD1 && hasD2 && (RI_drop || (HS===0 && RoI>=8))){
@@ -344,53 +316,39 @@ function classifier(D2,D1,D0){
     why.push(`Gãy nhịp: RI_prev=${RI_prev} → RI=${RI} hoặc HS=0 & RoI cao`);
   } else {
     state = "DIFFUSE";
-    if(hasD1) why.push(`RI=${RI} (không đủ continuation mạnh) & RoI=${RoI} (xoay)`);
+    if(hasD1 && RI!==null) why.push(`DIFFUSE: RI=${RI} (chưa đủ continuation) & RoI=${RoI} (xoay)`);
     else why.push(`Thiếu D1 nên mặc định DIFFUSE`);
+    if(DS_num>=1) why.push(`Ghi chú: có nhiễu D0 (multiNums=${DS_num}) nhưng không đủ dump mạnh`);
   }
 
-  // Confidence heuristic
+  // Confidence heuristic (LOCKED)
   let conf = 0.55;
-  if(state==="XẢ") conf = 0.78 + Math.min(0.12, DS_num*0.05 + Math.max(0, DS_tail-0.30) + Math.max(0, DS_head-0.30));
+  if(state==="XẢ") conf = 0.78 + Math.min(0.15, (DS_num-3)*0.03 + Math.max(0, DS_tail-0.35) + Math.max(0, DS_head-0.35));
   if(state==="CONTINUATION") conf = 0.70 + Math.min(0.15, (RI-6)*0.03 + (HS-1)*0.05);
   if(state==="RESET/ĐẢO PHA") conf = 0.68 + (RI_drop?0.10:0) + (RoI>=8?0.05:0);
-  if(state==="DIFFUSE") conf = 0.58 + (RoI>=8?0.08:0) + (hasD1 && RI<=1 ? 0.05 : 0);
+  if(state==="DIFFUSE") conf = 0.60 + (RoI>=8?0.06:0) + (hasD1 && RI!==null && RI<=1 ? 0.04 : 0);
 
   const kpi = {RI, HS, DS_num, DS_tail, DS_head, RoI, RI_prev};
-  return {state, kpi, why: why.slice(0,2), confidence: Math.min(0.95, conf)};
+  return {state, kpi, why: why.slice(0,3), confidence: Math.min(0.95, conf)};
 }
 
 /** ===== tie-break nền (cố định) ===== */
-
 function finalTieBreak(cands, ctx){
-  // Tie-break kỹ thuật (KHÔNG dùng "chọn số bé" kiểu tâm linh).
+  // cands: array of {n, score, meta}
   // 1) prefer lower freq in D0 (avoid xả)
-  // 2) prefer hasMirror (đảo xuất hiện)
-  // Nếu vẫn hòa sau 2 bước => trả về null để người dùng tự chốt.
-  let best = null;
-  let bestKey = null;
-
-  for(const c of cands){
-    const f = ctx.s0.freqNum[c.n];                   // lower is better
-    const m = c.meta?.hasMirror ? 1 : 0;            // higher is better
-    const key = [f, -m];                             // lexicographic
-    if(!bestKey || (key[0] < bestKey[0]) || (key[0]===bestKey[0] && key[1] < bestKey[1])){
-      bestKey = key;
-      best = c;
-    }
-  }
-  // Check if unique best
-  const winners = cands.filter(c=>{
-    const f = ctx.s0.freqNum[c.n];
-    const m = c.meta?.hasMirror ? 1 : 0;
-    const key = [f, -m];
-    return key[0]===bestKey[0] && key[1]===bestKey[1];
+  cands.sort((a,b)=>{
+    const fa = ctx.s0.freqNum[a.n], fb = ctx.s0.freqNum[b.n];
+    if(fa!==fb) return fa - fb;
+    // 2) prefer hasMirror (dao appeared)
+    const ma = a.meta?.hasMirror ? 1:0, mb = b.meta?.hasMirror?1:0;
+    if(ma!==mb) return mb - ma;
+    // 3) prefer smaller number
+    return a.n - b.n;
   });
-  if(winners.length===1) return winners[0];
-  return null; // force manual pick
+  return cands[0];
 }
 
 function hasMirrorInDays(n, days){
-(n, days){
   const a = n%10, b = Math.floor(n/10);
   const m = a*10 + b;
   const sets = days.map(d=>new Set(d));
@@ -522,10 +480,8 @@ function sysDIFF(D2,D1,D0){
   const topScore = scored2[0]?.score ?? -999;
   const ties = scored2.filter(x=>x.score===topScore);
   const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored2[0];
-  const unresolved = (ties.length>1 && pick===null);
-  const finalPick = unresolved ? null : pick;
 
-  return {top1: finalPick===null ? null : finalPick.n, ties: unresolved ? ties.map(x=>x.n) : [], scored: scored2.slice(0,12), note:`DIFF: pool=${poolSet.size}, filtered=${scored.length}`};
+  return {top1: pick.n, scored: scored2.slice(0,12), note:`DIFF: pool=${poolSet.size}, filtered=${scored.length}`};
 }
 
 function sysDUMP(D1,D0){
@@ -687,10 +643,8 @@ function sysRESET(D2,D1,D0){
   const topScore = scored[0]?.score ?? -999;
   const ties = scored.filter(x=>x.score===topScore);
   const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
-  const unresolved = (ties.length>1 && pick===null);
-  const finalPick = unresolved ? null : pick;
 
-  return {top1: finalPick===null ? null : finalPick.n, ties: unresolved ? ties.map(x=>x.n) : [], scored: scored.slice(0,12), note:`RESET: pool=${poolSet.size}, newHeads=${newHeads.join("")}, newTails=${newTails.join("")}`};
+  return {top1: pick.n, scored: scored.slice(0,12), note:`RESET: pool=${poolSet.size}, newHeads=${newHeads.join("")}, newTails=${newTails.join("")}`};
 }
 
 /** =========================
@@ -783,21 +737,7 @@ function runSystem(){
   session.lastResult = { modeKey, out, cls };
 
   $("resultCard").style.display = "";
-  // Tie unresolved => user must pick
-  if(out.top1===null){
-    $("tieCard").style.display = "";
-    $("resultMain").innerHTML = `TOP1: <b class=\"mono\">(CHƯA CHỌN)</b> <span class=\"pill\">${MODES[modeKey].name}</span>`;
-    const opts = out.ties || [];
-    $("tieList").innerHTML = opts.map(n=>{
-      const s = formatNum(n);
-      return `<label style=\"display:block;margin:6px 0;\"><input type=\"radio\" name=\"tiePick\" value=\"${s}\"/> <b class=\"mono\">${s}</b></label>`;
-    }).join("");
-    $("btnSaveHistory").disabled = true;
-  } else {
-    $("tieCard").style.display = "none";
-    $("resultMain").innerHTML = `TOP1: <b class=\"mono\">${formatNum(out.top1)}</b> <span class=\"pill\">${MODES[modeKey].name}</span>`;
-  }
-
+  $("resultMain").innerHTML = `TOP1: <b class="mono">${formatNum(out.top1)}</b> <span class="pill">${MODES[modeKey].name}</span>`;
   const topList = out.scored.map(x=>`${formatNum(x.n)}(${x.score})`).join(", ");
   $("resultExplain").innerHTML = `<div class="small"><b>Top candidates</b>: <span class="mono">${topList}</span></div>`;
   $("resultMeta").innerHTML = `<div class="small muted">Ghi chú hệ: ${out.note}. Classifier: <b>${cls.state}</b> (conf ${(cls.confidence*100).toFixed(0)}%).</div>`;
@@ -961,19 +901,6 @@ function init(){
   // run
   $("btnRun").addEventListener("click", runSystem);
 
-  // confirm tie pick
-  $("btnConfirmPick").addEventListener("click", ()=>{
-    if(!session.lastResult){ alert("Chưa có kết quả để chốt."); return; }
-    const sel = document.querySelector("input[name='tiePick']:checked");
-    if(!sel){ alert("Chưa chọn con nào trong danh sách hòa."); return; }
-    const picked = sel.value;
-    // set as final TOP1
-    session.lastResult.out.top1 = Number(picked);
-    $("tieCard").style.display = "none";
-    $("resultMain").innerHTML = `TOP1: <b class="mono">${picked}</b> <span class="pill">${MODES[session.lastResult.modeKey].name}</span>`;
-    $("btnSaveHistory").disabled = false;
-  });
-
   // save history
   $("btnSaveHistory").addEventListener("click", addCurrentToHistory);
 
@@ -989,49 +916,6 @@ function init(){
   renderHistory();
 }
 init();
-
-
-/* ===============================
-   CLASSIFIER v1.1 (LOCKED)
-   Diffuse adjusted - DS strong only
-   Do NOT modify without version bump
-================================= */
-
-function classifyState(metrics){
-  const { RI, HS, RI_prev, RoI, DS_num, maxHeadPct, maxTailPct } = metrics;
-
-  // 1. CONTINUATION
-  if(RI >= 6 && HS >= 1 && !isStrongDump(metrics)){
-    return "CONTINUATION";
-  }
-
-  // 2. STRONG DUMP only
-  if(isStrongDump(metrics)){
-    return "DUMP";
-  }
-
-  // 3. RESET
-  if((RI_prev >= 5 && RI <= 2) || (HS === 0 && RoI >= 8)){
-    return "RESET";
-  }
-
-  // 4. DIFFUSE (default)
-  return "DIFFUSE";
-}
-
-function isStrongDump(metrics){
-  const { DS_num, maxHeadPct, maxTailPct } = metrics;
-
-  // Strong dump condition (locked):
-  // - DS_num >= 3
-  // - AND head or tail concentration >= 35%
-  if(DS_num >= 3 && (maxHeadPct >= 35 || maxTailPct >= 35)){
-    return true;
-  }
-  return false;
-}
-
-
 </script>
 </body>
 </html>
