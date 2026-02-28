@@ -36,7 +36,7 @@
   </style>
 </head>
 <body>
-  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày</h1>
+  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1-LOCKED-2026-02-28</span></h1>
   <div class="small locknote">
     Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
     Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
@@ -328,7 +328,7 @@ function classifier(D2,D1,D0){
   if(state==="RESET/ĐẢO PHA") conf = 0.68 + (RI_drop?0.10:0) + (RoI>=8?0.05:0);
   if(state==="DIFFUSE") conf = 0.60 + (RoI>=8?0.06:0) + (hasD1 && RI!==null && RI<=1 ? 0.04 : 0);
 
-  const kpi = {RI, HS, DS_num, DS_tail, DS_head, RoI, RI_prev};
+  const kpi = {RI, HS, DS_num, DS_tail, DS_head, RoI, RI_prev, maxHeadCount: s0.maxHead.val, maxTailCount: s0.maxTail.val};
   return {state, kpi, why: why.slice(0,3), confidence: Math.min(0.95, conf)};
 }
 
@@ -765,8 +765,8 @@ function renderClassifier(){
     <span class="pill">RI: <b>${k.RI===null?"—":k.RI}</b></span>
     <span class="pill">HS: <b>${k.HS===null?"—":k.HS}</b></span>
     <span class="pill">DS_num: <b>${k.DS_num}</b></span>
-    <span class="pill">maxTail: <b>${(k.DS_tail*100).toFixed(0)}%</b></span>
-    <span class="pill">maxHead: <b>${(k.DS_head*100).toFixed(0)}%</b></span>
+    <span class="pill">maxTail: <b>${(k.DS_tail*100).toFixed(0)}%</b> <span style="color:#777;">(${k.maxTailCount||"—"}/27)</span></span>
+    <span class="pill">maxHead: <b>${(k.DS_head*100).toFixed(0)}%</b> <span style="color:#777;">(${k.maxHeadCount||"—"}/27)</span></span>
     <span class="pill">RoI: <b>${k.RoI}</b></span>
     <span class="pill">RI_prev: <b>${k.RI_prev===null?"—":k.RI_prev}</b></span>
   `;
