@@ -36,7 +36,7 @@
   </style>
 </head>
 <body>
-  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.1-LOCKED-2026-02-28</span></h1>
+  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v1.1.2-LOCKED-2026-02-28</span></h1>
   <div class="small locknote">
     Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
     Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
@@ -358,9 +358,9 @@ function classifier(D2,D1,D0){
   if(DUMP_STRONG){
     state = "XẢ";
     why.push(`DUMP MẠNH: multiNums=${DS_num}, maxTail=${(DS_tail*100).toFixed(0)}%, maxHead=${(DS_head*100).toFixed(0)}%`);
-  } else if(hasD1 && RI!==null && RI>=6 && HS>=1){
+  } else if(hasD1 && RI!==null && (RI>=8 || (RI>=6 && HS>=1))){
     state = "CONTINUATION";
-    why.push(`RI=${RI} (≥6) và HS=${HS} (giữ trục)`);
+    why.push(`RI=${RI} (≥8) hoặc (RI≥6 & HS≥1)`);
   } else if(hasD1 && hasD2 && (RI_drop || ((RI!==null && RI<=3) && (HS===0) && (RoI>=8)))){
     state = "RESET/ĐẢO PHA";
     why.push(`Gãy nhịp: RI_prev=${RI_prev} → RI=${RI} hoặc (RI<=3 & HS=0 & RoI cao)`);
