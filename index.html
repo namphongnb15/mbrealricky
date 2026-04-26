@@ -1,997 +1,116 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MB 4-HỆ TRẠNG THÁI (Locked Modes) — Full 27 lô/ngày v2.0</title>
-  <style>
-    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
-    body { margin: 18px; line-height: 1.35; }
-    h1 { margin: 0 0 10px; font-size: 18px; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 10px 0; }
-    .card h2 { font-size: 14px; margin: 0 0 8px; }
-    textarea { width: 100%; min-height: 92px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 12px; }
-    button { padding: 8px 10px; border-radius: 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
-    button.primary { border-color: #111; }
-    button.danger { border-color: #b00020; color: #b00020; }
-    button:disabled { opacity: .45; cursor: not-allowed; }
-    label { font-size: 12px; color: #333; }
-    .small { font-size: 12px; color: #555; }
-    .pill { display: inline-block; padding: 2px 8px; border: 1px solid #ccc; border-radius: 999px; font-size: 12px; margin-right: 6px; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-    @media (min-width: 920px) { .grid { grid-template-columns: 1fr 1fr; } }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border-bottom: 1px solid #eee; padding: 8px 6px; text-align: left; font-size: 12px; vertical-align: top; }
-    th { background: #fafafa; position: sticky; top: 0; }
-    .muted { color: #777; }
-    .ok { color: #0a7; }
-    .warn { color: #b80; }
-    .bad { color: #b00020; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    .kpi { display:flex; gap:8px; flex-wrap:wrap; }
-    .kpi .pill { border-color:#ddd; background:#fafafa; }
-    .locknote { font-size: 12px; color:#444; }
-    .modeBtn { margin-right: 8px; }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SXMB v5.3 FIXED — CHẶN N-1</title>
+<style>
+body{font-family:system-ui;margin:16px;background:#fafafa}
+.card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:12px;margin-top:12px}
+textarea{width:100%;min-height:140px;padding:10px}
+button{padding:8px 12px;border-radius:8px;border:0;background:#111;color:#fff}
+.big{font-size:28px;font-weight:bold}
+</style>
 </head>
 <body>
-  <h1>MB — 4 Hệ theo Trạng thái bảng (Độc lập, Mode khóa cứng) — Full 27 lô/ngày <span id=\"verBadge\" style=\"font-size:12px;color:#666;margin-left:8px;\">v2.0-LOCKED-2026-03-01</span></h1>
-  <div class="small locknote">
-    Workflow: <b>Nhập KQ</b> → <b>Đọc trạng thái</b> → <b>Chọn Mode</b> (manual) → <b>Chạy đúng 1 hệ</b> → <b>Chốt TOP1</b>. 
-    Mỗi phiên chỉ chạy 1 mode cho tới khi bấm <b>Reset phiên</b>.
-  </div>
 
-  <div class="grid">
-    <div class="card">
-      <h2>1) Nhập KQ (27 lô/ngày)</h2>
+<h2>SXMB v5.3 — FIX N-1 + PARSE SẠCH</h2>
 
-      <div class="row" style="align-items:flex-end">
-        <div style="flex: 1 1 240px;">
-          <label>Ngày chốt (bắt buộc)</label><br/>
-          <input id="chotDate" type="date" style="padding:8px 10px;border-radius:10px;border:1px solid #ccc;" />
-        </div>
-        <div style="flex: 2 1 360px;">
-          <label>Ghi chú (tuỳ chọn)</label><br/>
-          <input id="note" type="text" placeholder="VD: Bảng nhiễu, vào nhẹ..." style="width:100%;padding:8px 10px;border-radius:10px;border:1px solid #ccc;" />
-        </div>
-      </div>
+<div class="card">
+Ngày N
+<textarea id="n"></textarea>
+</div>
 
-      <div class="card" style="margin-top:12px;">
-        <div class="row" style="justify-content:space-between; align-items:center;">
-          <div><b>D0</b> (ngày gần nhất) — bắt buộc cho mọi mode</div>
-          <button class="danger" id="clearD0">Xoá KQ D0</button>
-        </div>
-        <textarea id="inputD0" placeholder="Nhập 27 số. Cách nhau bằng dấu cách, dấu phẩy, hoặc xuống dòng. VD: 12 34 05 ..."></textarea>
-        <div class="small muted" id="statD0"></div>
-      </div>
+<div class="card">
+Ngày N-1
+<textarea id="n1"></textarea>
+</div>
 
-      <div class="card" id="boxD1">
-        <div class="row" style="justify-content:space-between; align-items:center;">
-          <div><b>D1</b> (ngày -1)</div>
-          <button class="danger" id="clearD1">Xoá KQ D1</button>
-        </div>
-        <textarea id="inputD1" placeholder="Nhập 27 số của ngày D1"></textarea>
-        <div class="small muted" id="statD1"></div>
-      </div>
+<div class="card">
+Ngày N-2
+<textarea id="n2"></textarea>
+</div>
 
-      <div class="card" id="boxD2">
-        <div class="row" style="justify-content:space-between; align-items:center;">
-          <div><b>D2</b> (ngày -2)</div>
-          <button class="danger" id="clearD2">Xoá KQ D2</button>
-        </div>
-        <textarea id="inputD2" placeholder="Nhập 27 số của ngày D2"></textarea>
-        <div class="small muted" id="statD2"></div>
-      </div>
-
-      <div class="row" style="margin-top:10px;">
-        <button class="primary" id="btnClassify">Đọc trạng thái bảng</button>
-        <button id="btnResetSession">Reset phiên (mở khoá mode)</button>
-      </div>
-
-      <div class="card" id="classifyCard" style="display:none;">
-        <h2>Trạng thái bảng (Classifier)</h2>
-        <div id="classifyState" style="font-size:14px; margin: 4px 0 6px;"></div>
-        <div class="kpi" id="kpi"></div>
-        <div class="small" id="classifyWhy" style="margin-top:6px;"></div>
-        <div class="small muted" id="classifyConf" style="margin-top:6px;"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>2) Chọn Mode (4 hệ độc lập — khóa cứng)</h2>
-      <div class="small muted">Bạn quyết định mode sau khi xem classifier. App mặc định <b>không tự nhảy hệ</b>.</div>
-
-      <div style="margin-top:10px;">
-        <button class="modeBtn" id="modeCONT">Mode 1 — CONTINUATION</button>
-        <button class="modeBtn" id="modeDIFF">Mode 2 — DIFFUSE</button>
-        <button class="modeBtn" id="modeDUMP">Mode 3 — XẢ</button>
-        <button class="modeBtn" id="modeRESET">Mode 4 — RESET/ĐẢO PHA</button>
-      </div>
-
-      <div class="card" style="margin-top:12px;">
-        <h2>Mode đang khoá</h2>
-        <div id="lockedMode" style="font-size:14px;"><span class="pill">Chưa chọn</span></div>
-        <div class="small muted" id="modeHint" style="margin-top:6px;"></div>
-      </div>
-
-      <div class="row">
-        <button class="primary" id="btnRun" disabled>Chạy hệ & chốt TOP1</button>
-        <button id="btnSaveHistory" disabled>Lưu vào lịch sử</button>
-      </div>
-
-      <div class="card" id="resultCard" style="display:none;">
-        <h2>Kết quả chốt</h2>
-        <div id="resultMain" style="font-size:16px; margin: 6px 0;"></div>
-        <div class="small" id="resultExplain"></div>
-        <div class="small muted" id="resultMeta" style="margin-top:6px;"></div>
-      </div>
-
-      <div class="card">
-        <h2>3) Lịch sử chốt (trúng/trượt + hệ dùng)</h2>
-        <div class="row" style="align-items:center;">
-          <button class="danger" id="btnClearHistory">Xoá lịch sử</button>
-          <span class="small muted">Lưu trên máy (localStorage).</span>
-        </div>
-        <div style="overflow:auto; max-height: 420px; margin-top: 10px;">
-          <table id="histTable">
-            <thead>
-              <tr>
-                <th>Ngày chốt</th>
-                <th>Mode</th>
-                <th>TOP1</th>
-                <th>Classifier</th>
-                <th>KQ</th>
-                <th>Ghi chú</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody id="histBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="card">
+<button onclick="run()">CHỐT</button>
+<div id="kq"></div>
+</div>
 
 <script>
-/** =========================
- *  LOCKED SPEC (v1.0)
- *  - Full 27 lô/ngày
- *  - 4 modes độc lập, khóa cứng, không trộn.
- *  - Mỗi mode dùng số ngày theo đề xuất đã chốt:
- *    CONT: D0+D1 (bắt buộc), D2 optional confirm
- *    DIFF: D0+D1+D2 (bắt buộc)
- *    DUMP: D0 (bắt buộc), D1 optional
- *    RESET: D0+D1+D2 (bắt buộc)
- *  - Bắt buộc chốt TOP1 cho mọi mode.
- *  - Lịch sử lưu: ngày chốt, mode, TOP1, classifier state + KPI, trúng/trượt.
- * ========================= */
-
-const $ = (id)=>document.getElementById(id);
-const LS_KEY = "MB_4MODE_HISTORY_v1";
-
-const MODES = {
-  CONT: { name: "CONTINUATION", need: ["D0","D1"], opt: ["D2"] },
-  DIFF: { name: "DIFFUSE", need: ["D0","D1","D2"], opt: [] },
-  DUMP: { name: "XẢ", need: ["D0"], opt: ["D1"] },
-  RESET:{ name: "RESET/ĐẢO PHA", need: ["D0","D1","D2"], opt: [] },
-};
-
-let session = {
-  lockedMode: null,
-  classifier: null,
-  lastResult: null,
-};
-
-function pad2(n){ n = String(n).trim(); if(n==="") return ""; if(n.length===1) return "0"+n; return n.slice(-2); }
-function isNum2(s){ return /^[0-9]{2}$/.test(s); }
-
-function parseDay(raw){
-  // Robust parser for XSMB pasted text.
-  // Extract EXACT 27 lô by taking last-2-digits of each prize number (ĐB, G1..G7).
-  const text = (raw||"").replace(/\r/g,"\n");
-
-  const last2 = (s)=>{
-    const t = String(s).replace(/[^\d]/g,"");
-    if(!t) return null;
-    if(t.length===1) return "0"+t;
-    return t.slice(-2);
-  };
-
+function parseNums(text){
   const lines = text.split("\n");
-
-  const buckets = {"ĐB":[],G1:[],G2:[],G3:[],G4:[],G5:[],G6:[],G7:[]};
-
-  const norm = (ln)=>{
-    return ln
-      .replace(/[：]/g,":")
-      .replace(/\u00A0/g," ") // nbsp
-      .trim();
-  };
-
-  for(let ln of lines){
-    ln = norm(ln);
-    if(!ln) continue;
-
-    // Find label anywhere at line start (allow extra spaces)
-    let label = null;
-    const m = ln.match(/^(ĐB|DB|G[1-7])\s*[:：]?\s*(.*)$/i);
-    if(m){
-      label = m[1].toUpperCase();
-      if(label==="DB") label="ĐB";
-      ln = m[2]||"";
-    } else {
-      continue;
-    }
-
-    const nums = ln.match(/\d{2,6}/g) || [];
-    for(const n of nums){
-      const v = last2(n);
-      if(v!==null) buckets[label].push(Number(v));
-    }
-  }
-
-  let used = [];
-  const hasLabeled = Object.values(buckets).some(arr=>arr.length>0);
-  if(hasLabeled){
-    used = used.concat(buckets["ĐB"], buckets.G1, buckets.G2, buckets.G3, buckets.G4, buckets.G5, buckets.G6, buckets.G7);
-  } else {
-    const nums = text.match(/\d{2,6}/g) || [];
-    used = nums.map(n=>Number(last2(n))).filter(v=>Number.isFinite(v));
-  }
-
-  const warn = used.length!==27 ? `Đọc được ${used.length} số (last-2), lấy ${Math.min(used.length,27)} số đầu.` : "";
-  used = used.slice(0,27);
-
-  if(used.length===0) return { ok:false, msg:"Trống", nums:[] };
-  if(used.some(v=>v<0 || v>99)) return { ok:false, msg:"Có số ngoài 00-99", nums:[] };
-
-  return { ok: used.length===27, msg: used.length===27 ? "OK (27 số)" : warn, nums: used };
-}
-
-function dayStats(nums){
-  const freqNum = Array(100).fill(0);
-  const freqHead= Array(10).fill(0);
-  const freqTail= Array(10).fill(0);
-  for(const v of nums){
-    freqNum[v] += 1;
-    freqHead[Math.floor(v/10)] += 1;
-    freqTail[v%10] += 1;
-  }
-  const uniqNums = new Set(nums);
-  const uniqHeads = new Set(nums.map(v=>Math.floor(v/10)));
-  const uniqTails = new Set(nums.map(v=>v%10));
-
-  const topK = (arr,k)=>{
-    const idx = arr.map((val,i)=>({i,val}));
-    idx.sort((a,b)=> b.val-a.val || a.i-b.i);
-    return idx.slice(0,k);
-  };
-
-  const topHeads = topK(freqHead,3);
-  const topTails = topK(freqTail,3);
-
-  const multiNums = [];
-  for(let i=0;i<100;i++) if(freqNum[i]>=2) multiNums.push({n:i, c:freqNum[i]});
-  multiNums.sort((a,b)=>b.c-a.c || a.n-b.n);
-
-  const maxHead = topK(freqHead,1)[0];
-  const maxTail = topK(freqTail,1)[0];
-
-  return {freqNum,freqHead,freqTail, uniqNums, uniqHeads, uniqTails, topHeads, topTails, multiNums, maxHead, maxTail};
-}
-
-function setIntersection(aSet,bSet){
-  let c=0;
-  for(const x of aSet) if(bSet.has(x)) c++;
-  return c;
-}
-
-function repeatSet(aNums,bNums){
-  const A = new Set(aNums);
-  const B = new Set(bNums);
   const out = [];
-  for(const x of A) if(B.has(x)) out.push(x);
-  out.sort((x,y)=>x-y);
+
+  for(let L of lines){
+    L = L.trim();
+
+    if(!/^(ĐB|DB|G)/i.test(L)) continue;
+
+    const nums = L.match(/\d+/g) || [];
+
+    for(let n of nums){
+      if(n.length >= 2){
+        out.push(parseInt(n.slice(-2)));
+      }
+    }
+  }
   return out;
 }
 
-function agg3days(D2,D1,D0){
-  // aggregate freqHead/freqTail across available days
-  const freqHead=Array(10).fill(0), freqTail=Array(10).fill(0);
-  const days = [D2,D1,D0].filter(Boolean);
-  for(const d of days){
-    const st = dayStats(d);
-    for(let i=0;i<10;i++){ freqHead[i]+=st.freqHead[i]; freqTail[i]+=st.freqTail[i]; }
-  }
-  return {freqHead,freqTail, daysCount: days.length};
+function freq(arr){
+  const m = {};
+  arr.forEach(x => m[x]=(m[x]||0)+1);
+  return m;
 }
 
-function topKIdx(arr,k){
-  const idx = arr.map((val,i)=>({i,val}));
-  idx.sort((a,b)=> b.val-a.val || a.i-b.i);
-  return idx.slice(0,k).map(o=>o.i);
-}
+function run(){
+  const N = parseNums(document.getElementById("n").value);
+  const N1 = parseNums(document.getElementById("n1").value);
+  const N2 = parseNums(document.getElementById("n2").value);
 
-function intersection(a,b){
-  const sb = new Set(b);
-  return a.filter(x=> sb.has(x));
-}
+  const all = [...N, ...N1, ...N2];
 
-function classifier(D2,D1,D0){
-  // Needs D0 always. Uses D1 & D2 if present. Returns {state,kpi,why,confidence}
-  const s0 = dayStats(D0);
-  const hasD1 = !!D1;
-  const hasD2 = !!D2;
+  const tailCount = Array(10).fill(0);
+  all.forEach(x => tailCount[x%10]++);
 
-  const RI = hasD1 ? repeatSet(D0,D1).length : null;
-  const HS = hasD1 ? (()=> {
-    const top2_0 = s0.topHeads.slice(0,2).map(o=>o.i);
-    const top2_1 = dayStats(D1).topHeads.slice(0,2).map(o=>o.i);
-    let c=0;
-    for(const h of top2_0) if(top2_1.includes(h)) c++;
-    return c; // 0-2
-  })() : null;
+  const tails = [...tailCount.map((v,i)=>({i,v}))].sort((a,b)=>b.v-a.v);
+  const tail = tails[0].i;
 
-  // Dump signals
-  const DS_num = s0.multiNums.filter(x=>x.c>=2).length;
-  const DS_tail = s0.maxTail.val / 27;
-  const DS_head = s0.maxHead.val / 27;
-
-  /* ===============================
-     CLASSIFIER v1.1 (LOCKED)
-     Diffuse adjusted: chỉ coi là XẢ khi DUMP MẠNH
-     Strong dump when: DS_num>=3 AND (maxTail>=35% OR maxHead>=35%)
-     Do NOT modify without version bump
-  ================================= */
-  const DUMP_STRONG = (DS_num>=3) && (DS_tail>=0.35 || DS_head>=0.35);
-
-  const RoI = s0.uniqHeads.size;
-
-  // RI drop check for RESET
-  let RI_prev = null;
-  let RI_drop = false;
-  if(hasD1 && hasD2){
-    RI_prev = repeatSet(D1,D2).length;
-    RI_drop = (RI_prev>=5 && RI!==null && RI<=2);
+  let candidates = [];
+  for(let h=0;h<10;h++){
+    candidates.push(h*10 + tail);
   }
 
-  let state = "DIFFUSE";
-  let why = [];
+  const fN = freq(N);
+  const fN1 = freq(N1);
 
-  // Priority order (LOCKED): DUMP_STRONG -> CONT -> RESET -> DIFFUSE
-  if(DUMP_STRONG){
-    state = "XẢ";
-    why.push(`DUMP MẠNH: multiNums=${DS_num}, maxTail=${(DS_tail*100).toFixed(0)}%, maxHead=${(DS_head*100).toFixed(0)}%`);
-  } else if(hasD1 && RI!==null && (RI>=8 || (RI>=6 && HS>=1))){
-    state = "CONTINUATION";
-    why.push(`RI=${RI} (≥8) hoặc (RI≥6 & HS≥1)`);
-  } else if(hasD1 && hasD2 && (RI_drop || ((RI!==null && RI<=3) && (HS===0) && (RoI>=8)))){
-    state = "RESET/ĐẢO PHA";
-    why.push(`Gãy nhịp: RI_prev=${RI_prev} → RI=${RI} hoặc (RI<=3 & HS=0 & RoI cao)`);
-  } else {
-    state = "DIFFUSE";
-    if(hasD1 && RI!==null) why.push(`DIFFUSE: RI=${RI} (chưa đủ continuation) & RoI=${RoI} (xoay)`);
-    else why.push(`Thiếu D1 nên mặc định DIFFUSE`);
-    if(DS_num>=1) why.push(`Ghi chú: có nhiễu D0 (multiNums=${DS_num}) nhưng không đủ dump mạnh`);
-  }
+  let scored = candidates.map(n=>{
+    let s=0;
 
-  // Confidence heuristic (LOCKED)
-  let conf = 0.55;
-  if(state==="XẢ") conf = 0.78 + Math.min(0.15, (DS_num-3)*0.03 + Math.max(0, DS_tail-0.35) + Math.max(0, DS_head-0.35));
-  if(state==="CONTINUATION") conf = 0.70 + Math.min(0.15, (RI-6)*0.03 + (HS-1)*0.05);
-  if(state==="RESET/ĐẢO PHA") conf = 0.68 + (RI_drop?0.10:0) + (RoI>=8?0.05:0);
-  if(state==="DIFFUSE") conf = 0.60 + (RoI>=8?0.06:0) + (hasD1 && RI!==null && RI<=1 ? 0.04 : 0);
+    if(!fN[n] && fN1[n]) s+=1;
+    if(fN[n]==1) s+=3;
+    if(fN[n]>=2) s-=4;
+    if(fN[n] && fN1[n]) s-=2;
 
-  const kpi = {RI, HS, DS_num, DS_tail, DS_head, RoI, RI_prev, maxHeadCount: s0.maxHead.val, maxTailCount: s0.maxTail.val};
-  return {state, kpi, why: why.slice(0,3), confidence: Math.min(0.95, conf)};
-}
-
-/** ===== tie-break nền (cố định) ===== */
-function finalTieBreak(cands, ctx){
-  // cands: array of {n, score, meta}
-  // 1) prefer lower freq in D0 (avoid xả)
-  cands.sort((a,b)=>{
-    const fa = ctx.s0.freqNum[a.n], fb = ctx.s0.freqNum[b.n];
-    if(fa!==fb) return fa - fb;
-    // 2) prefer hasMirror (dao appeared)
-    const ma = a.meta?.hasMirror ? 1:0, mb = b.meta?.hasMirror?1:0;
-    if(ma!==mb) return mb - ma;
-    // 3) no "số bé" bias: keep original order (stable in modern JS engines)
-    return 0;
-  });
-  return cands[0];
-}
-
-function hasMirrorInDays(n, days){
-  const a = n%10, b = Math.floor(n/10);
-  const m = a*10 + b;
-  const sets = days.map(d=>new Set(d));
-  for(const s of sets) if(s.has(m)) return true;
-  return false;
-}
-
-/** =========================
- *  MODE SYSTEMS (Locked)
- * ========================= */
-
-function sysCONT(D2,D1,D0){
-  const s0 = dayStats(D0);
-  const s1 = dayStats(D1);
-  const agg = agg3days(D2,D1,D0);
-  const rep = repeatSet(D0,D1); // A
-  let pool = [];
-  if(rep.length>0){
-    pool = rep;
-  } else {
-    const top2H = s0.topHeads.slice(0,2).map(o=>o.i);
-    const top2T = s0.topTails.slice(0,2).map(o=>o.i);
-    for(const h of top2H) for(const t of top2T){
-      const n = h*10+t;
-      pool.push(n);
-    }
-    // remove numbers already in D0
-    const set0 = new Set(D0);
-    pool = pool.filter(n=>!set0.has(n));
-  }
-  // score
-  const top2H0 = s0.topHeads.slice(0,2).map(o=>o.i);
-  const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
-  const top2H1 = s1.topHeads.slice(0,2).map(o=>o.i);
-  const top2T1 = s1.topTails.slice(0,2).map(o=>o.i);
-  const HS_CONT = intersection(top2H0, top2H1).length; // giữ trục đầu (0..2)
-  const top3H3 = topKIdx(agg.freqHead,3);
-  const top3T3 = topKIdx(agg.freqTail,3);
-
-  const DS_soft = (s0.multiNums.filter(x=>x.c>=2).length===1) || (s0.maxTail.val/27>=0.26) || (s0.maxHead.val/27>=0.26);
-
-  const days = [D2,D1,D0].filter(Boolean);
-  const scored = pool.map(n=>{
-    const h=Math.floor(n/10), t=n%10;
-    let sc=0;
-    if(rep.includes(n)) sc += 50;
-    const freqSum = (s0.freqNum[n]||0) + (s1.freqNum[n]||0);
-    if(rep.includes(n) && freqSum>=3) sc += 10; // đa giải/đa nháy 2 ngày
-    // Nếu continuation kiểu 'rải' (HS=0) thì bỏ bias top2 đầu/đuôi để tránh kéo lệch.
-    const w = (HS_CONT===0) ? 0.0 : (rep.includes(n) ? 0.5 : 1.0);
-    if(top2H0.includes(h)) sc += 20*w;
-    if(top2T0.includes(t)) sc += 15*w;
-    if(top2H1.includes(h)) sc += 10*w;
-    if(top2T1.includes(t)) sc += 5*w;
-    // 3-day stability bonus (helps continuation in rải cụm)
-    if(top3H3.includes(h)) sc += 8;
-    if(top3T3.includes(t)) sc += 6;
-    if(HS_CONT===0){
-      const tailCount0 = s0.freqTail[t] || 0;
-      const headCount0 = s0.freqHead[h] || 0;
-      // ưu tiên đuôi/đầu ít crowded trong D0 (giảm kéo lệch kiểu 63)
-      const tailRarity = Math.max(0, 6 - tailCount0);
-      const headRarity = Math.max(0, 6 - headCount0);
-      sc += tailRarity * 2 + headRarity * 1;
-    }
-    if(s0.freqNum[n]>=2) sc -= 25;
-    if(DS_soft) sc -= 15;
-    const meta = { hasMirror: hasMirrorInDays(n, days) };
-    return {n, score: sc, meta};
+    return {n, s};
   });
 
-  scored.sort((a,b)=> b.score-a.score || a.n-b.n);
-  if(!scored.length){
-    return {top1:null, cands:[], note:'CONT: scored empty (check input)', debug:{pool:pool.length, rep:rep.length}};
-  }
-  const topScore = scored[0]?.score ?? -999;
-  const ties = scored.filter(x=>x.score===topScore);
-  const pick = (ties.length>1 ? finalTieBreak(ties, {s0, s1, agg}) : scored[0]);
-    return {top1: (pick && pick.n!=null ? pick.n : null), scored: scored.slice(0,12), note:`CONT: pool=${pool.length}, repeat=${rep.length}`};
-}
+  scored.sort((a,b)=>b.s-a.s);
 
-function sysDIFF(D2,D1,D0){
-  const s0 = dayStats(D0);
-  const agg = agg3days(D2,D1,D0);
-  const top2H0 = s0.topHeads.slice(0,2).map(o=>o.i);
-  const top2T3 = topKIdx(agg.freqTail,2);
-  const top2H3 = topKIdx(agg.freqHead,2);
-  const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
-
-  const poolSet = new Set();
-  // main: top2Heads(D0) × top2Tails(3day)
-  for(const h of top2H0) for(const t of top2T3) poolSet.add(h*10+t);
-  // secondary: top2Heads(3day) × top2Tails(D0)
-  for(const h of top2H3) for(const t of top2T0) poolSet.add(h*10+t);
-
-  let pool = Array.from(poolSet).sort((a,b)=>a-b);
-
-  // mandatory filters:
-  const set0 = new Set(D0);
-  const set1 = new Set(D1);
-  const set2 = new Set(D2);
-
-  pool = pool.filter(n=>{
-    if(s0.freqNum[n]>=2) return false;                 // no xả D0
-    if(set0.has(n)) return false;                      // no chase D0
-    if(set0.has(n) && set1.has(n) && set2.has(n)) return false; // redundant, already excluded
-    // exclude "appears all 3 days" (neo dài)
-    if(set0.has(n) && set1.has(n) && set2.has(n)) return false;
-    return true;
-  });
-
-  const days = [D2,D1,D0];
-  const scored = pool.map(n=>{
-    const h=Math.floor(n/10), t=n%10;
-    let sc=0;
-    if(top2T3.includes(t)) sc += 35;
-    if(top2H0.includes(h)) sc += 25;
-    if(top2H3.includes(h)) sc += 15;
-    if(top2T0.includes(t)) sc += 15;
-    if(hasMirrorInDays(n, days)) sc += 10;
-    if(set1.has(n)) sc -= 10; // reduce if in D1
-    const meta = { hasMirror: hasMirrorInDays(n, days) };
-    return {n, score: sc, meta};
-  });
-
-  // If after filters pool empty, fall back (locked): remove "no chase D0", keep no xả & no 3-day
-  if(scored.length===0){
-    pool = Array.from(poolSet).sort((a,b)=>a-b).filter(n=>{
-      if(s0.freqNum[n]>=2) return false;
-      if(set0.has(n) && set1.has(n) && set2.has(n)) return false;
-      return true;
-    });
-  }
-
-  const scored2 = (scored.length?scored: pool.map(n=>{
-    const h=Math.floor(n/10), t=n%10;
-    let sc=0;
-    if(top2T3.includes(t)) sc += 35;
-    if(top2H0.includes(h)) sc += 25;
-    if(top2H3.includes(h)) sc += 15;
-    if(top2T0.includes(t)) sc += 15;
-    if(hasMirrorInDays(n, days)) sc += 10;
-    if(set0.has(n)) sc -= 20;
-    if(set1.has(n)) sc -= 10;
-    const meta = { hasMirror: hasMirrorInDays(n, days) };
-    return {n, score: sc, meta};
-  }));
-
-  scored2.sort((a,b)=> b.score-a.score || a.n-b.n);
-  const topScore = scored2[0]?.score ?? -999;
-  const ties = scored2.filter(x=>x.score===topScore);
-  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored2[0];
-
-  return {top1: pick.n, scored: scored2.slice(0,12), note:`DIFF: pool=${poolSet.size}, filtered=${scored.length}`};
-}
-
-function sysDUMP(D1,D0){
-  const s0 = dayStats(D0);
-  const top2H0 = s0.topHeads.slice(0,2).map(o=>o.i);
-  const top2T0 = s0.topTails.slice(0,2).map(o=>o.i);
-
-  const DS_num = s0.multiNums.filter(x=>x.c>=2).length;
-  const dumpTail = (s0.maxTail.val/27>=0.30) ? s0.maxTail.i : null;
-  const dumpHead = (s0.maxHead.val/27>=0.30) ? s0.maxHead.i : null;
-  const dumpNums = new Set(s0.multiNums.filter(x=>x.c>=2).map(x=>x.n));
-
-  const left = (x)=>(x+9)%10, right=(x)=>(x+1)%10;
-
-  let poolSet = new Set();
-  if(dumpTail!==null){
-    const tails = [left(dumpTail), right(dumpTail)];
-    for(const h of top2H0) for(const t of tails) poolSet.add(h*10+t);
-  }
-  if(dumpHead!==null){
-    const heads = [left(dumpHead), right(dumpHead)];
-    for(const h of heads) for(const t of top2T0) poolSet.add(h*10+t);
-  }
-  if(poolSet.size===0){
-    // fallback: top2x top2 and remove dump
-    for(const h of top2H0) for(const t of top2T0) poolSet.add(h*10+t);
-  }
-
-  const set0 = new Set(D0);
-  const set1 = D1 ? new Set(D1) : new Set();
-  let pool = Array.from(poolSet);
-
-  // mandatory filters
-  pool = pool.filter(n=>{
-    if(dumpNums.has(n)) return false;
-    if(dumpHead!==null && Math.floor(n/10)===dumpHead) return false;
-    if(dumpTail!==null && n%10===dumpTail) return false;
-    if(set0.has(n)) return false; // no chase D0
-    return true;
-  });
-
-  const days = [D1,D0].filter(Boolean);
-  const scored = pool.map(n=>{
-    const h=Math.floor(n/10), t=n%10;
-    let sc=0;
-    if(dumpTail!==null && (t===left(dumpTail) || t===right(dumpTail))) sc += 40;
-    if(top2H0.includes(h) && (dumpHead===null || h!==dumpHead)) sc += 25;
-    if(top2T0.includes(t) && (dumpTail===null || t!==dumpTail)) sc += 15;
-    if(hasMirrorInDays(n, days)) sc += 10;
-    if(set1.has(n)) sc -= 15;
-    const meta = { hasMirror: hasMirrorInDays(n, days) };
-    return {n, score: sc, meta};
-  });
-
-  if(scored.length===0){
-    // locked fallback: allow D0 chase but still exclude dump zones
-    const pool2 = Array.from(poolSet).filter(n=>{
-      if(dumpNums.has(n)) return false;
-      if(dumpHead!==null && Math.floor(n/10)===dumpHead) return false;
-      if(dumpTail!==null && n%10===dumpTail) return false;
-      return true;
-    });
-    for(const n of pool2) {
-      const h=Math.floor(n/10), t=n%10;
-      let sc=0;
-      if(dumpTail!==null && (t===left(dumpTail) || t===right(dumpTail))) sc += 40;
-      if(top2H0.includes(h) && (dumpHead===null || h!==dumpHead)) sc += 25;
-      if(top2T0.includes(t) && (dumpTail===null || t!==dumpTail)) sc += 15;
-      if(hasMirrorInDays(n, days)) sc += 10;
-      if(set1.has(n)) sc -= 15;
-      scored.push({n, score: sc, meta:{hasMirror: hasMirrorInDays(n, days)}});
+  let chot = null;
+  for(let i=0;i<scored.length;i++){
+    if(!N1.includes(scored[i].n)){
+      chot = scored[i].n;
+      break;
     }
   }
 
-  scored.sort((a,b)=> b.score-a.score || a.n-b.n);
-  const topScore = scored[0]?.score ?? -999;
-  const ties = scored.filter(x=>x.score===topScore);
-  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
+  if(chot===null) chot = scored[0].n;
 
-  return {top1: pick.n, scored: scored.slice(0,12), note:`DUMP: dumpTail=${dumpTail}, dumpHead=${dumpHead}, dumpNums=${dumpNums.size}`};
+  document.getElementById("kq").innerHTML =
+    '<div class="big">CHỐT: ' + String(chot).padStart(2,"0") + '</div>';
 }
-
-function sysRESET(D2,D1,D0){
-  const s0 = dayStats(D0);
-  const s1 = dayStats(D1);
-  const s2 = dayStats(D2);
-
-  const oldHeads = new Set([...s2.topHeads.slice(0,2).map(o=>o.i), ...s1.topHeads.slice(0,2).map(o=>o.i)]);
-  const oldTails = new Set([...s2.topTails.slice(0,2).map(o=>o.i), ...s1.topTails.slice(0,2).map(o=>o.i)]);
-
-  const newHeads = s0.topHeads.slice(0,3).map(o=>o.i).filter(h=>!oldHeads.has(h));
-  const newTails = s0.topTails.slice(0,3).map(o=>o.i).filter(t=>!oldTails.has(t));
-
-  let poolSet = new Set();
-  for(const h of newHeads) for(const t of newTails) poolSet.add(h*10+t);
-
-  // If too small, relax: allow one side not-new, but still HS=0-ish; here: add (newHeads×top3Tails0) and (top3Heads0×newTails)
-  if(poolSet.size<3){
-    const top3H0 = s0.topHeads.slice(0,3).map(o=>o.i);
-    const top3T0 = s0.topTails.slice(0,3).map(o=>o.i);
-    for(const h of newHeads) for(const t of top3T0) poolSet.add(h*10+t);
-    for(const h of top3H0) for(const t of newTails) poolSet.add(h*10+t);
-  }
-
-  const set0 = new Set(D0);
-  const set1 = new Set(D1);
-
-  let pool = Array.from(poolSet);
-
-  // mandatory filters
-  pool = pool.filter(n=>{
-    const h=Math.floor(n/10), t=n%10;
-    if(oldHeads.has(h) && oldTails.has(t)) return false; // dính kép trục cũ
-    if(set0.has(n)) return false; // no chase D0
-    if(set1.has(n) && set0.has(n)) return false; // redundant
-    // exclude appears 2 days in a row (D1 & D0)
-    if(set1.has(n)) return false;
-    return true;
-  });
-
-  const RoI = s0.uniqHeads.size;
-  const days = [D2,D1,D0];
-
-  const scored = pool.map(n=>{
-    const h=Math.floor(n/10), t=n%10;
-    let sc=0;
-    if(newHeads.includes(h)) sc += 45;
-    if(newTails.includes(t)) sc += 35;
-    if(RoI>=8) sc += 10;
-    if(oldHeads.has(h)) sc -= 20;
-    if(oldTails.has(t)) sc -= 15;
-    if(hasMirrorInDays(n, days)) sc += 5; // small, reset prefers "mới"
-    const meta = { hasMirror: hasMirrorInDays(n, days) };
-    return {n, score: sc, meta};
-  });
-
-  if(scored.length===0){
-    // locked fallback: allow D1 presence but keep oldHeads&oldTails exclusion + no D0 chase
-    pool = Array.from(poolSet).filter(n=>{
-      const h=Math.floor(n/10), t=n%10;
-      if(oldHeads.has(h) && oldTails.has(t)) return false;
-      if(set0.has(n)) return false;
-      return true;
-    });
-    for(const n of pool){
-      const h=Math.floor(n/10), t=n%10;
-      let sc=0;
-      if(newHeads.includes(h)) sc += 45;
-      if(newTails.includes(t)) sc += 35;
-      if(RoI>=8) sc += 10;
-      if(oldHeads.has(h)) sc -= 20;
-      if(oldTails.has(t)) sc -= 15;
-      if(set1.has(n)) sc -= 15;
-      scored.push({n, score: sc, meta:{hasMirror: hasMirrorInDays(n, days)}});
-    }
-  }
-
-  scored.sort((a,b)=> b.score-a.score || a.n-b.n);
-  const topScore = scored[0]?.score ?? -999;
-  const ties = scored.filter(x=>x.score===topScore);
-  const pick = ties.length>1 ? finalTieBreak(ties, {s0}) : scored[0];
-
-  return {top1: pick.n, scored: scored.slice(0,12), note:`RESET: pool=${poolSet.size}, newHeads=${newHeads.join("")}, newTails=${newTails.join("")}`};
-}
-
-/** =========================
- *  UI / SESSION
- * ========================= */
-
-function updateBoxVisibility(){
-  // show boxes based on lockedMode (or default show all)
-  const m = session.lockedMode;
-  const showD1 = !m || MODES[m].need.includes("D1") || MODES[m].opt.includes("D1");
-  const showD2 = !m || MODES[m].need.includes("D2") || MODES[m].opt.includes("D2");
-  $("boxD1").style.display = showD1 ? "" : "none";
-  $("boxD2").style.display = showD2 ? "" : "none";
-}
-
-function setLockedMode(modeKey){
-  if(session.lockedMode) return; // already locked
-  session.lockedMode = modeKey;
-  $("lockedMode").innerHTML = `<span class="pill">${MODES[modeKey].name}</span>`;
-  const need = MODES[modeKey].need.join(", ");
-  const opt = MODES[modeKey].opt.length ? ` (optional: ${MODES[modeKey].opt.join(", ")})` : "";
-  $("modeHint").textContent = `Mode này dùng: ${need}${opt}. App sẽ chỉ chạy đúng hệ này cho tới khi Reset phiên.`;
-  $("btnRun").disabled = false;
-  $("btnSaveHistory").disabled = true;
-  updateBoxVisibility();
-}
-
-function resetSession(){
-  session.lockedMode = null;
-  session.lastResult = null;
-  $("lockedMode").innerHTML = `<span class="pill">Chưa chọn</span>`;
-  $("modeHint").textContent = "";
-  $("btnRun").disabled = true;
-  $("btnSaveHistory").disabled = true;
-  $("resultCard").style.display = "none";
-  updateBoxVisibility();
-}
-
-function renderStats(){
-  const d0 = parseDay($("inputD0").value);
-  $("statD0").textContent = d0.msg;
-  const d1 = parseDay($("inputD1").value);
-  $("statD1").textContent = d1.msg;
-  const d2 = parseDay($("inputD2").value);
-  $("statD2").textContent = d2.msg;
-}
-
-function requireDaysForMode(modeKey, D2, D1, D0){
-  const need = MODES[modeKey].need;
-  const missing = [];
-  for(const d of need){
-    if(d==="D0" && !D0) missing.push("D0");
-    if(d==="D1" && !D1) missing.push("D1");
-    if(d==="D2" && !D2) missing.push("D2");
-  }
-  return missing;
-}
-
-function formatNum(n){ return String(n).padStart(2,"0"); }
-
-function runSystem(){
-  const modeKey = session.lockedMode;
-  if(!modeKey){ alert("Chưa chọn Mode."); return; }
-
-  const p0 = parseDay($("inputD0").value);
-  if(!p0.ok){ alert("D0 chưa đủ 27 số."); return; }
-  const p1 = parseDay($("inputD1").value);
-  const p2 = parseDay($("inputD2").value);
-
-  const D0 = p0.nums;
-  const D1 = p1.ok ? p1.nums : null;
-  const D2 = p2.ok ? p2.nums : null;
-
-  const missing = requireDaysForMode(modeKey, D2, D1, D0);
-  if(missing.length){
-    alert(`Thiếu dữ liệu bắt buộc cho ${MODES[modeKey].name}: ${missing.join(", ")} (mỗi ngày phải đủ 27 số).`);
-    return;
-  }
-
-  // classifier if possible (uses D1/D2 if present)
-  const cls = classifier(D2, D1, D0);
-  session.classifier = cls;
-
-  let out = null;
-  if(modeKey==="CONT") out = sysCONT(D2, D1, D0);
-  if(modeKey==="DIFF") out = sysDIFF(D2, D1, D0);
-  if(modeKey==="DUMP") out = sysDUMP(D1, D0);
-  if(modeKey==="RESET") out = sysRESET(D2, D1, D0);
-
-  session.lastResult = { modeKey, out, cls };
-
-  $("resultCard").style.display = "";
-  $("resultMain").innerHTML = `TOP1: <b class="mono">${formatNum(out.top1)}</b> <span class="pill">${MODES[modeKey].name}</span>`;
-  const topList = out.scored.map(x=>`${formatNum(x.n)}(${x.score})`).join(", ");
-  $("resultExplain").innerHTML = `<div class="small"><b>Top candidates</b>: <span class="mono">${topList}</span></div>`;
-  $("resultMeta").innerHTML = `<div class="small muted">Ghi chú hệ: ${out.note}. Classifier: <b>${cls.state}</b> (conf ${(cls.confidence*100).toFixed(0)}%).</div>`;
-  $("btnSaveHistory").disabled = false;
-}
-
-function renderClassifier(){
-  const p0 = parseDay($("inputD0").value);
-  if(!p0.ok){ alert("D0 chưa đủ 27 số."); return; }
-  const p1 = parseDay($("inputD1").value);
-  const p2 = parseDay($("inputD2").value);
-  const D0 = p0.nums;
-  const D1 = p1.ok ? p1.nums : null;
-  const D2 = p2.ok ? p2.nums : null;
-  const cls = classifier(D2,D1,D0);
-  session.classifier = cls;
-
-  $("classifyCard").style.display = "";
-  const st = cls.state;
-  const badge = st==="XẢ" ? "bad" : (st==="CONTINUATION" ? "ok" : (st==="RESET/ĐẢO PHA" ? "warn" : "muted"));
-  $("classifyState").innerHTML = `Trạng thái: <b class="${badge}">${st}</b>`;
-
-  const k = cls.kpi;
-  $("kpi").innerHTML = `
-    <span class="pill">RI: <b>${k.RI===null?"—":k.RI}</b></span>
-    <span class="pill">HS: <b>${k.HS===null?"—":k.HS}</b></span>
-    <span class="pill">DS_num: <b>${k.DS_num}</b></span>
-    <span class="pill">maxTail: <b>${(k.DS_tail*100).toFixed(0)}%</b> <span style="color:#777;">(${k.maxTailCount||"—"}/27)</span></span>
-    <span class="pill">maxHead: <b>${(k.DS_head*100).toFixed(0)}%</b> <span style="color:#777;">(${k.maxHeadCount||"—"}/27)</span></span>
-    <span class="pill">RoI: <b>${k.RoI}</b></span>
-    <span class="pill">RI_prev: <b>${k.RI_prev===null?"—":k.RI_prev}</b></span>
-  `;
-
-  $("classifyWhy").innerHTML = cls.why.map(x=>`• ${x}`).join("<br/>");
-  $("classifyConf").textContent = `Độ tin cậy (heuristic): ${(cls.confidence*100).toFixed(0)}%. Nếu borderline, bạn vẫn quyết mode thủ công.`;
-}
-
-function loadHistory(){
-  const raw = localStorage.getItem(LS_KEY);
-  let rows = [];
-  try { rows = raw ? JSON.parse(raw) : []; } catch(e){ rows=[]; }
-  return rows;
-}
-
-function saveHistory(rows){
-  localStorage.setItem(LS_KEY, JSON.stringify(rows));
-}
-
-function renderHistory(){
-  const rows = loadHistory();
-  const body = $("histBody");
-  body.innerHTML = "";
-  if(rows.length===0){
-    body.innerHTML = `<tr><td colspan="7" class="muted">Chưa có lịch sử.</td></tr>`;
-    return;
-  }
-  for(let i=0;i<rows.length;i++){
-    const r = rows[i];
-    const k = r.classifier?.kpi || {};
-    const clsText = r.classifier ? `${r.classifier.state} (RI:${k.RI ?? "—"}, HS:${k.HS ?? "—"}, DS_num:${k.DS_num ?? "—"}, RoI:${k.RoI ?? "—"})` : "—";
-    const res = r.result;
-    const kq = r.outcome ?? "—";
-    body.innerHTML += `
-      <tr>
-        <td>${r.date || "—"}</td>
-        <td><span class="pill">${r.modeName}</span></td>
-        <td class="mono"><b>${res}</b></td>
-        <td class="small">${clsText}</td>
-        <td>
-          <select data-idx="${i}" class="outSel">
-            <option value="—" ${kq==="—"?"selected":""}>—</option>
-            <option value="TRÚNG" ${kq==="TRÚNG"?"selected":""}>TRÚNG</option>
-            <option value="TRƯỢT" ${kq==="TRƯỢT"?"selected":""}>TRƯỢT</option>
-          </select>
-        </td>
-        <td class="small">${(r.note||"").replace(/</g,"&lt;")}</td>
-        <td><button class="danger" data-del="${i}">Xoá</button></td>
-      </tr>
-    `;
-  }
-
-  // bind deletes
-  body.querySelectorAll("button[data-del]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const idx = Number(btn.getAttribute("data-del"));
-      const rows = loadHistory();
-      rows.splice(idx,1);
-      saveHistory(rows);
-      renderHistory();
-    });
-  });
-
-  // bind outcome changes
-  body.querySelectorAll("select.outSel").forEach(sel=>{
-    sel.addEventListener("change", ()=>{
-      const idx = Number(sel.getAttribute("data-idx"));
-      const rows = loadHistory();
-      rows[idx].outcome = sel.value;
-      saveHistory(rows);
-      renderHistory();
-    });
-  });
-}
-
-function addCurrentToHistory(){
-  if(!session.lastResult){ alert("Chưa có kết quả chốt để lưu."); return; }
-  const date = $("chotDate").value;
-  if(!date){ alert("Chưa chọn ngày chốt."); return; }
-  const note = $("note").value || "";
-  const { modeKey, out, cls } = session.lastResult;
-
-  const rows = loadHistory();
-  rows.unshift({
-    date,
-    note,
-    modeKey,
-    modeName: MODES[modeKey].name,
-    result: formatNum(out.top1),
-    classifier: cls,
-    outcome: "—",
-    savedAt: new Date().toISOString(),
-  });
-  saveHistory(rows);
-  renderHistory();
-  $("btnSaveHistory").disabled = true;
-}
-
-/** =========================
- *  Wiring
- * ========================= */
-function init(){
-  // default date today
-  const today = new Date();
-  const tzOff = today.getTimezoneOffset()*60000;
-  const localISO = new Date(Date.now()-tzOff).toISOString().slice(0,10);
-  $("chotDate").value = localISO;
-
-  // stats update on input
-  ["inputD0","inputD1","inputD2"].forEach(id=>{
-    $(id).addEventListener("input", renderStats);
-  });
-  renderStats();
-
-  // clear buttons
-  $("clearD0").addEventListener("click", ()=>{ $("inputD0").value=""; renderStats(); });
-  $("clearD1").addEventListener("click", ()=>{ $("inputD1").value=""; renderStats(); });
-  $("clearD2").addEventListener("click", ()=>{ $("inputD2").value=""; renderStats(); });
-
-  // classifier
-  $("btnClassify").addEventListener("click", renderClassifier);
-
-  // mode selection
-  $("modeCONT").addEventListener("click", ()=>setLockedMode("CONT"));
-  $("modeDIFF").addEventListener("click", ()=>setLockedMode("DIFF"));
-  $("modeDUMP").addEventListener("click", ()=>setLockedMode("DUMP"));
-  $("modeRESET").addEventListener("click", ()=>setLockedMode("RESET"));
-
-  // reset session
-  $("btnResetSession").addEventListener("click", resetSession);
-
-  // run
-  $("btnRun").addEventListener("click", runSystem);
-
-  // save history
-  $("btnSaveHistory").addEventListener("click", addCurrentToHistory);
-
-  // clear history
-  $("btnClearHistory").addEventListener("click", ()=>{
-    if(confirm("Xoá toàn bộ lịch sử chốt?")) {
-      localStorage.removeItem(LS_KEY);
-      renderHistory();
-    }
-  });
-
-  updateBoxVisibility();
-  renderHistory();
-}
-init();
 </script>
+
 </body>
 </html>
