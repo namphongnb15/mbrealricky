@@ -3,113 +3,603 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SXMB v5.3 FIXED — CHẶN N-1</title>
+<title>SXMB v5.8 CLEAN — CHỐT 1 + CHẶN NGÀY N</title>
 <style>
-body{font-family:system-ui;margin:16px;background:#fafafa}
-.card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:12px;margin-top:12px}
-textarea{width:100%;min-height:140px;padding:10px}
-button{padding:8px 12px;border-radius:8px;border:0;background:#111;color:#fff}
-.big{font-size:28px;font-weight:bold}
+  :root{
+    --bg:#fafafa;--card:#fff;--line:#e6e6e6;--text:#111;--muted:#666;
+    --good-bg:#eaffea;--good:#064;--bad-bg:#ffecec;--bad:#700;--ghost:#f1f1f1;
+    --mid:#c47a00;--blue:#1a5fb4;--purple:#8a2be2;
+  }
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:16px;background:var(--bg);color:var(--text)}
+  h1{font-size:18px;margin:0 0 6px}
+  .small{font-size:12px;color:var(--muted);line-height:1.45}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:12px}
+  textarea,input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:12px;font-size:14px;background:#fff}
+  textarea{min-height:155px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+  button{padding:8px 12px;border:0;border-radius:12px;font-weight:900;cursor:pointer}
+  .primary{background:#111;color:#fff}
+  .goodBtn{background:var(--good-bg);color:var(--good)}
+  .badBtn{background:var(--bad-bg);color:var(--bad)}
+  .ghost{background:var(--ghost)}
+  .danger{background:var(--bad-bg);color:var(--bad)}
+  .big{font-size:34px;font-weight:950;letter-spacing:0.5px}
+  .sep{height:1px;background:#eee;margin:12px 0}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media (max-width:720px){ .grid2,.grid3{grid-template-columns:1fr} }
+  table{width:100%;border-collapse:collapse;margin-top:10px}
+  th,td{border-bottom:1px solid #eee;padding:8px 6px;font-size:13px;text-align:left;vertical-align:top}
+  th{background:#fafafa;position:sticky;top:0}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#f2f2f2;font-size:12px;margin:1px}
+  .tier{font-weight:950}
+  .tplus{color:#0a7a0a}
+  .treal{color:#1a5fb4}
+  .tricky{color:#8a2be2}
+  .hit{color:#0a7a0a;font-weight:950}
+  .miss{color:#c00000;font-weight:950}
+  .warn{background:#fff8e1;border:1px solid #ffe0a3;color:#6b4300;border-radius:12px;padding:8px;margin-top:8px}
+  .ok{background:#eefbf0;border:1px solid #c7efce;color:#075c13;border-radius:12px;padding:8px;margin-top:8px}
+  .badbox{background:#fff0f0;border:1px solid #ffd0d0;color:#8a0000;border-radius:12px;padding:8px;margin-top:8px}
 </style>
 </head>
 <body>
 
-<h2>SXMB v5.3 — FIX N-1 + PARSE SẠCH</h2>
-
-<div class="card">
-Ngày N
-<textarea id="n"></textarea>
+<h1>SXMB v5.8 CLEAN — CHỐT 1 CON + CHẶN SỐ ĐÃ VỀ NGÀY N</h1>
+<div class="small">
+  <span class="pill">Parser sạch: bỏ dòng KQ/ngày tháng</span>
+  <span class="pill">Chỉ nhận ĐB/DB/G1…G7</span>
+  <span class="pill">Chặn toàn bộ số đã về ngày N</span>
+  <span class="pill">Con 1 = CHỐT</span>
+  <span class="pill">Con 2 = PHỤ</span>
+  <div style="margin-top:6px">
+    Dán mỗi ngày 1 ô. Có thể dán cả dòng <b>KQ XSMB 26/04/2026</b>, app sẽ tự bỏ qua, không cho ăn parser.
+  </div>
 </div>
 
 <div class="card">
-Ngày N-1
-<textarea id="n1"></textarea>
+  <div class="row">
+    <b>Ngày N — ngày gần nhất</b>
+    <div class="row">
+      <button class="ghost" onclick="fillSample('txtN')">Mẫu</button>
+      <button class="ghost" onclick="clearBox('txtN')">Xoá</button>
+    </div>
+  </div>
+  <textarea id="txtN" placeholder="KQ XSMB 26/04/2026
+ĐB: 38228
+G1: 25708
+G2: 18653 91985
+G3: ...
+G4: ...
+G5: ...
+G6: ...
+G7: ..."></textarea>
+  <div id="parseN" class="small"></div>
 </div>
 
 <div class="card">
-Ngày N-2
-<textarea id="n2"></textarea>
+  <div class="row">
+    <b>Ngày N-1</b>
+    <div class="row">
+      <button class="ghost" onclick="fillSample('txtN1')">Mẫu</button>
+      <button class="ghost" onclick="clearBox('txtN1')">Xoá</button>
+    </div>
+  </div>
+  <textarea id="txtN1"></textarea>
+  <div id="parseN1" class="small"></div>
 </div>
 
 <div class="card">
-<button onclick="run()">CHỐT</button>
-<div id="kq"></div>
+  <div class="row">
+    <b>Ngày N-2</b>
+    <div class="row">
+      <button class="ghost" onclick="fillSample('txtN2')">Mẫu</button>
+      <button class="ghost" onclick="clearBox('txtN2')">Xoá</button>
+    </div>
+  </div>
+  <textarea id="txtN2"></textarea>
+  <div id="parseN2" class="small"></div>
+</div>
+
+<div class="card">
+  <div class="grid3" style="align-items:end">
+    <div>
+      <b>Ngày soi (N+1)</b>
+      <input id="dateTarget" placeholder="vd 04/05/2026" class="mono">
+    </div>
+    <div>
+      <b>Chế độ lọc</b>
+      <select id="mode">
+        <option value="strict" selected>STRICT — chặn số đã về ngày N</option>
+        <option value="soft">SOFT — vẫn chặn N, nhưng ghi chú tail yếu</option>
+      </select>
+    </div>
+    <button class="primary" id="btnPick">CHỐT</button>
+  </div>
+
+  <div class="sep"></div>
+
+  <div id="resultBox" class="small">Chưa chốt.</div>
+
+  <div class="row" style="margin-top:10px">
+    <button class="goodBtn" id="btnHit" disabled>✅ Lưu TRÚNG (Con chốt)</button>
+    <button class="badBtn" id="btnMiss" disabled>❌ Lưu SỊT (Con chốt)</button>
+    <button class="danger" id="btnUndo" disabled>↩︎ Xoá bản ghi gần nhất</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="grid2">
+    <div>
+      <b>Thống kê CHỐT (Con 1)</b>
+      <div class="small" style="margin-top:6px;line-height:1.5">
+        Tổng: <b id="kTotal">0</b><br>
+        % Trúng con chốt: <b id="kRateChot">0%</b><br>
+        Chuỗi sịt dài nhất: <b id="kMiss">0</b>
+      </div>
+    </div>
+    <div>
+      <b>Tham khảo</b>
+      <div class="small" style="margin-top:6px;line-height:1.5">
+        % Trúng con phụ: <b id="kRatePhu">0%</b><br>
+        % Trúng ≥1/2: <b id="kRateAny">0%</b><br>
+        REAL+/REAL/RICKY chỉ đánh giá theo con chốt.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="row">
+    <b>Lịch sử</b>
+    <span class="pill">localStorage</span>
+    <button class="danger" id="btnClearAll">Xoá toàn bộ lịch sử</button>
+  </div>
+  <div style="max-height:420px;overflow:auto;margin-top:10px">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ngày</th>
+          <th>Con CHỐT</th>
+          <th>Tầng</th>
+          <th>Day filter</th>
+          <th>Con PHỤ</th>
+          <th>KQ chốt</th>
+          <th>KQ phụ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="hist"></tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-function parseNums(text){
-  const lines = text.split("\n");
-  const out = [];
+const KEY="sxmb_v58_clean_blockN_chot1_v1";
 
-  for(let L of lines){
-    L = L.trim();
-
-    if(!/^(ĐB|DB|G)/i.test(L)) continue;
-
-    const nums = L.match(/\d+/g) || [];
-
-    for(let n of nums){
-      if(n.length >= 2){
-        out.push(parseInt(n.slice(-2)));
-      }
-    }
-  }
-  return out;
+function clearBox(id){
+  document.getElementById(id).value="";
+  updateParsePreview();
+}
+function pad2(n){return String(n).padStart(2,"0")}
+function fillSample(id){
+  document.getElementById(id).value =
+`KQ XSMB 26/04/2026
+ĐB: 82438
+G1: 32172
+G2: 39869 21073
+G3: 48067 07113 74630 05458 91202 00608
+G4: 1508 4847 5535 3417
+G5: 1130 7400 4663 1636 7725 6936
+G6: 768 195 519
+G7: 70 95 10 43`;
+  updateParsePreview();
 }
 
-function freq(arr){
-  const m = {};
-  arr.forEach(x => m[x]=(m[x]||0)+1);
+/*
+  PARSER v5.8 CLEAN:
+  - Bỏ dòng KQ XSMB / ngày tháng / ghi chú.
+  - Chỉ parse dòng bắt đầu bằng ĐB, DB, G1, G2, G3, G4, G5, G6, G7.
+  - Nếu 1 dòng có nhiều số, lấy 2 số cuối từng giải.
+  - Nếu các số bị dính liền, cắt theo độ dài giải.
+*/
+function parseNums(text){
+  const raw = String(text||"").replace(/\u00A0/g," ");
+  const lines = raw.split(/\r?\n/);
+  const out = [];
+  const ignored = [];
+
+  function labelChunkLen(lbl){
+    const L = lbl.toUpperCase().replace(/\s+/g,"");
+    if (L==="DB" || L==="ĐB") return 5;
+    if (L==="G1" || L==="G.1") return 5;
+    if (L==="G2" || L==="G.2") return 5;
+    if (L==="G3" || L==="G.3") return 5;
+    if (L==="G4" || L==="G.4") return 4;
+    if (L==="G5" || L==="G.5") return 4;
+    if (L==="G6" || L==="G.6") return 3;
+    if (L==="G7" || L==="G.7") return 2;
+    return null;
+  }
+
+  function pushChunks(rest, chunkLen){
+    const runs = String(rest||"").match(/\d+/g) || [];
+    if(!runs.length) return;
+
+    if(runs.length >= 2){
+      for(const r of runs){
+        if(r.length >= 2){
+          const num = parseInt(r.slice(-2),10);
+          if(!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
+        }
+      }
+      return;
+    }
+
+    const s = runs.join("");
+    if(!s) return;
+
+    if(chunkLen && s.length >= chunkLen){
+      const nChunks = Math.floor(s.length / chunkLen);
+      for(let i=0;i<nChunks;i++){
+        const chunk = s.slice(i*chunkLen, i*chunkLen + chunkLen);
+        const num = parseInt(chunk.slice(-2),10);
+        if(!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
+      }
+      return;
+    }
+
+    if(s.length >= 2){
+      const num = parseInt(s.slice(-2),10);
+      if(!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
+    }
+  }
+
+  for(const line of lines){
+    const L = line.trim();
+    if(!L) continue;
+
+    if(/^KQ\s*(XSMB|MB|MIỀN\s*BẮC)?/i.test(L)){
+      ignored.push(L);
+      continue;
+    }
+
+    const m = L.match(/^(ĐB|DB|G\.?\s*1|G\.?\s*2|G\.?\s*3|G\.?\s*4|G\.?\s*5|G\.?\s*6|G\.?\s*7)\s*[:.\-–—]?\s*/i);
+    if(!m){
+      if(/\d/.test(L)) ignored.push(L);
+      continue;
+    }
+
+    const label = m[1];
+    const rest = L.slice(m[0].length);
+    pushChunks(rest, labelChunkLen(label));
+  }
+
+  return {nums: out, ignored};
+}
+
+function parseOnlyNums(text){ return parseNums(text).nums; }
+
+function head(n){return Math.floor(n/10)}
+function tail(n){return n%10}
+
+function freqMap(nums){
+  const m=new Map();
+  for(const n of nums) m.set(n,(m.get(n)||0)+1);
   return m;
 }
+function headCounts(nums){
+  const c=Array(10).fill(0);
+  for(const n of nums) c[head(n)]++;
+  return c;
+}
+function tailCounts(nums){
+  const c=Array(10).fill(0);
+  for(const n of nums) c[tail(n)]++;
+  return c;
+}
+function topIndices(counts){
+  const arr=counts.map((v,i)=>({i,v}));
+  arr.sort((a,b)=>(b.v-a.v)||(a.i-b.i));
+  return arr;
+}
 
-function run(){
-  const N = parseNums(document.getElementById("n").value);
-  const N1 = parseNums(document.getElementById("n1").value);
-  const N2 = parseNums(document.getElementById("n2").value);
+function chooseTailAnchors(numsN2, numsN1, numsN){
+  const all=[...numsN2,...numsN1,...numsN];
+  const t3=tailCounts(all);
+  const sorted=topIndices(t3);
+  const tail1 = sorted[0]?.i ?? 0;
+  const tail2 = sorted[1]?.i ?? tail1;
+  const tailGap = (sorted[0]?.v ?? 0) - (sorted[1]?.v ?? 0);
+  return {tail1, tail2, tailGap, tailStats: sorted};
+}
 
-  const all = [...N, ...N1, ...N2];
+/*
+  CHẶN NGÀY N:
+  - Nếu số n đã xuất hiện trong ngày N => loại.
+  - Không cộng/trừ điểm cho số đã về N nữa, vì đã bị chặn tuyệt đối.
+*/
+function scoreCandidates(numsN2, numsN1, numsN, tailAnchor){
+  const mapN=freqMap(numsN);
+  const mapN1=freqMap(numsN1);
+  const mapN2=freqMap(numsN2);
+  const hcN=headCounts(numsN);
+  const hcN1=headCounts(numsN1);
 
-  const tailCount = Array(10).fill(0);
-  all.forEach(x => tailCount[x%10]++);
-
-  const tails = [...tailCount.map((v,i)=>({i,v}))].sort((a,b)=>b.v-a.v);
-  const tail = tails[0].i;
-
-  let candidates = [];
-  for(let h=0;h<10;h++){
-    candidates.push(h*10 + tail);
+  const blockedN = new Set(numsN);
+  const candidates=[];
+  for(let h=0; h<=9; h++){
+    const n = h*10 + tailAnchor;
+    if(blockedN.has(n)) continue; // CHẶN SỐ ĐÃ VỀ NGÀY N
+    candidates.push(n);
   }
 
-  const fN = freq(N);
-  const fN1 = freq(N1);
+  const scored=candidates.map(n=>{
+    const fN1=mapN1.get(n)||0;
+    const fN2=mapN2.get(n)||0;
 
-  let scored = candidates.map(n=>{
-    let s=0;
+    let score=0;
 
-    if(!fN[n] && fN1[n]) s+=1;
-    if(fN[n]==1) s+=3;
-    if(fN[n]>=2) s-=4;
-    if(fN[n] && fN1[n]) s-=2;
+    // Lực hồi từ N-1/N-2 nhưng không trộn N vì N đã bị chặn.
+    if(fN1>0) score+=2;
+    if(fN2>0) score+=1;
+    if(fN1>0 && fN2>0) score+=1;
 
-    return {n, s};
+    // Đầu đang lên trong ngày N: dùng đầu, không dùng chính số đã về N.
+    const diffHead = hcN[head(n)] - hcN1[head(n)];
+    if(diffHead>=2) score+=3;
+    else if(diffHead>=1) score+=2;
+
+    // Số sạch hoàn toàn 2 ngày trước: vẫn cho điểm nhỏ để tránh bó quá cứng.
+    if(fN1===0 && fN2===0) score+=1;
+
+    return {n, score, fN1, fN2, diffHead};
   });
 
-  scored.sort((a,b)=>b.s-a.s);
+  scored.sort((a,b)=>
+    (b.score-a.score) ||
+    (b.diffHead-a.diffHead) ||
+    (b.fN1-a.fN1) ||
+    (b.fN2-a.fN2) ||
+    (a.n-b.n)
+  );
+  return scored;
+}
 
-  let chot = null;
-  for(let i=0;i<scored.length;i++){
-    if(!N1.includes(scored[i].n)){
-      chot = scored[i].n;
-      break;
+function pickTwo(numsN2, numsN1, numsN){
+  const tails = chooseTailAnchors(numsN2, numsN1, numsN);
+
+  const s1 = scoreCandidates(numsN2, numsN1, numsN, tails.tail1);
+  const s2 = scoreCandidates(numsN2, numsN1, numsN, tails.tail2);
+
+  const p1 = s1[0]?.n ?? null;
+  const p2 = s2[0]?.n ?? null;
+
+  const m1 = (s1.length>=2) ? Math.abs(s1[0].score - s1[1].score) : 0;
+  const m2 = (s2.length>=2) ? Math.abs(s2[0].score - s2[1].score) : 0;
+
+  return {...tails, chot:p1, phu:p2, score1:s1[0]?.score ?? null, score2:s2[0]?.score ?? null, m1, m2, valid1:s1.length, valid2:s2.length};
+}
+
+function tierFromMargin(m, tailGap, valid){
+  if(valid < 3) return "NGHỈ";
+  if(m>=3 && tailGap>=2) return "REAL+";
+  if(m>=2) return "REAL";
+  return "RICKY";
+}
+function tierClass(t){
+  if(t==="REAL+") return "tplus";
+  if(t==="REAL") return "treal";
+  if(t==="RICKY") return "tricky";
+  return "miss";
+}
+function dayFilterText(tier, valid){
+  if(tier==="NGHỈ") return "NGHỈ — ngày nhiễu/ít ứng viên";
+  if(tier==="REAL+") return "ĐÁNH MẠNH";
+  if(tier==="REAL") return "ĐÁNH VỪA";
+  return "ĐÁNH NHẸ";
+}
+
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)||"[]"); } catch { return []; } }
+function save(arr){ localStorage.setItem(KEY, JSON.stringify(arr)); }
+function uuid(){ try { return crypto.randomUUID(); } catch { return String(Date.now()) + Math.random().toString(16).slice(2); } }
+function isTrue(v){ return v===true || v==="true" || v===1 || v==="1"; }
+
+function maxMissStreak(arrChrono){
+  let best=0, cur=0;
+  for(const it of arrChrono){
+    if(isTrue(it.chotHit)){ cur=0; }
+    else { cur++; best=Math.max(best,cur); }
+  }
+  return best;
+}
+
+function updateParsePreview(){
+  const boxes = [
+    ["txtN","parseN","N"],
+    ["txtN1","parseN1","N-1"],
+    ["txtN2","parseN2","N-2"]
+  ];
+
+  for(const [txtId, outId, label] of boxes){
+    const p = parseNums(document.getElementById(txtId).value);
+    const el = document.getElementById(outId);
+    if(!document.getElementById(txtId).value.trim()){
+      el.innerHTML = "";
+      continue;
     }
+    const numsTxt = p.nums.map(pad2).join(" ");
+    const ignoredTxt = p.ignored.length ? `<div class="warn">Đã bỏ qua: ${p.ignored.map(x=>`<span class="mono">${escapeHtml(x)}</span>`).join(" | ")}</div>` : `<div class="ok">Không có dòng nhiễu.</div>`;
+    el.innerHTML = `<div class="small" style="margin-top:6px"><b>${label} parse được ${p.nums.length} số:</b> <span class="mono">${numsTxt}</span></div>${ignoredTxt}`;
+  }
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function updateUI(){
+  const arr = load();
+  const total = arr.length;
+
+  const hitChot = arr.filter(x=>isTrue(x.chotHit)).length;
+  const hitPhu  = arr.filter(x=>isTrue(x.phuHit)).length;
+  const hitAny  = arr.filter(x=>isTrue(x.chotHit) || isTrue(x.phuHit)).length;
+
+  document.getElementById("kTotal").textContent = String(total);
+  document.getElementById("kRateChot").textContent = (total ? Math.round((hitChot/total)*100) : 0) + "%";
+  document.getElementById("kRatePhu").textContent = (total ? Math.round((hitPhu/total)*100) : 0) + "%";
+  document.getElementById("kRateAny").textContent = (total ? Math.round((hitAny/total)*100) : 0) + "%";
+  document.getElementById("kMiss").textContent = String(maxMissStreak(arr.slice().reverse()));
+
+  const tbody = document.getElementById("hist");
+  tbody.innerHTML = "";
+  arr.forEach((x,i)=>{
+    const kqChot = isTrue(x.chotHit) ? "<span class='hit'>✅</span>" : "<span class='miss'>❌</span>";
+    const kqPhu  = (x.phuHit===null || x.phuHit===undefined) ? "-" : (isTrue(x.phuHit) ? "<span class='hit'>✅</span>" : "<span class='miss'>❌</span>");
+    const tier = x.tier || "RICKY";
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td class="mono">${escapeHtml(x.date || "")}</td>
+      <td class="mono"><b>${x.chot || ""}</b></td>
+      <td class="tier ${tierClass(tier)}">${tier}</td>
+      <td>${escapeHtml(x.dayFilter || "")}</td>
+      <td class="mono">${x.phu || ""}</td>
+      <td>${kqChot}</td>
+      <td>${kqPhu}</td>
+      <td><button class="danger" data-del="${x.id}">Xoá</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del");
+      const next = load().filter(r=>r.id!==id);
+      save(next);
+      updateUI();
+    });
+  });
+
+  document.getElementById("btnUndo").disabled = (total===0);
+}
+
+let lastPick = null;
+
+document.getElementById("btnPick").addEventListener("click", ()=>{
+  updateParsePreview();
+
+  const numsN  = parseOnlyNums(document.getElementById("txtN").value);
+  const numsN1 = parseOnlyNums(document.getElementById("txtN1").value);
+  const numsN2 = parseOnlyNums(document.getElementById("txtN2").value);
+
+  const box = document.getElementById("resultBox");
+  if(!numsN.length || !numsN1.length || !numsN2.length){
+    box.innerHTML = `<div class="badbox">Thiếu dữ liệu 3 ngày. Cần dán đúng dòng ĐB/DB/G1…G7. Dòng KQ/ngày tháng sẽ bị bỏ qua.</div>`;
+    lastPick = null;
+    document.getElementById("btnHit").disabled = true;
+    document.getElementById("btnMiss").disabled = true;
+    return;
   }
 
-  if(chot===null) chot = scored[0].n;
+  const res = pickTwo(numsN2, numsN1, numsN);
+  if(res.chot===null){
+    box.innerHTML = `<div class="big bad">KHÔNG CHỐT</div><div class="badbox">Tất cả ứng viên đuôi mạnh đã bị chặn vì đã về ngày N hoặc không còn ứng viên hợp lệ.</div>`;
+    lastPick = null;
+    document.getElementById("btnHit").disabled = true;
+    document.getElementById("btnMiss").disabled = true;
+    return;
+  }
 
-  document.getElementById("kq").innerHTML =
-    '<div class="big">CHỐT: ' + String(chot).padStart(2,"0") + '</div>';
+  const tier = tierFromMargin(res.m1 ?? 0, res.tailGap ?? 0, res.valid1 ?? 0);
+  const dayFilter = dayFilterText(tier, res.valid1 ?? 0);
+  lastPick = {...res, tier, dayFilter};
+
+  const blockedSet = new Set(numsN);
+  const blockedN = [...blockedSet].sort((a,b)=>a-b).map(pad2).join(" ");
+
+  let noteClass = tier==="NGHỈ" ? "badbox" : (tier==="REAL+" ? "ok" : "warn");
+  let saveDisabled = tier==="NGHỈ";
+
+  box.innerHTML = `
+    <div class="grid2">
+      <div>
+        <div class="small">Con CHỐT — đuôi #1 = ${res.tail1}</div>
+        <div class="big mono">${pad2(res.chot)}</div>
+        <div class="small">Tầng: <span class="tier ${tierClass(tier)}">${tier}</span> • margin=${res.m1 ?? "-"} • tailGap=${res.tailGap ?? "-"}</div>
+      </div>
+      <div>
+        <div class="small">Con PHỤ — đuôi #2 = ${res.tail2}</div>
+        <div class="big mono">${res.phu===null ? "--" : pad2(res.phu)}</div>
+        <div class="small">Chỉ tham khảo, không tính % chính.</div>
+      </div>
+    </div>
+    <div class="${noteClass}"><b>Day filter:</b> ${dayFilter}</div>
+    <div class="warn"><b>Đã chặn số về ngày N:</b> <span class="mono">${blockedN}</span></div>
+  `;
+
+  document.getElementById("btnHit").disabled = saveDisabled;
+  document.getElementById("btnMiss").disabled = saveDisabled;
+});
+
+function askPhuHit(){
+  if(!lastPick || lastPick.phu===null || lastPick.phu===undefined) return null;
+  const ans = prompt("Con PHỤ có về không? Nhập: 1 = Có, 0 = Không (bỏ trống = không ghi)", "");
+  const v = String(ans||"").trim();
+  if(v==="") return null;
+  return (v==="1");
 }
+
+function saveRecord(chotHit){
+  const date = document.getElementById("dateTarget").value.trim();
+  const phuHit = askPhuHit();
+  const rec = {
+    id: uuid(),
+    date,
+    chot: pad2(lastPick.chot),
+    phu: lastPick.phu===null ? "" : pad2(lastPick.phu),
+    tier: lastPick.tier,
+    dayFilter: lastPick.dayFilter,
+    chotHit: chotHit,
+    phuHit: phuHit
+  };
+  const arr = load();
+  arr.unshift(rec);
+  save(arr);
+  updateUI();
+}
+
+document.getElementById("btnHit").addEventListener("click", ()=>{
+  if(!lastPick) return;
+  saveRecord(true);
+});
+document.getElementById("btnMiss").addEventListener("click", ()=>{
+  if(!lastPick) return;
+  saveRecord(false);
+});
+document.getElementById("btnUndo").addEventListener("click", ()=>{
+  const arr = load();
+  if(arr.length===0) return;
+  arr.shift();
+  save(arr);
+  updateUI();
+});
+document.getElementById("btnClearAll").addEventListener("click", ()=>{
+  if(!confirm("Xoá toàn bộ lịch sử?")) return;
+  save([]);
+  updateUI();
+});
+
+["txtN","txtN1","txtN2"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", updateParsePreview);
+});
+
+updateUI();
+updateParsePreview();
 </script>
 
 </body>
