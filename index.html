@@ -3,604 +3,642 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SXMB v5.8 CLEAN — CHỐT 1 + CHẶN NGÀY N</title>
+<title>V4 SMART MB - Phần mềm soi lô nâng cao</title>
 <style>
-  :root{
-    --bg:#fafafa;--card:#fff;--line:#e6e6e6;--text:#111;--muted:#666;
-    --good-bg:#eaffea;--good:#064;--bad-bg:#ffecec;--bad:#700;--ghost:#f1f1f1;
-    --mid:#c47a00;--blue:#1a5fb4;--purple:#8a2be2;
-  }
-  *{box-sizing:border-box}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:16px;background:var(--bg);color:var(--text)}
-  h1{font-size:18px;margin:0 0 6px}
-  .small{font-size:12px;color:var(--muted);line-height:1.45}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:12px}
-  textarea,input,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:12px;font-size:14px;background:#fff}
-  textarea{min-height:155px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
-  button{padding:8px 12px;border:0;border-radius:12px;font-weight:900;cursor:pointer}
-  .primary{background:#111;color:#fff}
-  .goodBtn{background:var(--good-bg);color:var(--good)}
-  .badBtn{background:var(--bad-bg);color:var(--bad)}
-  .ghost{background:var(--ghost)}
-  .danger{background:var(--bad-bg);color:var(--bad)}
-  .big{font-size:34px;font-weight:950;letter-spacing:0.5px}
-  .sep{height:1px;background:#eee;margin:12px 0}
-  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-  @media (max-width:720px){ .grid2,.grid3{grid-template-columns:1fr} }
-  table{width:100%;border-collapse:collapse;margin-top:10px}
-  th,td{border-bottom:1px solid #eee;padding:8px 6px;font-size:13px;text-align:left;vertical-align:top}
-  th{background:#fafafa;position:sticky;top:0}
-  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
-  .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#f2f2f2;font-size:12px;margin:1px}
-  .tier{font-weight:950}
-  .tplus{color:#0a7a0a}
-  .treal{color:#1a5fb4}
-  .tricky{color:#8a2be2}
-  .hit{color:#0a7a0a;font-weight:950}
-  .miss{color:#c00000;font-weight:950}
-  .warn{background:#fff8e1;border:1px solid #ffe0a3;color:#6b4300;border-radius:12px;padding:8px;margin-top:8px}
-  .ok{background:#eefbf0;border:1px solid #c7efce;color:#075c13;border-radius:12px;padding:8px;margin-top:8px}
-  .badbox{background:#fff0f0;border:1px solid #ffd0d0;color:#8a0000;border-radius:12px;padding:8px;margin-top:8px}
+:root{
+  --bg:#07111f;--panel:#0b1220;--panel2:#111827;--text:#e5e7eb;--muted:#94a3b8;--line:#243044;
+  --blue:#38bdf8;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--violet:#a78bfa;--chip:#172033;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top,#10233d,#020617 55%);color:var(--text)}
+.wrap{max-width:1280px;margin:auto;padding:14px}
+h1{font-size:24px;margin:8px 0 4px}
+h2{font-size:16px;margin:0 0 10px}
+.sub{color:var(--muted);margin:0 0 14px;font-size:13px;line-height:1.45}
+.card{background:rgba(11,18,32,.9);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 12px 34px rgba(0,0,0,.28)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px;outline:none}
+textarea{min-height:230px;line-height:1.45;font-size:13px;resize:vertical}
+input,select{height:40px}
+textarea:focus,input:focus,select:focus{border-color:var(--blue)}
+button{border:0;border-radius:12px;padding:10px 12px;background:#1f2937;color:var(--text);font-weight:750;cursor:pointer}
+button:hover{filter:brightness(1.12)}
+.primary{background:linear-gradient(135deg,#0284c7,#16a34a)}
+.blue{background:#075985}.green{background:#14532d}.red{background:#7f1d1d}.yellow{background:#78350f}.violet{background:#4c1d95}
+.small{font-size:12px;padding:7px 9px;border-radius:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tab{background:#111827;border:1px solid var(--line)}
+.tab.active{background:linear-gradient(135deg,#075985,#14532d);border-color:#38bdf8}
+.section{display:none}.section.active{display:block}
+.kpi{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:10px 0}
+@media(max-width:900px){.kpi{grid-template-columns:repeat(2,1fr)}}
+.kpi>div{background:#020617;border:1px solid var(--line);border-radius:14px;padding:10px}
+.kpi span{display:block;color:var(--muted);font-size:12px}.kpi b{font-size:20px}
+.log{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px;line-height:1.5;min-height:120px;overflow:auto}
+.decision{font-size:32px;font-weight:950;margin:8px 0}.go{color:var(--green)}.rest{color:var(--yellow)}.bad{color:var(--red)}.muted{color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{background:#0f172a;color:#cbd5e1;position:sticky;top:0}
+.pill{display:inline-block;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:3px 8px;margin:2px;font-size:12px}
+.pill.g{background:#052e16;border-color:#14532d;color:#bbf7d0}.pill.r{background:#450a0a;border-color:#7f1d1d;color:#fecaca}.pill.y{background:#451a03;border-color:#78350f;color:#fde68a}.pill.b{background:#082f49;border-color:#075985;color:#bae6fd}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.note{font-size:12px;color:var(--muted);line-height:1.45}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0}
 </style>
 </head>
 <body>
+<div class="wrap">
+  <h1>V4 SMART MB</h1>
+  <p class="sub">Phần mềm soi lô MB nâng cao: lưu nhiều ngày KQ, tự chọn 3 ngày gần nhất, Smart Gate vào/nghỉ, Selector 1 con, Auto Compare, Backtest, thống kê rule ăn/trượt và học trọng số phụ. Không đảm bảo thắng; mục tiêu là kiểm chứng hệ, giảm cảm tính.</p>
 
-<h1>SXMB v5.8 CLEAN — CHỐT 1 CON + CHẶN SỐ ĐÃ VỀ NGÀY N</h1>
-<div class="small">
-  <span class="pill">Parser sạch: bỏ dòng KQ/ngày tháng</span>
-  <span class="pill">Chỉ nhận ĐB/DB/G1…G7</span>
-  <span class="pill">Chặn toàn bộ số đã về ngày N</span>
-  <span class="pill">Con 1 = CHỐT</span>
-  <span class="pill">Con 2 = PHỤ</span>
-  <div style="margin-top:6px">
-    Dán mỗi ngày 1 ô. Có thể dán cả dòng <b>KQ XSMB 26/04/2026</b>, app sẽ tự bỏ qua, không cho ăn parser.
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('run',this)">1. Soi & Chốt</button>
+    <button class="tab" onclick="showTab('data',this)">2. Dữ liệu KQ</button>
+    <button class="tab" onclick="showTab('compare',this)">3. Auto Compare</button>
+    <button class="tab" onclick="showTab('backtest',this)">4. Backtest</button>
+    <button class="tab" onclick="showTab('learn',this)">5. Học & Thống kê</button>
+    <button class="tab" onclick="showTab('settings',this)">6. Cài đặt</button>
   </div>
-</div>
 
-<div class="card">
-  <div class="row">
-    <b>Ngày N — ngày gần nhất</b>
-    <div class="row">
-      <button class="ghost" onclick="fillSample('txtN')">Mẫu</button>
-      <button class="ghost" onclick="clearBox('txtN')">Xoá</button>
+  <div id="run" class="section active">
+    <div class="grid2">
+      <div class="card">
+        <h2>Chọn ngày chốt</h2>
+        <div class="grid2">
+          <div><label class="note">Ngày chốt D0</label><input id="targetDate" placeholder="VD: 07/05/2026 hoặc 2026-05-07"></div>
+          <div><label class="note">Chế độ</label><select id="mode"><option value="smart">SMART - cân bằng</option><option value="safe">SAFE - siết nghỉ nhiều</option><option value="attack">ATTACK - vào thoáng hơn</option></select></div>
+        </div>
+        <div class="row">
+          <button class="primary" onclick="runToday()">SOI & CHỐT</button>
+          <button class="blue" onclick="quickFromLast()">Lấy ngày sau KQ mới nhất</button>
+          <button class="yellow" onclick="savePick()">Lưu chốt</button>
+        </div>
+        <p class="note">Phần mềm sẽ tự lấy 3 ngày KQ gần nhất trước ngày chốt. Nếu chưa đủ dữ liệu, nó báo thiếu.</p>
+      </div>
+      <div class="card">
+        <h2>Quyết định</h2>
+        <div id="decision" class="decision muted">Chưa soi</div>
+        <div id="explain" class="log">Nhập dữ liệu KQ ở tab “Dữ liệu KQ”, rồi bấm SOI & CHỐT.</div>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div><span>Ngày KQ đã lưu</span><b id="kDays">0</b></div>
+      <div><span>Ứng viên</span><b id="kCand">0</b></div>
+      <div><span>Độ nhiễu</span><b id="kNoise">0</b></div>
+      <div><span>Độ rộng cụm</span><b id="kWide">0</b></div>
+      <div><span>Cổng vào</span><b id="kGate">-</b></div>
+      <div><span>Tự tin</span><b id="kConf">-</b></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Cụm / Pha / Cảnh báo</h2>
+        <div id="clusterLog" class="log"></div>
+      </div>
+      <div class="card">
+        <h2>Top ứng viên</h2>
+        <div style="max-height:420px;overflow:auto">
+          <table><thead><tr><th>#</th><th>Số</th><th>Điểm</th><th>Cụm</th><th>Sạch</th><th>Nhịp</th><th>Học</th><th>Tags</th></tr></thead><tbody id="candBody"></tbody></table>
+        </div>
+      </div>
     </div>
   </div>
-  <textarea id="txtN" placeholder="KQ XSMB 26/04/2026
-ĐB: 38228
-G1: 25708
-G2: 18653 91985
-G3: ...
-G4: ...
-G5: ...
-G6: ...
+
+  <div id="data" class="section">
+    <div class="grid2">
+      <div class="card">
+        <h2>Dán KQ nhiều ngày</h2>
+        <textarea id="bulk" placeholder="Dán nhiều ngày liên tiếp. Ví dụ:
+KQ XSMB 04/05/2026
+ĐB: ...
+G7: ...
+
+KQ XSMB 05/05/2026
+ĐB: ...
 G7: ..."></textarea>
-  <div id="parseN" class="small"></div>
-</div>
-
-<div class="card">
-  <div class="row">
-    <b>Ngày N-1</b>
-    <div class="row">
-      <button class="ghost" onclick="fillSample('txtN1')">Mẫu</button>
-      <button class="ghost" onclick="clearBox('txtN1')">Xoá</button>
-    </div>
-  </div>
-  <textarea id="txtN1"></textarea>
-  <div id="parseN1" class="small"></div>
-</div>
-
-<div class="card">
-  <div class="row">
-    <b>Ngày N-2</b>
-    <div class="row">
-      <button class="ghost" onclick="fillSample('txtN2')">Mẫu</button>
-      <button class="ghost" onclick="clearBox('txtN2')">Xoá</button>
-    </div>
-  </div>
-  <textarea id="txtN2"></textarea>
-  <div id="parseN2" class="small"></div>
-</div>
-
-<div class="card">
-  <div class="grid3" style="align-items:end">
-    <div>
-      <b>Ngày soi (N+1)</b>
-      <input id="dateTarget" placeholder="vd 04/05/2026" class="mono">
-    </div>
-    <div>
-      <b>Chế độ lọc</b>
-      <select id="mode">
-        <option value="strict" selected>STRICT — chặn số đã về ngày N</option>
-        <option value="soft">SOFT — vẫn chặn N, nhưng ghi chú tail yếu</option>
-      </select>
-    </div>
-    <button class="primary" id="btnPick">CHỐT</button>
-  </div>
-
-  <div class="sep"></div>
-
-  <div id="resultBox" class="small">Chưa chốt.</div>
-
-  <div class="row" style="margin-top:10px">
-    <button class="goodBtn" id="btnHit" disabled>✅ Lưu TRÚNG (Con chốt)</button>
-    <button class="badBtn" id="btnMiss" disabled>❌ Lưu SỊT (Con chốt)</button>
-    <button class="danger" id="btnUndo" disabled>↩︎ Xoá bản ghi gần nhất</button>
-  </div>
-</div>
-
-<div class="card">
-  <div class="grid2">
-    <div>
-      <b>Thống kê CHỐT (Con 1)</b>
-      <div class="small" style="margin-top:6px;line-height:1.5">
-        Tổng: <b id="kTotal">0</b><br>
-        % Trúng con chốt: <b id="kRateChot">0%</b><br>
-        Chuỗi sịt dài nhất: <b id="kMiss">0</b>
+        <div class="row">
+          <button class="primary" onclick="importBulk()">Nhập vào kho dữ liệu</button>
+          <button onclick="loadDemo()">Nạp demo</button>
+          <button class="red" onclick="document.getElementById('bulk').value=''">Xóa ô dán</button>
+        </div>
+        <p class="note">Parser chỉ lấy các dòng ĐB/G1/G2/G3/G4/G5/G6/G7. Dòng ngày không bị nuốt làm số.</p>
+      </div>
+      <div class="card">
+        <h2>Thêm/sửa 1 ngày</h2>
+        <input id="oneDate" placeholder="Ngày KQ, VD 06/05/2026">
+        <textarea id="oneText" placeholder="Dán KQ của 1 ngày..."></textarea>
+        <div class="row">
+          <button class="green" onclick="saveOneDay()">Lưu 1 ngày</button>
+          <button class="red" onclick="deleteDay()">Xóa ngày này</button>
+        </div>
       </div>
     </div>
-    <div>
-      <b>Tham khảo</b>
-      <div class="small" style="margin-top:6px;line-height:1.5">
-        % Trúng con phụ: <b id="kRatePhu">0%</b><br>
-        % Trúng ≥1/2: <b id="kRateAny">0%</b><br>
-        REAL+/REAL/RICKY chỉ đánh giá theo con chốt.
+    <div class="card" style="margin-top:12px">
+      <h2>Kho dữ liệu KQ</h2>
+      <div class="row">
+        <button onclick="renderData()">Làm mới</button>
+        <button class="blue" onclick="exportAll()">Tải toàn bộ dữ liệu JSON</button>
+        <label class="pill b">Nhập JSON <input type="file" id="jsonFile" accept=".json" style="display:none" onchange="importJsonFile(event)"></label>
+        <button class="red" onclick="clearData()">Xóa kho dữ liệu</button>
+      </div>
+      <div id="dataLog" class="log"></div>
+    </div>
+  </div>
+
+  <div id="compare" class="section">
+    <div class="grid2">
+      <div class="card">
+        <h2>Auto Compare</h2>
+        <p class="note">Sau khi có KQ ngày chốt, bấm nút này để phần mềm tự kiểm tra chốt ăn/trượt. Chỉ so với chốt đã lưu trước đó.</p>
+        <div class="row">
+          <button class="primary" onclick="autoCompare()">Tự so kết quả</button>
+          <button onclick="renderPicks()">Làm mới lịch sử</button>
+          <button class="red" onclick="clearPicks()">Xóa lịch sử chốt</button>
+        </div>
+        <div class="kpi">
+          <div><span>Lệnh</span><b id="sOrders">0</b></div>
+          <div><span>Ăn</span><b id="sWin">0</b></div>
+          <div><span>Trượt</span><b id="sLose">0</b></div>
+          <div><span>Tỷ lệ</span><b id="sRate">0%</b></div>
+          <div><span>Nghỉ</span><b id="sRest">0</b></div>
+          <div><span>Thua dài nhất</span><b id="sStreak">0</b></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Nhật ký kiểm chứng</h2>
+        <div id="pickLog" class="log"></div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="card">
-  <div class="row">
-    <b>Lịch sử</b>
-    <span class="pill">localStorage</span>
-    <button class="danger" id="btnClearAll">Xoá toàn bộ lịch sử</button>
+  <div id="backtest" class="section">
+    <div class="card">
+      <h2>Backtest trên kho dữ liệu</h2>
+      <div class="grid3">
+        <div><label class="note">Từ ngày</label><input id="btFrom" placeholder="VD: 01/03/2026"></div>
+        <div><label class="note">Đến ngày</label><input id="btTo" placeholder="VD: 30/04/2026"></div>
+        <div><label class="note">Mode</label><select id="btMode"><option value="smart">SMART</option><option value="safe">SAFE</option><option value="attack">ATTACK</option></select></div>
+      </div>
+      <div class="row">
+        <button class="primary" onclick="runBacktest()">Chạy backtest</button>
+        <button class="blue" onclick="exportBacktest()">Tải backtest JSON</button>
+      </div>
+      <div id="btSummary" class="log" style="margin-top:10px"></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h2>Chi tiết backtest</h2>
+      <div style="max-height:520px;overflow:auto">
+        <table><thead><tr><th>Ngày</th><th>Quyết định</th><th>KQ</th><th>Điểm</th><th>Lý do</th></tr></thead><tbody id="btBody"></tbody></table>
+      </div>
+    </div>
   </div>
-  <div style="max-height:420px;overflow:auto;margin-top:10px">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Ngày</th>
-          <th>Con CHỐT</th>
-          <th>Tầng</th>
-          <th>Day filter</th>
-          <th>Con PHỤ</th>
-          <th>KQ chốt</th>
-          <th>KQ phụ</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="hist"></tbody>
-    </table>
+
+  <div id="learn" class="section">
+    <div class="grid2">
+      <div class="card">
+        <h2>Thống kê tín hiệu</h2>
+        <div class="row">
+          <button class="primary" onclick="rebuildLearning()">Tính lại từ lịch sử</button>
+          <button class="yellow" onclick="applyLearning()">Áp dụng học nhẹ</button>
+          <button class="red" onclick="resetLearning()">Reset học</button>
+        </div>
+        <p class="note">Học nhẹ chỉ cộng/trừ trọng số phụ theo nhóm tín hiệu đã kiểm chứng. Không sửa lõi rule.</p>
+        <div id="learnLog" class="log"></div>
+      </div>
+      <div class="card">
+        <h2>Trọng số học hiện tại</h2>
+        <div id="weightLog" class="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings" class="section">
+    <div class="grid2">
+      <div class="card">
+        <h2>Cài đặt cổng vào</h2>
+        <div class="grid2">
+          <div><label class="note">Điểm tối thiểu SMART</label><input id="setMinSmart" type="number" value="7"></div>
+          <div><label class="note">Điểm tối thiểu SAFE</label><input id="setMinSafe" type="number" value="9"></div>
+          <div><label class="note">Điểm tối thiểu ATTACK</label><input id="setMinAttack" type="number" value="6"></div>
+          <div><label class="note">Số hòa tối đa</label><input id="setMaxTie" type="number" value="3"></div>
+          <div><label class="note">Độ nhiễu tối đa</label><input id="setMaxNoise" type="number" value="68"></div>
+          <div><label class="note">Độ rộng cụm tối đa</label><input id="setMaxWide" type="number" value="7"></div>
+        </div>
+        <div class="row">
+          <button class="green" onclick="saveSettings()">Lưu cài đặt</button>
+          <button onclick="loadSettings(true)">Mặc định</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Nguyên tắc khóa</h2>
+        <div class="log">V4_SMART_MB:
+- Dùng 3 ngày gần nhất trước ngày chốt.
+- Chỉ chốt 1 con hoặc NGHỈ.
+- Không TOP 2.
+- Không bắt chọn tay.
+- Né số vừa về D-1, đặc biệt đa nháy.
+- Có Smart Gate phát hiện bảng nhiễu / đổi pha / cụm quá rộng.
+- Auto Compare là lõi để biết hệ thật sự ăn hay trượt.
+- Học nhẹ chỉ chỉnh điểm phụ, không tự ý phá rule lõi.</div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-const KEY="sxmb_v58_clean_blockN_chot1_v1";
+const LS_DATA='v4mb_data', LS_PICKS='v4mb_picks', LS_SET='v4mb_settings', LS_LEARN='v4mb_learning';
+let lastResult=null, lastBacktest=[];
 
-function clearBox(id){
-  document.getElementById(id).value="";
-  updateParsePreview();
+function pad2(n){return String(n).padStart(2,'0')}
+function normDate(s){
+  if(!s) return '';
+  s=String(s).trim();
+  let m=s.match(/(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+  if(m) return `${m[1]}-${pad2(m[2])}-${pad2(m[3])}`;
+  m=s.match(/(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/);
+  if(m) return `${m[3]}-${pad2(m[2])}-${pad2(m[1])}`;
+  return '';
 }
-function pad2(n){return String(n).padStart(2,"0")}
-function fillSample(id){
-  document.getElementById(id).value =
-`KQ XSMB 26/04/2026
-ĐB: 82438
-G1: 32172
-G2: 39869 21073
-G3: 48067 07113 74630 05458 91202 00608
-G4: 1508 4847 5535 3417
-G5: 1130 7400 4663 1636 7725 6936
-G6: 768 195 519
-G7: 70 95 10 43`;
-  updateParsePreview();
+function vnDate(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; }
+function addDays(iso,n){ const d=new Date(iso+'T00:00:00'); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function getData(){ return JSON.parse(localStorage.getItem(LS_DATA)||'{}'); }
+function setData(x){ localStorage.setItem(LS_DATA,JSON.stringify(x)); renderData(); updateKpis(); }
+function getPicks(){ return JSON.parse(localStorage.getItem(LS_PICKS)||'[]'); }
+function setPicks(x){ localStorage.setItem(LS_PICKS,JSON.stringify(x)); renderPicks(); }
+function getSettings(){
+  return JSON.parse(localStorage.getItem(LS_SET)||'{"minSmart":7,"minSafe":9,"minAttack":6,"maxTie":3,"maxNoise":68,"maxWide":7}');
 }
+function setSettings(x){ localStorage.setItem(LS_SET,JSON.stringify(x)); }
+function getLearning(){ return JSON.parse(localStorage.getItem(LS_LEARN)||'{}'); }
+function setLearning(x){ localStorage.setItem(LS_LEARN,JSON.stringify(x)); renderWeights(); }
 
-/*
-  PARSER v5.8 CLEAN:
-  - Bỏ dòng KQ XSMB / ngày tháng / ghi chú.
-  - Chỉ parse dòng bắt đầu bằng ĐB, DB, G1, G2, G3, G4, G5, G6, G7.
-  - Nếu 1 dòng có nhiều số, lấy 2 số cuối từng giải.
-  - Nếu các số bị dính liền, cắt theo độ dài giải.
-*/
-function parseNums(text){
-  const raw = String(text||"").replace(/\u00A0/g," ");
-  const lines = raw.split(/\r?\n/);
-  const out = [];
-  const ignored = [];
-
-  function labelChunkLen(lbl){
-    const L = lbl.toUpperCase().replace(/\s+/g,"");
-    if (L==="DB" || L==="ĐB") return 5;
-    if (L==="G1" || L==="G.1") return 5;
-    if (L==="G2" || L==="G.2") return 5;
-    if (L==="G3" || L==="G.3") return 5;
-    if (L==="G4" || L==="G.4") return 4;
-    if (L==="G5" || L==="G.5") return 4;
-    if (L==="G6" || L==="G.6") return 3;
-    if (L==="G7" || L==="G.7") return 2;
-    return null;
+function parseLo(text){
+  const out=[]; const re=/(ĐB|DB|G1|G2|G3|G4|G5|G6|G7)\s*[:：]\s*([^\n\r]+)/gi; let m;
+  while((m=re.exec(text||''))!==null){
+    const nums=(m[2].match(/\d+/g)||[]);
+    nums.forEach(x=>{ if(x.length>=2) out.push(x.slice(-2)); });
   }
-
-  function pushChunks(rest, chunkLen){
-    const runs = String(rest||"").match(/\d+/g) || [];
-    if(!runs.length) return;
-
-    if(runs.length >= 2){
-      for(const r of runs){
-        if(r.length >= 2){
-          const num = parseInt(r.slice(-2),10);
-          if(!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
-        }
-      }
-      return;
-    }
-
-    const s = runs.join("");
-    if(!s) return;
-
-    if(chunkLen && s.length >= chunkLen){
-      const nChunks = Math.floor(s.length / chunkLen);
-      for(let i=0;i<nChunks;i++){
-        const chunk = s.slice(i*chunkLen, i*chunkLen + chunkLen);
-        const num = parseInt(chunk.slice(-2),10);
-        if(!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
-      }
-      return;
-    }
-
-    if(s.length >= 2){
-      const num = parseInt(s.slice(-2),10);
-      if(!Number.isNaN(num) && num>=0 && num<=99) out.push(num);
-    }
-  }
-
+  return out;
+}
+function splitBulk(text){
+  const lines=(text||'').split(/\r?\n/);
+  const chunks=[]; let cur=null;
   for(const line of lines){
-    const L = line.trim();
-    if(!L) continue;
-
-    if(/^KQ\s*(XSMB|MB|MIỀN\s*BẮC)?/i.test(L)){
-      ignored.push(L);
-      continue;
-    }
-
-    const m = L.match(/^(ĐB|DB|G\.?\s*1|G\.?\s*2|G\.?\s*3|G\.?\s*4|G\.?\s*5|G\.?\s*6|G\.?\s*7)\s*[:.\-–—]?\s*/i);
-    if(!m){
-      if(/\d/.test(L)) ignored.push(L);
-      continue;
-    }
-
-    const label = m[1];
-    const rest = L.slice(m[0].length);
-    pushChunks(rest, labelChunkLen(label));
+    const m=line.match(/KQ\s*XSMB\s*(\d{1,2}[\/-]\d{1,2}[\/-]\d{4}|\d{4}[\/-]\d{1,2}[\/-]\d{1,2})/i);
+    if(m){
+      if(cur) chunks.push(cur);
+      cur={date:normDate(m[1]), text:line+'\n'};
+    }else if(cur){ cur.text+=line+'\n'; }
   }
-
-  return {nums: out, ignored};
+  if(cur) chunks.push(cur);
+  return chunks.filter(c=>c.date);
 }
+function countMap(a){ const m={}; a.forEach(x=>m[x]=(m[x]||0)+1); return m; }
+function rev(x){ return x[1]+x[0]; }
+function topEntries(o,n=10){ return Object.entries(o).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,n); }
+function digitCounts(arr,pos){ const m={}; arr.forEach(x=>{const d=pos==='h'?x[0]:x[1]; m[d]=(m[d]||0)+1}); return m; }
+function touchCounts(arr){ const m={}; arr.forEach(x=>{m[x[0]]=(m[x[0]]||0)+1; m[x[1]]=(m[x[1]]||0)+1}); return m; }
+function uniq(a){ return [...new Set(a)]; }
 
-function parseOnlyNums(text){ return parseNums(text).nums; }
-
-function head(n){return Math.floor(n/10)}
-function tail(n){return n%10}
-
-function freqMap(nums){
-  const m=new Map();
-  for(const n of nums) m.set(n,(m.get(n)||0)+1);
-  return m;
-}
-function headCounts(nums){
-  const c=Array(10).fill(0);
-  for(const n of nums) c[head(n)]++;
-  return c;
-}
-function tailCounts(nums){
-  const c=Array(10).fill(0);
-  for(const n of nums) c[tail(n)]++;
-  return c;
-}
-function topIndices(counts){
-  const arr=counts.map((v,i)=>({i,v}));
-  arr.sort((a,b)=>(b.v-a.v)||(a.i-b.i));
-  return arr;
-}
-
-function chooseTailAnchors(numsN2, numsN1, numsN){
-  const all=[...numsN2,...numsN1,...numsN];
-  const t3=tailCounts(all);
-  const sorted=topIndices(t3);
-  const tail1 = sorted[0]?.i ?? 0;
-  const tail2 = sorted[1]?.i ?? tail1;
-  const tailGap = (sorted[0]?.v ?? 0) - (sorted[1]?.v ?? 0);
-  return {tail1, tail2, tailGap, tailStats: sorted};
-}
-
-/*
-  CHẶN NGÀY N:
-  - Nếu số n đã xuất hiện trong ngày N => loại.
-  - Không cộng/trừ điểm cho số đã về N nữa, vì đã bị chặn tuyệt đối.
-*/
-function scoreCandidates(numsN2, numsN1, numsN, tailAnchor){
-  const mapN=freqMap(numsN);
-  const mapN1=freqMap(numsN1);
-  const mapN2=freqMap(numsN2);
-  const hcN=headCounts(numsN);
-  const hcN1=headCounts(numsN1);
-
-  const blockedN = new Set(numsN);
-  const candidates=[];
-  for(let h=0; h<=9; h++){
-    const n = h*10 + tailAnchor;
-    if(blockedN.has(n)) continue; // CHẶN SỐ ĐÃ VỀ NGÀY N
-    candidates.push(n);
-  }
-
-  const scored=candidates.map(n=>{
-    const fN1=mapN1.get(n)||0;
-    const fN2=mapN2.get(n)||0;
-
-    let score=0;
-
-    // Lực hồi từ N-1/N-2 nhưng không trộn N vì N đã bị chặn.
-    if(fN1>0) score+=2;
-    if(fN2>0) score+=1;
-    if(fN1>0 && fN2>0) score+=1;
-
-    // Đầu đang lên trong ngày N: dùng đầu, không dùng chính số đã về N.
-    const diffHead = hcN[head(n)] - hcN1[head(n)];
-    if(diffHead>=2) score+=3;
-    else if(diffHead>=1) score+=2;
-
-    // Số sạch hoàn toàn 2 ngày trước: vẫn cho điểm nhỏ để tránh bó quá cứng.
-    if(fN1===0 && fN2===0) score+=1;
-
-    return {n, score, fN1, fN2, diffHead};
+function importBulk(){
+  const chunks=splitBulk(document.getElementById('bulk').value);
+  if(!chunks.length){ alert('Không nhận ra ngày KQ. Cần dòng kiểu: KQ XSMB 04/05/2026'); return; }
+  const db=getData(); let ok=0, bad=0;
+  chunks.forEach(c=>{
+    const arr=parseLo(c.text);
+    if(arr.length>=20){ db[c.date]={date:c.date,text:c.text,lo:arr,updated:new Date().toISOString()}; ok++; } else bad++;
   });
-
-  scored.sort((a,b)=>
-    (b.score-a.score) ||
-    (b.diffHead-a.diffHead) ||
-    (b.fN1-a.fN1) ||
-    (b.fN2-a.fN2) ||
-    (a.n-b.n)
-  );
-  return scored;
+  setData(db); alert(`Đã nhập ${ok} ngày. Bỏ qua ${bad} ngày thiếu dữ liệu.`);
+}
+function saveOneDay(){
+  const d=normDate(document.getElementById('oneDate').value), text=document.getElementById('oneText').value, arr=parseLo(text);
+  if(!d){alert('Ngày chưa đúng.');return}
+  if(arr.length<20 && !confirm(`Chỉ đọc được ${arr.length} lô. Vẫn lưu?`)) return;
+  const db=getData(); db[d]={date:d,text,lo:arr,updated:new Date().toISOString()}; setData(db);
+}
+function deleteDay(){
+  const d=normDate(document.getElementById('oneDate').value); if(!d)return;
+  const db=getData(); delete db[d]; setData(db);
+}
+function clearData(){ if(confirm('Xóa toàn bộ kho KQ?')) setData({}); }
+function renderData(){
+  const db=getData(); const keys=Object.keys(db).sort();
+  document.getElementById('dataLog').textContent = keys.length ? keys.map(k=>`${vnDate(k)}: ${db[k].lo.length} lô | ${db[k].lo.join(' ')}`).join('\n\n') : 'Chưa có dữ liệu.';
+}
+function updateKpis(){ document.getElementById('kDays').textContent=Object.keys(getData()).length; }
+function exportAll(){
+  const payload={data:getData(),picks:getPicks(),settings:getSettings(),learning:getLearning(),exported:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='v4-smart-mb-data.json'; a.click();
+}
+function importJsonFile(e){
+  const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{ try{const obj=JSON.parse(r.result); if(obj.data)setData(obj.data); if(obj.picks)setPicks(obj.picks); if(obj.settings)setSettings(obj.settings); if(obj.learning)setLearning(obj.learning); alert('Đã nhập JSON.');}catch(err){alert('File JSON lỗi.')} };
+  r.readAsText(f);
+}
+function quickFromLast(){
+  const keys=Object.keys(getData()).sort(); if(keys.length<1){alert('Chưa có KQ.');return}
+  document.getElementById('targetDate').value=vnDate(addDays(keys[keys.length-1],1));
 }
 
-function pickTwo(numsN2, numsN1, numsN){
-  const tails = chooseTailAnchors(numsN2, numsN1, numsN);
-
-  const s1 = scoreCandidates(numsN2, numsN1, numsN, tails.tail1);
-  const s2 = scoreCandidates(numsN2, numsN1, numsN, tails.tail2);
-
-  const p1 = s1[0]?.n ?? null;
-  const p2 = s2[0]?.n ?? null;
-
-  const m1 = (s1.length>=2) ? Math.abs(s1[0].score - s1[1].score) : 0;
-  const m2 = (s2.length>=2) ? Math.abs(s2[0].score - s2[1].score) : 0;
-
-  return {...tails, chot:p1, phu:p2, score1:s1[0]?.score ?? null, score2:s2[0]?.score ?? null, m1, m2, valid1:s1.length, valid2:s2.length};
+function daysBefore(target){
+  const db=getData(); return Object.keys(db).filter(k=>k<target).sort();
 }
-
-function tierFromMargin(m, tailGap, valid){
-  if(valid < 3) return "NGHỈ";
-  if(m>=3 && tailGap>=2) return "REAL+";
-  if(m>=2) return "REAL";
-  return "RICKY";
+function getLast3(target){
+  const ks=daysBefore(target); if(ks.length<3) return null;
+  const three=ks.slice(-3); return three.map(k=>dbDay(k));
 }
-function tierClass(t){
-  if(t==="REAL+") return "tplus";
-  if(t==="REAL") return "treal";
-  if(t==="RICKY") return "tricky";
-  return "miss";
-}
-function dayFilterText(tier, valid){
-  if(tier==="NGHỈ") return "NGHỈ — ngày nhiễu/ít ứng viên";
-  if(tier==="REAL+") return "ĐÁNH MẠNH";
-  if(tier==="REAL") return "ĐÁNH VỪA";
-  return "ĐÁNH NHẸ";
-}
+function dbDay(k){ return getData()[k]; }
 
-function load(){ try { return JSON.parse(localStorage.getItem(KEY)||"[]"); } catch { return []; } }
-function save(arr){ localStorage.setItem(KEY, JSON.stringify(arr)); }
-function uuid(){ try { return crypto.randomUUID(); } catch { return String(Date.now()) + Math.random().toString(16).slice(2); } }
-function isTrue(v){ return v===true || v==="true" || v===1 || v==="1"; }
-
-function maxMissStreak(arrChrono){
-  let best=0, cur=0;
-  for(const it of arrChrono){
-    if(isTrue(it.chotHit)){ cur=0; }
-    else { cur++; best=Math.max(best,cur); }
-  }
-  return best;
-}
-
-function updateParsePreview(){
-  const boxes = [
-    ["txtN","parseN","N"],
-    ["txtN1","parseN1","N-1"],
-    ["txtN2","parseN2","N-2"]
-  ];
-
-  for(const [txtId, outId, label] of boxes){
-    const p = parseNums(document.getElementById(txtId).value);
-    const el = document.getElementById(outId);
-    if(!document.getElementById(txtId).value.trim()){
-      el.innerHTML = "";
-      continue;
+function analyze(target, mode='smart', silent=false){
+  const db=getData(), keys=Object.keys(db).filter(k=>k<target).sort();
+  if(keys.length<3) return {ok:false,error:'Thiếu dữ liệu: cần ít nhất 3 ngày trước ngày chốt.'};
+  const k3=keys[keys.length-3], k2=keys[keys.length-2], k1=keys[keys.length-1];
+  const a3=db[k3].lo, a2=db[k2].lo, a1=db[k1].lo;
+  const c3=countMap(a3), c2=countMap(a2), c1=countMap(a1);
+  const all=a3.concat(a2,a1), heads=digitCounts(all,'h'), tails=digitCounts(all,'t'), touches=touchCounts(all);
+  const learning=getLearning();
+  const universe=Array.from({length:100},(_,i)=>pad2(i));
+  const scores=universe.map(x=>scoreNumber(x,{a3,a2,a1,c3,c2,c1,all,heads,tails,touches,learning}));
+  let candidates=scores.filter(s=>s.total>=4 && s.cluster>=1).sort((a,b)=>b.total-a.total||b.clean-a.clean||b.cluster-a.cluster||a.x.localeCompare(b.x));
+  const phase=detectPhase(candidates,{a3,a2,a1,c1,heads,tails,touches});
+  const settings=getSettings();
+  const minScore=mode==='safe'?settings.minSafe:mode==='attack'?settings.minAttack:settings.minSmart;
+  let decision='NGHỈ', number='', gate='CLOSE', confidence='THẤP', reason=[];
+  const top=candidates[0], second=candidates[1];
+  if(!top){ reason.push('Không có ứng viên đủ điều kiện.'); }
+  else{
+    const ties=candidates.filter(s=>s.total===top.total).length;
+    const gap=second?top.total-second.total:99;
+    const d1Count=c1[top.x]||0;
+    if(top.total<minScore) reason.push(`TOP ${top.x} chỉ ${top.total} điểm, dưới cổng ${minScore}.`);
+    if(top.cluster<2) reason.push(`TOP ${top.x} cụm yếu.`);
+    if(d1Count>=2) reason.push(`TOP ${top.x} vừa xả đa nháy D-1.`);
+    if(mode!=='attack' && d1Count>=1 && top.total<minScore+2) reason.push(`TOP ${top.x} dính D-1 một nháy, điểm chưa đủ bù.`);
+    if(ties>settings.maxTie) reason.push(`Có ${ties} số hòa TOP, nhiễu cao.`);
+    if(phase.noise>settings.maxNoise) reason.push(`Độ nhiễu ${phase.noise} vượt ngưỡng ${settings.maxNoise}.`);
+    if(mode!=='attack' && phase.wide>settings.maxWide) reason.push(`Cụm quá rộng ${phase.wide}, dễ loạn.`);
+    if(phase.change && mode==='safe') reason.push('SAFE phát hiện đổi pha nên nghỉ.');
+    if(reason.length===0){
+      decision='CHỐT'; number=top.x; gate='OPEN';
+      confidence = top.total>=minScore+3 && phase.noise<55 && !d1Count ? 'KHÁ' : 'TRUNG BÌNH';
+      reason.push(`Chốt ${top.x}: điểm ${top.total}, cụm ${top.cluster}, sạch ${top.clean}, nhịp ${top.rhythm}.`);
+      reason.push(...top.why.slice(0,8));
     }
-    const numsTxt = p.nums.map(pad2).join(" ");
-    const ignoredTxt = p.ignored.length ? `<div class="warn">Đã bỏ qua: ${p.ignored.map(x=>`<span class="mono">${escapeHtml(x)}</span>`).join(" | ")}</div>` : `<div class="ok">Không có dòng nhiễu.</div>`;
-    el.innerHTML = `<div class="small" style="margin-top:6px"><b>${label} parse được ${p.nums.length} số:</b> <span class="mono">${numsTxt}</span></div>${ignoredTxt}`;
   }
+  return {ok:true,target,mode,used:[k3,k2,k1],a3,a2,a1,c1,heads,tails,touches,candidates,phase,decision,number,gate,confidence,reason,top:top||null};
+}
+function scoreNumber(x,d){
+  const {c3,c2,c1,heads,tails,touches,learning}=d; const r=rev(x); let cluster=0,clean=0,rhythm=0,pen=0,learn=0,tags=[],why=[];
+  const h=x[0], t=x[1], days=[c3[x]>0,c2[x]>0,c1[x]>0].filter(Boolean).length, rdays=[c3[r]>0,c2[r]>0,c1[r]>0].filter(Boolean).length;
+  if(days>=2){cluster+=2;tags.push('so_2_3');why.push('số có mặt 2/3 ngày')}
+  if(days>=3){cluster+=2;tags.push('so_3_3');why.push('số có mặt 3/3 ngày')}
+  if(rdays>=1){cluster+=1;tags.push('dao');why.push('đảo hỗ trợ '+r)}
+  if(rdays>=2){cluster+=1;tags.push('dao_2_3');why.push('đảo có lực 2/3 ngày')}
+  if((heads[h]||0)>=7){cluster+=1;tags.push('dau_day');why.push('đầu '+h+' dày')}
+  if((tails[t]||0)>=7){cluster+=1;tags.push('duoi_day');why.push('đuôi '+t+' dày')}
+  if((touches[h]||0)>=12 || (touches[t]||0)>=12){cluster+=1;tags.push('cham_day');why.push('chạm có lực')}
+  if(!c1[x]){clean+=3;tags.push('sach_d1');why.push('không về D-1')}
+  if(!c1[x]&&!c2[x]){clean+=2;tags.push('nghi_2_ngay');why.push('nghỉ 2 ngày gần nhất')}
+  if(c2[x]&&!c1[x]){clean+=1;tags.push('d2_nghi_d1');why.push('về D-2 nghỉ D-1')}
+  if(c1[x]===1){pen-=2;tags.push('dinh_d1_1');why.push('dính D-1 một nháy')}
+  if(c1[x]>=2){pen-=5;tags.push('dinh_d1_multi');why.push('D-1 đa nháy')}
+  if(c3[x]&&!c2[x]&&c1[x]){rhythm+=2;tags.push('co_nghi_co');why.push('nhịp có-nghỉ-có')}
+  if(!c3[x]&&c2[x]&&!c1[x]){rhythm+=2;tags.push('nghi_co_nghi');why.push('nhịp nghỉ-có-nghỉ')}
+  if((c1[x]||0)>=2){rhythm-=3;tags.push('xa_manh_d1');why.push('D-1 xả mạnh')}
+  if(cluster<=1 && !c1[x]){pen-=1;tags.push('don_le');why.push('đơn lẻ')}
+  tags.forEach(tag=>{learn += learning[tag]||0});
+  const total=cluster+clean+rhythm+pen+learn;
+  return {x,total,cluster,clean,rhythm,pen,learn,tags,why};
+}
+function detectPhase(candidates,d){
+  const top10=candidates.slice(0,10);
+  const topScore=top10[0]?.total||0;
+  const ties=candidates.filter(s=>s.total===topScore).length;
+  const hotD1=Object.values(d.c1).filter(v=>v>=2).length;
+  const headActive=Object.values(d.heads).filter(v=>v>=7).length;
+  const tailActive=Object.values(d.tails).filter(v=>v>=7).length;
+  const touchActive=Object.values(d.touches).filter(v=>v>=12).length;
+  const wide=headActive+tailActive+touchActive;
+  const noise=Math.min(100, ties*12 + hotD1*10 + Math.max(0,wide-5)*8 + (top10.length>=10?10:0));
+  return {ties,hotD1,headActive,tailActive,touchActive,wide,noise,change:noise>=70||hotD1>=4};
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function runToday(){
+  const target=normDate(document.getElementById('targetDate').value); if(!target){alert('Nhập ngày chốt.');return}
+  const mode=document.getElementById('mode').value;
+  const r=analyze(target,mode); lastResult=r;
+  renderAnalysis(r);
 }
+function renderAnalysis(r){
+  if(!r.ok){
+    document.getElementById('decision').className='decision bad'; document.getElementById('decision').textContent='THIẾU DỮ LIỆU';
+    document.getElementById('explain').textContent=r.error; return;
+  }
+  document.getElementById('decision').className='decision '+(r.decision==='CHỐT'?'go':'rest');
+  document.getElementById('decision').textContent=r.decision==='CHỐT'?'CHỐT: '+r.number:'NGHỈ';
+  document.getElementById('explain').textContent=`Ngày chốt: ${vnDate(r.target)}
+Dùng 3 ngày: ${r.used.map(vnDate).join(' | ')}
+Mode: ${r.mode.toUpperCase()}
+Cổng: ${r.gate}
+Tự tin: ${r.confidence}
 
-function updateUI(){
-  const arr = load();
-  const total = arr.length;
-
-  const hitChot = arr.filter(x=>isTrue(x.chotHit)).length;
-  const hitPhu  = arr.filter(x=>isTrue(x.phuHit)).length;
-  const hitAny  = arr.filter(x=>isTrue(x.chotHit) || isTrue(x.phuHit)).length;
-
-  document.getElementById("kTotal").textContent = String(total);
-  document.getElementById("kRateChot").textContent = (total ? Math.round((hitChot/total)*100) : 0) + "%";
-  document.getElementById("kRatePhu").textContent = (total ? Math.round((hitPhu/total)*100) : 0) + "%";
-  document.getElementById("kRateAny").textContent = (total ? Math.round((hitAny/total)*100) : 0) + "%";
-  document.getElementById("kMiss").textContent = String(maxMissStreak(arr.slice().reverse()));
-
-  const tbody = document.getElementById("hist");
-  tbody.innerHTML = "";
-  arr.forEach((x,i)=>{
-    const kqChot = isTrue(x.chotHit) ? "<span class='hit'>✅</span>" : "<span class='miss'>❌</span>";
-    const kqPhu  = (x.phuHit===null || x.phuHit===undefined) ? "-" : (isTrue(x.phuHit) ? "<span class='hit'>✅</span>" : "<span class='miss'>❌</span>");
-    const tier = x.tier || "RICKY";
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${i+1}</td>
-      <td class="mono">${escapeHtml(x.date || "")}</td>
-      <td class="mono"><b>${x.chot || ""}</b></td>
-      <td class="tier ${tierClass(tier)}">${tier}</td>
-      <td>${escapeHtml(x.dayFilter || "")}</td>
-      <td class="mono">${x.phu || ""}</td>
-      <td>${kqChot}</td>
-      <td>${kqPhu}</td>
-      <td><button class="danger" data-del="${x.id}">Xoá</button></td>
-    `;
-    tbody.appendChild(tr);
+Lý do:
+- ${r.reason.join('\n- ')}`;
+  document.getElementById('kCand').textContent=r.candidates.length;
+  document.getElementById('kNoise').textContent=r.phase.noise;
+  document.getElementById('kWide').textContent=r.phase.wide;
+  document.getElementById('kGate').textContent=r.gate;
+  document.getElementById('kConf').textContent=r.confidence;
+  const body=document.getElementById('candBody'); body.innerHTML='';
+  r.candidates.slice(0,30).forEach((s,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td><b class="mono">${s.x}</b></td><td><b>${s.total}</b></td><td>${s.cluster}</td><td>${s.clean}</td><td>${s.rhythm}</td><td>${s.learn}</td><td>${s.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</td>`;
+    body.appendChild(tr);
   });
+  const c1hot=topEntries(r.c1,12).map(e=>`${e[0]}(${e[1]})`).join(' ');
+  document.getElementById('clusterLog').textContent=`PHA / NHIỄU
+- Độ nhiễu: ${r.phase.noise}/100
+- Số hòa TOP: ${r.phase.ties}
+- D-1 đa nháy: ${r.phase.hotD1}
+- Cụm rộng: ${r.phase.wide}
+- Đổi pha: ${r.phase.change?'CÓ':'không'}
 
-  tbody.querySelectorAll("button[data-del]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.getAttribute("data-del");
-      const next = load().filter(r=>r.id!==id);
-      save(next);
-      updateUI();
-    });
+ĐẾM CỤM
+- Đầu dày: ${topEntries(r.heads,5).map(e=>'đầu '+e[0]+'='+e[1]).join(', ')}
+- Đuôi dày: ${topEntries(r.tails,5).map(e=>'đuôi '+e[0]+'='+e[1]).join(', ')}
+- Chạm dày: ${topEntries(r.touches,5).map(e=>'chạm '+e[0]+'='+e[1]).join(', ')}
+
+D-1 CẦN NÉ
+${c1hot}
+
+TOP 8
+${r.candidates.slice(0,8).map((s,i)=>`${i+1}. ${s.x}: ${s.total} điểm | ${s.why.slice(0,4).join('; ')}`).join('\n')}`;
+}
+function savePick(){
+  if(!lastResult||!lastResult.ok){alert('Chưa có kết quả soi.');return}
+  const picks=getPicks();
+  const rec={id:Date.now(),target:lastResult.target,mode:lastResult.mode,decision:lastResult.decision,number:lastResult.number,gate:lastResult.gate,confidence:lastResult.confidence,top:lastResult.top,tags:lastResult.top?lastResult.top.tags:[],reason:lastResult.reason,used:lastResult.used,created:new Date().toISOString(),status:'PENDING'};
+  picks.unshift(rec); setPicks(picks); alert('Đã lưu chốt.');
+}
+function autoCompare(){
+  const db=getData(); const picks=getPicks(); let changed=0;
+  picks.forEach(p=>{
+    if(p.status==='PENDING' && db[p.target]){
+      if(p.decision==='NGHỈ'){ p.status='REST'; p.hit=false; }
+      else{ p.hit=(db[p.target].lo||[]).includes(p.number); p.status=p.hit?'WIN':'LOSE'; }
+      p.resultLo=db[p.target].lo; p.checked=new Date().toISOString(); changed++;
+    }
   });
+  setPicks(picks); alert(`Đã so ${changed} chốt.`);
+  rebuildLearning(false);
+}
+function statsFromPicks(){
+  const picks=getPicks(); let orders=0,w=0,l=0,rest=0,st=0,maxst=0;
+  picks.slice().reverse().forEach(p=>{
+    if(p.status==='REST'||p.decision==='NGHỈ'){rest++; return}
+    if(p.status==='WIN'||p.status==='LOSE'){orders++; if(p.status==='WIN'){w++;st=0}else{l++;st++;maxst=Math.max(maxst,st)}}
+  });
+  return {orders,w,l,rest,rate:orders?Math.round(w/orders*100):0,maxst};
+}
+function renderPicks(){
+  const s=statsFromPicks();
+  document.getElementById('sOrders').textContent=s.orders; document.getElementById('sWin').textContent=s.w; document.getElementById('sLose').textContent=s.l; document.getElementById('sRate').textContent=s.rate+'%'; document.getElementById('sRest').textContent=s.rest; document.getElementById('sStreak').textContent=s.maxst;
+  const picks=getPicks();
+  document.getElementById('pickLog').textContent=picks.length?picks.map((p,i)=>`${i+1}. ${vnDate(p.target)} | ${p.decision}${p.number?' '+p.number:''} | ${p.status}
+Mode: ${p.mode} | Tự tin: ${p.confidence}
+Tags: ${(p.tags||[]).join(', ')}`).join('\n\n---\n\n'):'Chưa có lịch sử chốt.';
+}
+function clearPicks(){ if(confirm('Xóa lịch sử chốt?')) setPicks([]); }
 
-  document.getElementById("btnUndo").disabled = (total===0);
+function runBacktest(){
+  const db=getData(), keys=Object.keys(db).sort(); if(keys.length<4){alert('Cần ít nhất 4 ngày KQ.');return}
+  const from=normDate(document.getElementById('btFrom').value)||keys[3], to=normDate(document.getElementById('btTo').value)||keys[keys.length-1], mode=document.getElementById('btMode').value;
+  const targets=keys.filter(k=>k>=from&&k<=to);
+  const rows=[];
+  targets.forEach(t=>{
+    const prior=Object.keys(db).filter(k=>k<t).sort();
+    if(prior.length>=3){
+      const r=analyze(t,mode,true); if(r.ok){
+        let status='REST';
+        if(r.decision==='CHỐT') status=(db[t].lo||[]).includes(r.number)?'WIN':'LOSE';
+        rows.push({target:t,decision:r.decision,number:r.number,status,score:r.top?r.top.total:0,reason:r.reason.join('; '),used:r.used,tags:r.top?r.top.tags:[]});
+      }
+    }
+  });
+  lastBacktest=rows; renderBacktest(rows);
+}
+function renderBacktest(rows){
+  let orders=0,w=0,l=0,rest=0,st=0,maxst=0;
+  rows.forEach(x=>{ if(x.decision==='NGHỈ'){rest++}else{orders++; if(x.status==='WIN'){w++;st=0}else{l++;st++;maxst=Math.max(maxst,st)}}});
+  document.getElementById('btSummary').textContent=`Tổng ngày test: ${rows.length}
+Vào lệnh: ${orders}
+Ăn: ${w}
+Trượt: ${l}
+Nghỉ: ${rest}
+Tỷ lệ ăn/lệnh: ${orders?Math.round(w/orders*100):0}%
+Chuỗi thua dài nhất: ${maxst}`;
+  const body=document.getElementById('btBody'); body.innerHTML='';
+  rows.forEach(x=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${vnDate(x.target)}</td><td><b>${x.decision}${x.number?' '+x.number:''}</b></td><td>${x.status}</td><td>${x.score}</td><td>${x.reason}</td>`;
+    body.appendChild(tr);
+  });
+}
+function exportBacktest(){
+  const blob=new Blob([JSON.stringify(lastBacktest,null,2)],{type:'application/json'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='v4-smart-mb-backtest.json'; a.click();
 }
 
-let lastPick = null;
-
-document.getElementById("btnPick").addEventListener("click", ()=>{
-  updateParsePreview();
-
-  const numsN  = parseOnlyNums(document.getElementById("txtN").value);
-  const numsN1 = parseOnlyNums(document.getElementById("txtN1").value);
-  const numsN2 = parseOnlyNums(document.getElementById("txtN2").value);
-
-  const box = document.getElementById("resultBox");
-  if(!numsN.length || !numsN1.length || !numsN2.length){
-    box.innerHTML = `<div class="badbox">Thiếu dữ liệu 3 ngày. Cần dán đúng dòng ĐB/DB/G1…G7. Dòng KQ/ngày tháng sẽ bị bỏ qua.</div>`;
-    lastPick = null;
-    document.getElementById("btnHit").disabled = true;
-    document.getElementById("btnMiss").disabled = true;
-    return;
-  }
-
-  const res = pickTwo(numsN2, numsN1, numsN);
-  if(res.chot===null){
-    box.innerHTML = `<div class="big bad">KHÔNG CHỐT</div><div class="badbox">Tất cả ứng viên đuôi mạnh đã bị chặn vì đã về ngày N hoặc không còn ứng viên hợp lệ.</div>`;
-    lastPick = null;
-    document.getElementById("btnHit").disabled = true;
-    document.getElementById("btnMiss").disabled = true;
-    return;
-  }
-
-  const tier = tierFromMargin(res.m1 ?? 0, res.tailGap ?? 0, res.valid1 ?? 0);
-  const dayFilter = dayFilterText(tier, res.valid1 ?? 0);
-  lastPick = {...res, tier, dayFilter};
-
-  const blockedSet = new Set(numsN);
-  const blockedN = [...blockedSet].sort((a,b)=>a-b).map(pad2).join(" ");
-
-  let noteClass = tier==="NGHỈ" ? "badbox" : (tier==="REAL+" ? "ok" : "warn");
-  let saveDisabled = tier==="NGHỈ";
-
-  box.innerHTML = `
-    <div class="grid2">
-      <div>
-        <div class="small">Con CHỐT — đuôi #1 = ${res.tail1}</div>
-        <div class="big mono">${pad2(res.chot)}</div>
-        <div class="small">Tầng: <span class="tier ${tierClass(tier)}">${tier}</span> • margin=${res.m1 ?? "-"} • tailGap=${res.tailGap ?? "-"}</div>
-      </div>
-      <div>
-        <div class="small">Con PHỤ — đuôi #2 = ${res.tail2}</div>
-        <div class="big mono">${res.phu===null ? "--" : pad2(res.phu)}</div>
-        <div class="small">Chỉ tham khảo, không tính % chính.</div>
-      </div>
-    </div>
-    <div class="${noteClass}"><b>Day filter:</b> ${dayFilter}</div>
-    <div class="warn"><b>Đã chặn số về ngày N:</b> <span class="mono">${blockedN}</span></div>
-  `;
-
-  document.getElementById("btnHit").disabled = saveDisabled;
-  document.getElementById("btnMiss").disabled = saveDisabled;
-});
-
-function askPhuHit(){
-  if(!lastPick || lastPick.phu===null || lastPick.phu===undefined) return null;
-  const ans = prompt("Con PHỤ có về không? Nhập: 1 = Có, 0 = Không (bỏ trống = không ghi)", "");
-  const v = String(ans||"").trim();
-  if(v==="") return null;
-  return (v==="1");
+function rebuildLearning(show=true){
+  const picks=getPicks(); const stat={};
+  picks.forEach(p=>{
+    if(!p.tags||!(p.status==='WIN'||p.status==='LOSE')) return;
+    p.tags.forEach(t=>{ if(!stat[t])stat[t]={win:0,lose:0,total:0}; stat[t].total++; if(p.status==='WIN')stat[t].win++; else stat[t].lose++; });
+  });
+  let txt=Object.entries(stat).sort((a,b)=>b[1].total-a[1].total).map(([k,v])=>`${k}: ${v.win} ăn / ${v.lose} trượt | ${v.total?Math.round(v.win/v.total*100):0}%`).join('\n');
+  document.getElementById('learnLog').textContent=txt||'Chưa đủ lịch sử đã kiểm chứng.';
+  return stat;
+}
+function applyLearning(){
+  const stat=rebuildLearning(false); const weights={};
+  Object.entries(stat).forEach(([tag,v])=>{
+    if(v.total<5) return;
+    const rate=v.win/v.total;
+    if(rate>=0.62) weights[tag]=1;
+    if(rate>=0.72) weights[tag]=2;
+    if(rate<=0.38) weights[tag]=-1;
+    if(rate<=0.25) weights[tag]=-2;
+  });
+  setLearning(weights);
+  rebuildLearning();
+}
+function resetLearning(){ setLearning({}); rebuildLearning(); }
+function renderWeights(){
+  const w=getLearning();
+  document.getElementById('weightLog').textContent=Object.keys(w).length?Object.entries(w).map(([k,v])=>`${k}: ${v>0?'+':''}${v}`).join('\n'):'Chưa có trọng số học.';
+}
+function saveSettings(){
+  const x={minSmart:+setMinSmart.value,minSafe:+setMinSafe.value,minAttack:+setMinAttack.value,maxTie:+setMaxTie.value,maxNoise:+setMaxNoise.value,maxWide:+setMaxWide.value};
+  setSettings(x); alert('Đã lưu cài đặt.');
+}
+function loadSettings(def=false){
+  if(def){setSettings({minSmart:7,minSafe:9,minAttack:6,maxTie:3,maxNoise:68,maxWide:7});}
+  const s=getSettings(); setMinSmart.value=s.minSmart; setMinSafe.value=s.minSafe; setMinAttack.value=s.minAttack; setMaxTie.value=s.maxTie; setMaxNoise.value=s.maxNoise; setMaxWide.value=s.maxWide;
 }
 
-function saveRecord(chotHit){
-  const date = document.getElementById("dateTarget").value.trim();
-  const phuHit = askPhuHit();
-  const rec = {
-    id: uuid(),
-    date,
-    chot: pad2(lastPick.chot),
-    phu: lastPick.phu===null ? "" : pad2(lastPick.phu),
-    tier: lastPick.tier,
-    dayFilter: lastPick.dayFilter,
-    chotHit: chotHit,
-    phuHit: phuHit
-  };
-  const arr = load();
-  arr.unshift(rec);
-  save(arr);
-  updateUI();
+function showTab(id,btn){
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active'); btn.classList.add('active');
+  renderData(); renderPicks(); rebuildLearning(false); renderWeights(); updateKpis();
 }
+function loadDemo(){
+document.getElementById('bulk').value=`KQ XSMB 02/05/2026
+ĐB: 16132
+G1: 71757
+G2: 99083 98654
+G3: 86938 71437 36884 49158 15991 74525
+G4: 3100 7714 4382 0524
+G5: 6046 7173 3104 6621 0697 8307
+G6: 960 157 907
+G7: 41 14 62 87
 
-document.getElementById("btnHit").addEventListener("click", ()=>{
-  if(!lastPick) return;
-  saveRecord(true);
-});
-document.getElementById("btnMiss").addEventListener("click", ()=>{
-  if(!lastPick) return;
-  saveRecord(false);
-});
-document.getElementById("btnUndo").addEventListener("click", ()=>{
-  const arr = load();
-  if(arr.length===0) return;
-  arr.shift();
-  save(arr);
-  updateUI();
-});
-document.getElementById("btnClearAll").addEventListener("click", ()=>{
-  if(!confirm("Xoá toàn bộ lịch sử?")) return;
-  save([]);
-  updateUI();
-});
+KQ XSMB 03/05/2026
+ĐB: 32964
+G1: 07578
+G2: 04054 01848
+G3: 61895 30357 50223 32428 88363 00727
+G4: 0787 1532 2957 1984
+G5: 6844 3254 1640 1132 8475 8624
+G6: 900 821 286
+G7: 36 47 18 34
 
-["txtN","txtN1","txtN2"].forEach(id=>{
-  document.getElementById(id).addEventListener("input", updateParsePreview);
-});
+KQ XSMB 04/05/2026
+ĐB: 11251
+G1: 41714
+G2: 83115 80556
+G3: 26457 76234 63246 50115 83785 71851
+G4: 6469 5545 0730 1317
+G5: 8380 6205 9349 1012 2407 7442
+G6: 867 393 252
+G7: 15 69 63 67
 
-updateUI();
-updateParsePreview();
+KQ XSMB 05/05/2026
+ĐB: 22512
+G1: 24866
+G2: 25891 09705
+G3: 62986 00888 10468 07788 17920 01198
+G4: 4229 8961 1317 0934
+G5: 6666 1110 9097 3014 7198 2747
+G6: 368 391 971
+G7: 37 44 31 50`;
+}
+loadSettings(); renderData(); renderPicks(); renderWeights(); updateKpis();
 </script>
-
 </body>
 </html>
