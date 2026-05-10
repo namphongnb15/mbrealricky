@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>V4 SMART MB - Phần mềm soi lô nâng cao</title>
+<title>V4.2 REAL SELECTOR MB - Phần mềm soi lô nâng cao</title>
 <style>
 :root{
   --bg:#07111f;--panel:#0b1220;--panel2:#111827;--text:#e5e7eb;--muted:#94a3b8;--line:#243044;
@@ -51,8 +51,8 @@ hr{border:0;border-top:1px solid var(--line);margin:12px 0}
 </head>
 <body>
 <div class="wrap">
-  <h1>V4 SMART MB</h1>
-  <p class="sub">Phần mềm soi lô MB nâng cao: lưu nhiều ngày KQ, tự chọn 3 ngày gần nhất, Smart Gate vào/nghỉ, Selector 1 con, Auto Compare, Backtest, thống kê rule ăn/trượt và học trọng số phụ. Không đảm bảo thắng; mục tiêu là kiểm chứng hệ, giảm cảm tính.</p>
+  <h1>V4.2 REAL SELECTOR MB</h1>
+  <p class="sub">Phần mềm soi lô MB nâng cao - bản selector sạch hơn: lưu nhiều ngày KQ, tự chọn 3 ngày gần nhất, Smart Gate vào/nghỉ, Selector 1 con, Auto Compare, Backtest, thống kê rule ăn/trượt và học trọng số phụ. Không đảm bảo thắng; mục tiêu là kiểm chứng hệ, giảm cảm tính.</p>
 
   <div class="tabs">
     <button class="tab active" onclick="showTab('run',this)">1. Soi & Chốt</button>
@@ -102,7 +102,7 @@ hr{border:0;border-top:1px solid var(--line);margin:12px 0}
       <div class="card">
         <h2>Top ứng viên</h2>
         <div style="max-height:420px;overflow:auto">
-          <table><thead><tr><th>#</th><th>Số</th><th>Điểm</th><th>Cụm</th><th>Sạch</th><th>Nhịp</th><th>Học</th><th>Tags</th></tr></thead><tbody id="candBody"></tbody></table>
+          <table><thead><tr><th>#</th><th>Số</th><th>Điểm</th><th>Lõi</th><th>Sạch</th><th>Nhịp</th><th>Học</th><th>Tags</th></tr></thead><tbody id="candBody"></tbody></table>
         </div>
       </div>
     </div>
@@ -221,12 +221,12 @@ G7: ..."></textarea>
       <div class="card">
         <h2>Cài đặt cổng vào</h2>
         <div class="grid2">
-          <div><label class="note">Điểm tối thiểu SMART</label><input id="setMinSmart" type="number" value="7"></div>
-          <div><label class="note">Điểm tối thiểu SAFE</label><input id="setMinSafe" type="number" value="9"></div>
-          <div><label class="note">Điểm tối thiểu ATTACK</label><input id="setMinAttack" type="number" value="6"></div>
-          <div><label class="note">Số hòa tối đa</label><input id="setMaxTie" type="number" value="3"></div>
-          <div><label class="note">Độ nhiễu tối đa</label><input id="setMaxNoise" type="number" value="68"></div>
-          <div><label class="note">Độ rộng cụm tối đa</label><input id="setMaxWide" type="number" value="7"></div>
+          <div><label class="note">Điểm tối thiểu SMART</label><input id="setMinSmart" type="number" value="10"></div>
+          <div><label class="note">Điểm tối thiểu SAFE</label><input id="setMinSafe" type="number" value="12"></div>
+          <div><label class="note">Điểm tối thiểu ATTACK</label><input id="setMinAttack" type="number" value="9"></div>
+          <div><label class="note">Số hòa tối đa</label><input id="setMaxTie" type="number" value="4"></div>
+          <div><label class="note">Độ nhiễu tối đa</label><input id="setMaxNoise" type="number" value="88"></div>
+          <div><label class="note">Độ rộng cụm tối đa</label><input id="setMaxWide" type="number" value="12"></div>
         </div>
         <div class="row">
           <button class="green" onclick="saveSettings()">Lưu cài đặt</button>
@@ -242,6 +242,8 @@ G7: ..."></textarea>
 - Không bắt chọn tay.
 - Né số vừa về D-1, đặc biệt đa nháy.
 - Có Smart Gate phát hiện bảng nhiễu / đổi pha / cụm quá rộng.
+- V4.2 làm lại Selector: không còn để đầu/đuôi/chạm/đảo cộng chồng tạo ảo điểm 10-11.
+- Điểm cao phải có lõi REAL: sạch D-1 + nhịp cụ thể + cụm/đảo hỗ trợ.
 - Auto Compare là lõi để biết hệ thật sự ăn hay trượt.
 - Học nhẹ chỉ chỉnh điểm phụ, không tự ý phá rule lõi.</div>
       </div>
@@ -270,7 +272,7 @@ function setData(x){ localStorage.setItem(LS_DATA,JSON.stringify(x)); renderData
 function getPicks(){ return JSON.parse(localStorage.getItem(LS_PICKS)||'[]'); }
 function setPicks(x){ localStorage.setItem(LS_PICKS,JSON.stringify(x)); renderPicks(); }
 function getSettings(){
-  return JSON.parse(localStorage.getItem(LS_SET)||'{"minSmart":7,"minSafe":9,"minAttack":6,"maxTie":3,"maxNoise":68,"maxWide":7}');
+  return JSON.parse(localStorage.getItem(LS_SET)||'{"minSmart":10,"minSafe":12,"minAttack":9,"maxTie":4,"maxNoise":88,"maxWide":12}');
 }
 function setSettings(x){ localStorage.setItem(LS_SET,JSON.stringify(x)); }
 function getLearning(){ return JSON.parse(localStorage.getItem(LS_LEARN)||'{}'); }
@@ -364,7 +366,7 @@ function analyze(target, mode='smart', silent=false){
   const learning=getLearning();
   const universe=Array.from({length:100},(_,i)=>pad2(i));
   const scores=universe.map(x=>scoreNumber(x,{a3,a2,a1,c3,c2,c1,all,heads,tails,touches,learning}));
-  let candidates=scores.filter(s=>s.total>=4 && s.cluster>=1).sort((a,b)=>b.total-a.total||b.clean-a.clean||b.cluster-a.cluster||a.x.localeCompare(b.x));
+  let candidates=scores.filter(s=>s.total>=6 && s.cluster>=3 && s.clean>=3 && !s.tags.includes('loai_d1_multi')).sort((a,b)=>b.total-a.total||b.clean-a.clean||b.cluster-a.cluster||a.x.localeCompare(b.x));
   const phase=detectPhase(candidates,{a3,a2,a1,c1,heads,tails,touches});
   const settings=getSettings();
   const minScore=mode==='safe'?settings.minSafe:mode==='attack'?settings.minAttack:settings.minSmart;
@@ -375,57 +377,82 @@ function analyze(target, mode='smart', silent=false){
     const ties=candidates.filter(s=>s.total===top.total).length;
     const gap=second?top.total-second.total:99;
     const d1Count=c1[top.x]||0;
+    const strongTop = top.total >= minScore + 4 && top.cluster >= 5 && top.clean >= 3 && d1Count === 0;
+    const hasRealCore = top.tags.includes('real_d2_nghi_d1') || top.tags.includes('dao_keo_sach') || top.tags.includes('so_2_3_sach') || top.tags.includes('nhip_nghi_co_nghi');
     if(top.total<minScore) reason.push(`TOP ${top.x} chỉ ${top.total} điểm, dưới cổng ${minScore}.`);
-    if(top.cluster<2) reason.push(`TOP ${top.x} cụm yếu.`);
-    if(d1Count>=2) reason.push(`TOP ${top.x} vừa xả đa nháy D-1.`);
-    if(mode!=='attack' && d1Count>=1 && top.total<minScore+2) reason.push(`TOP ${top.x} dính D-1 một nháy, điểm chưa đủ bù.`);
-    if(ties>settings.maxTie) reason.push(`Có ${ties} số hòa TOP, nhiễu cao.`);
-    if(phase.noise>settings.maxNoise) reason.push(`Độ nhiễu ${phase.noise} vượt ngưỡng ${settings.maxNoise}.`);
-    if(mode!=='attack' && phase.wide>settings.maxWide) reason.push(`Cụm quá rộng ${phase.wide}, dễ loạn.`);
-    if(phase.change && mode==='safe') reason.push('SAFE phát hiện đổi pha nên nghỉ.');
+    if(top.cluster<3) reason.push(`TOP ${top.x} thiếu lõi cụm thật.`);
+    if(!hasRealCore) reason.push(`TOP ${top.x} chỉ đẹp phụ, thiếu tín hiệu REAL cụ thể.`);
+    if(d1Count>=1) reason.push(`TOP ${top.x} dính D-1, V4.2 không chốt số vừa về hôm qua.`);
+    if(ties>settings.maxTie && !strongTop) reason.push(`Có ${ties} số hòa TOP, chưa tách được 1 con sạch.`);
+    if(phase.noise>settings.maxNoise && !strongTop) reason.push(`Độ nhiễu ${phase.noise} cao, TOP chưa đủ mạnh để mở cổng.`);
+    if(mode==='safe' && phase.change && !strongTop) reason.push('SAFE phát hiện đổi pha nên nghỉ.');
     if(reason.length===0){
       decision='CHỐT'; number=top.x; gate='OPEN';
       confidence = top.total>=minScore+3 && phase.noise<55 && !d1Count ? 'KHÁ' : 'TRUNG BÌNH';
-      reason.push(`Chốt ${top.x}: điểm ${top.total}, cụm ${top.cluster}, sạch ${top.clean}, nhịp ${top.rhythm}.`);
+      reason.push(`Chốt ${top.x}: điểm ${top.total}, lõi ${top.cluster}, sạch ${top.clean}, nhịp ${top.rhythm}.`);
       reason.push(...top.why.slice(0,8));
     }
   }
   return {ok:true,target,mode,used:[k3,k2,k1],a3,a2,a1,c1,heads,tails,touches,candidates,phase,decision,number,gate,confidence,reason,top:top||null};
 }
 function scoreNumber(x,d){
-  const {c3,c2,c1,heads,tails,touches,learning}=d; const r=rev(x); let cluster=0,clean=0,rhythm=0,pen=0,learn=0,tags=[],why=[];
-  const h=x[0], t=x[1], days=[c3[x]>0,c2[x]>0,c1[x]>0].filter(Boolean).length, rdays=[c3[r]>0,c2[r]>0,c1[r]>0].filter(Boolean).length;
-  if(days>=2){cluster+=2;tags.push('so_2_3');why.push('số có mặt 2/3 ngày')}
-  if(days>=3){cluster+=2;tags.push('so_3_3');why.push('số có mặt 3/3 ngày')}
-  if(rdays>=1){cluster+=1;tags.push('dao');why.push('đảo hỗ trợ '+r)}
-  if(rdays>=2){cluster+=1;tags.push('dao_2_3');why.push('đảo có lực 2/3 ngày')}
-  if((heads[h]||0)>=7){cluster+=1;tags.push('dau_day');why.push('đầu '+h+' dày')}
-  if((tails[t]||0)>=7){cluster+=1;tags.push('duoi_day');why.push('đuôi '+t+' dày')}
-  if((touches[h]||0)>=12 || (touches[t]||0)>=12){cluster+=1;tags.push('cham_day');why.push('chạm có lực')}
-  if(!c1[x]){clean+=3;tags.push('sach_d1');why.push('không về D-1')}
-  if(!c1[x]&&!c2[x]){clean+=2;tags.push('nghi_2_ngay');why.push('nghỉ 2 ngày gần nhất')}
-  if(c2[x]&&!c1[x]){clean+=1;tags.push('d2_nghi_d1');why.push('về D-2 nghỉ D-1')}
-  if(c1[x]===1){pen-=2;tags.push('dinh_d1_1');why.push('dính D-1 một nháy')}
-  if(c1[x]>=2){pen-=5;tags.push('dinh_d1_multi');why.push('D-1 đa nháy')}
-  if(c3[x]&&!c2[x]&&c1[x]){rhythm+=2;tags.push('co_nghi_co');why.push('nhịp có-nghỉ-có')}
-  if(!c3[x]&&c2[x]&&!c1[x]){rhythm+=2;tags.push('nghi_co_nghi');why.push('nhịp nghỉ-có-nghỉ')}
-  if((c1[x]||0)>=2){rhythm-=3;tags.push('xa_manh_d1');why.push('D-1 xả mạnh')}
-  if(cluster<=1 && !c1[x]){pen-=1;tags.push('don_le');why.push('đơn lẻ')}
+  // V4.2 REAL SELECTOR:
+  // Không cho đầu/đuôi/chạm/đảo cộng chồng quá nhiều gây ảo 10-11 điểm.
+  // Điểm cao phải đến từ "số sạch + nhịp cụ thể + cụm không quá rộng".
+  const {c3,c2,c1,heads,tails,touches,learning}=d;
+  const r=rev(x);
+  let core=0, clean=0, rhythm=0, broad=0, pen=0, learn=0, tags=[], why=[];
+  const h=x[0], t=x[1];
+  const days=[c3[x]>0,c2[x]>0,c1[x]>0].filter(Boolean).length;
+  const rdays=[c3[r]>0,c2[r]>0,c1[r]>0].filter(Boolean).length;
+  const d1=c1[x]||0, d2=c2[x]||0, d3=c3[x]||0;
+
+  // 1) CORE: chỉ tính tín hiệu cụ thể của chính số / nhịp sạch
+  if(d2 && !d1){ core+=3; tags.push('real_d2_nghi_d1'); why.push('về D-2 nghỉ D-1, sạch để bật lại'); }
+  if(!d1 && !d2 && rdays>=2){ core+=3; tags.push('dao_keo_sach'); why.push('bản thân sạch 2 ngày, đảo có lực 2/3'); }
+  if(days>=2 && !d1){ core+=2; tags.push('so_2_3_sach'); why.push('số có mặt 2/3 nhưng không xả D-1'); }
+  if(!d3 && d2 && !d1){ rhythm+=2; tags.push('nhip_nghi_co_nghi'); why.push('nhịp nghỉ-có-nghỉ'); }
+  if(d3 && !d2 && !d1 && rdays>=1){ rhythm+=1; tags.push('nhip_co_nghi_nghi_dao'); why.push('có lực cũ, nghỉ 2 ngày, đảo còn giữ nhịp'); }
+
+  // 2) ĐẢO: hỗ trợ vừa phải, không được biến số yếu thành số mạnh
+  if(rdays>=1){ core+=1; tags.push('dao_ho_tro'); why.push('đảo '+r+' hỗ trợ'); }
+  if(rdays>=2 && !d1){ core+=1; tags.push('dao_2_3_sach'); why.push('đảo '+r+' có lực 2/3 và số không dính D-1'); }
+
+  // 3) BROAD: đầu/đuôi/chạm chỉ là phụ, giới hạn tối đa +2
+  let broadRaw=0;
+  if((heads[h]||0)>=8){ broadRaw+=1; tags.push('dau_day'); why.push('đầu '+h+' dày'); }
+  if((tails[t]||0)>=8){ broadRaw+=1; tags.push('duoi_day'); why.push('đuôi '+t+' dày'); }
+  if((touches[h]||0)>=14 || (touches[t]||0)>=14){ broadRaw+=1; tags.push('cham_day'); why.push('chạm có lực'); }
+  broad=Math.min(2,broadRaw);
+
+  // 4) SẠCH: không dính D-1 mới được cộng mạnh
+  if(!d1){ clean+=3; tags.push('sach_d1'); why.push('không về D-1'); }
+  if(!d1 && !d2){ clean+=1; tags.push('sach_2_ngay'); why.push('nghỉ 2 ngày gần nhất'); }
+
+  // 5) PHẠT: dính D-1 bị phạt rất nặng
+  if(d1===1){ pen-=5; tags.push('dinh_d1_1'); why.push('dính D-1 một nháy, hạ mạnh'); }
+  if(d1>=2){ pen-=99; tags.push('loai_d1_multi'); why.push('D-1 đa nháy, loại thực chiến'); }
+
+  // 6) Loại số chỉ đẹp do broad, không có CORE thật
+  if(core<3 && rhythm<2){ pen-=3; tags.push('ao_diem_broad'); why.push('thiếu lõi thật, dễ ảo điểm'); }
+
   tags.forEach(tag=>{learn += learning[tag]||0});
-  const total=cluster+clean+rhythm+pen+learn;
-  return {x,total,cluster,clean,rhythm,pen,learn,tags,why};
+  const selector = core*2 + clean + rhythm + broad + pen + learn;
+  const total = selector; // V4.2 dùng selector làm điểm chính, không dùng điểm cộng chồng cũ
+  return {x,total,cluster:core,broad,clean,rhythm,pen,learn,tags,why,selector};
 }
 function detectPhase(candidates,d){
   const top10=candidates.slice(0,10);
   const topScore=top10[0]?.total||0;
   const ties=candidates.filter(s=>s.total===topScore).length;
   const hotD1=Object.values(d.c1).filter(v=>v>=2).length;
-  const headActive=Object.values(d.heads).filter(v=>v>=7).length;
-  const tailActive=Object.values(d.tails).filter(v=>v>=7).length;
-  const touchActive=Object.values(d.touches).filter(v=>v>=12).length;
+  const headActive=Object.values(d.heads).filter(v=>v>=8).length;
+  const tailActive=Object.values(d.tails).filter(v=>v>=8).length;
+  const touchActive=Object.values(d.touches).filter(v=>v>=14).length;
   const wide=headActive+tailActive+touchActive;
-  const noise=Math.min(100, ties*12 + hotD1*10 + Math.max(0,wide-5)*8 + (top10.length>=10?10:0));
-  return {ties,hotD1,headActive,tailActive,touchActive,wide,noise,change:noise>=70||hotD1>=4};
+  // V4.2: noise chỉ là cảnh báo phụ, không khóa ngày máy móc.
+  const noise=Math.min(100, Math.max(0,ties-4)*5 + hotD1*8 + Math.max(0,wide-10)*4);
+  return {ties,hotD1,headActive,tailActive,touchActive,wide,noise,change:noise>=88||hotD1>=5};
 }
 
 function runToday(){
@@ -587,7 +614,7 @@ function saveSettings(){
   setSettings(x); alert('Đã lưu cài đặt.');
 }
 function loadSettings(def=false){
-  if(def){setSettings({minSmart:7,minSafe:9,minAttack:6,maxTie:3,maxNoise:68,maxWide:7});}
+  if(def){setSettings({minSmart:10,minSafe:12,minAttack:9,maxTie:4,maxNoise:88,maxWide:12});}
   const s=getSettings(); setMinSmart.value=s.minSmart; setMinSafe.value=s.minSafe; setMinAttack.value=s.minAttack; setMaxTie.value=s.maxTie; setMaxNoise.value=s.maxNoise; setMaxWide.value=s.maxWide;
 }
 
